@@ -43,11 +43,26 @@
   .preset-list { display:flex; flex-direction:column; gap:4px; max-height:200px; overflow-y:auto; }
   .p-item { background:#0d1117; padding:10px; border-radius:6px; font-size:12px; cursor:pointer; border:1px solid #30364d; display:flex; justify-content:space-between; align-items:center; }
   .p-del { color:#f85149; font-size:16px; padding:0 4px; }
+
+  /* LOGIN */
   #login-screen { max-width:360px; margin:40px auto; padding:24px; background:var(--card); border-radius:12px; border:1px solid #30364d; }
   #login-screen h2 { margin:0 0 20px; font-size:18px; color:var(--accent); text-align:center; }
   .btn-login { width:100%; padding:14px; background:var(--take); border:none; border-radius:8px; color:white; font-size:14px; font-weight:900; cursor:pointer; margin-top:4px; }
   #login-error { color:#f85149; font-size:12px; margin-top:8px; text-align:center; display:none; }
-  #setup-screen { max-width:360px; margin:40px auto; padding:24px; background:var(--card); border-radius:12px; border:1px solid #30364d; }
+
+  /* CONFIRMAÇÃO DE E-MAIL */
+  #confirm-screen { max-width:360px; margin:40px auto; padding:28px 24px; background:var(--card); border-radius:12px; border:1px solid #30364d; text-align:center; display:none; }
+  #confirm-screen .confirm-icon { font-size:48px; margin-bottom:12px; }
+  #confirm-screen h2 { margin:0 0 10px; font-size:18px; color:var(--accent); }
+  #confirm-screen p { font-size:13px; color:#8b949e; margin:0 0 20px; line-height:1.6; }
+  #confirm-screen .confirm-email-box { background:#0d1117; border:1px solid #30364d; border-radius:8px; padding:10px 14px; font-size:13px; color:white; font-weight:700; margin-bottom:20px; word-break:break-all; }
+  .btn-resend { width:100%; padding:12px; background:#30364d; border:none; border-radius:8px; color:#c9d1d9; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:8px; }
+  .btn-resend:active { background:#444d5c; }
+  #resend-msg { font-size:11px; color:#56d364; display:none; margin-top:4px; }
+  .confirm-tip { font-size:11px; color:#8b949e; margin-top:16px; padding:10px; background:#0d1117; border-radius:8px; line-height:1.5; }
+
+  /* SETUP */
+  #setup-screen { max-width:360px; margin:40px auto; padding:24px; background:var(--card); border-radius:12px; border:1px solid #30364d; display:none; }
   #setup-screen h2 { margin:0 0 8px; font-size:16px; color:var(--accent); }
   #setup-screen p { font-size:12px; color:#8b949e; margin-bottom:16px; }
   .btn-create { width:100%; padding:14px; background:var(--on); border:none; border-radius:8px; color:white; font-size:14px; font-weight:900; cursor:pointer; }
@@ -55,6 +70,8 @@
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
 <div id="login-screen">
   <h2>🎬 PontoView Overlay</h2>
   <label>E-mail</label>
@@ -65,7 +82,22 @@
   <button class="btn-login" style="background:#238636;margin-top:8px" onclick="doSignup()">CRIAR CONTA</button>
   <p id="login-error"></p>
 </div>
-<div id="setup-screen" style="display:none">
+
+<!-- TELA DE CONFIRMAÇÃO DE E-MAIL -->
+<div id="confirm-screen">
+  <div class="confirm-icon">✉️</div>
+  <h2>Confirme seu e-mail</h2>
+  <p>Enviamos um link de confirmação para:</p>
+  <div class="confirm-email-box" id="confirm-email-display"></div>
+  <p>Clique no link recebido no e-mail para ativar sua conta. Depois, <strong>volte a esta página</strong> — o login será feito automaticamente.</p>
+  <button class="btn-resend" onclick="resendEmail()">🔄 Reenviar e-mail</button>
+  <div id="resend-msg">✔ E-mail reenviado!</div>
+  <div class="confirm-tip">⚠️ Não encontrou o e-mail? Verifique a pasta de <strong>spam</strong> ou <strong>lixo eletrônico</strong>.</div>
+  <button class="btn-resend" style="margin-top:12px;color:var(--accent)" onclick="backToLogin()">← Voltar ao login</button>
+</div>
+
+<!-- SETUP WORKSPACE -->
+<div id="setup-screen">
   <h2>🆕 Criar seu Workspace</h2>
   <p>Escolha um slug único para sua URL do overlay.</p>
   <label>Nome do Workspace</label>
@@ -75,6 +107,8 @@
   <button class="btn-create" onclick="createWorkspace()">CRIAR WORKSPACE</button>
   <p id="setup-error"></p>
 </div>
+
+<!-- PAINEL PRINCIPAL -->
 <div id="main-panel" style="display:none">
   <div id="conn-status">⚠ Conectando...</div>
   <div id="workspace-info"></div>
@@ -126,52 +160,124 @@
     <div class="preset-list" id="preset-list"></div>
   </div>
 </div>
+
 <script>
 const SUPABASE_URL = 'https://gwawftcyltlmnunttyxj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3YXdmdGN5bHRsbW51bnR0eXhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1OTU0OTQsImV4cCI6MjA5NDE3MTQ5NH0.ZoglWSlO7Cb37GuG8mIESSGP4z33dh-3uz6nMiwx8uY';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null, workspaceId = null, workspaceSlug = null;
 let states = { live:false, side:false, tag:false, headline:false, ticker:false };
+let pendingEmail = null;
+
+function hideAll() {
+  ['login-screen','confirm-screen','setup-screen','main-panel']
+    .forEach(id => document.getElementById(id).style.display = 'none');
+}
+
+// ─── AUTH ──────────────────────────────────────────────────
 async function doLogin() {
-  const email = document.getElementById('login-email').value;
+  const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
   const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) { showLoginError(error.message); return; }
+  if (error) {
+    // Erro de e-mail não confirmado — orienta o usuário
+    if (error.message.includes('Email not confirmed') || error.message.includes('email_not_confirmed')) {
+      pendingEmail = email;
+      showConfirmScreen(email);
+      return;
+    }
+    showLoginError(error.message);
+    return;
+  }
   afterLogin();
 }
+
 async function doSignup() {
-  const email = document.getElementById('login-email').value;
+  const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
+  if (!email || !pass) { showLoginError('Preencha e-mail e senha.'); return; }
+  if (pass.length < 6)  { showLoginError('A senha deve ter pelo menos 6 caracteres.'); return; }
   const { error } = await sb.auth.signUp({ email, password: pass });
   if (error) { showLoginError(error.message); return; }
-  afterLogin();
+  // Signup OK → mostrar tela de confirmação
+  pendingEmail = email;
+  showConfirmScreen(email);
 }
-function showLoginError(msg) { const el = document.getElementById('login-error'); el.textContent = msg; el.style.display = 'block'; }
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  const msgs = {
+    'Invalid login credentials': 'E-mail ou senha incorretos.',
+    'Email not confirmed': 'E-mail não confirmado. Verifique sua caixa de entrada.',
+  };
+  el.textContent = msgs[msg] || msg;
+  el.style.display = 'block';
+}
+
+function showConfirmScreen(email) {
+  hideAll();
+  document.getElementById('confirm-email-display').textContent = email;
+  document.getElementById('confirm-screen').style.display = 'block';
+}
+
+function backToLogin() {
+  hideAll();
+  document.getElementById('login-screen').style.display = 'block';
+}
+
+async function resendEmail() {
+  const email = pendingEmail || document.getElementById('confirm-email-display').textContent;
+  await sb.auth.resend({ type: 'signup', email });
+  const msg = document.getElementById('resend-msg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 4000);
+}
+
 async function afterLogin() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
   currentUser = user;
-  document.getElementById('login-screen').style.display = 'none';
+  hideAll();
   const { data: ws } = await sb.from('workspaces').select('*').eq('user_id', user.id).single();
   if (ws) { workspaceId = ws.id; workspaceSlug = ws.slug; showMainPanel(); }
   else { document.getElementById('setup-screen').style.display = 'block'; }
 }
+
+// ─── SUPABASE AUTH LISTENER ────────────────────────────────
+// Detecta quando o usuário confirma o e-mail e retorna à página
+sb.auth.onAuthStateChange((event, session) => {
+  if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
+    // Se veio de uma confirmação de e-mail (tela de confirmação visível)
+    const confirmVisible = document.getElementById('confirm-screen').style.display !== 'none';
+    const loginVisible   = document.getElementById('login-screen').style.display !== 'none';
+    if (confirmVisible || loginVisible) {
+      currentUser = session.user;
+      afterLogin();
+    }
+  }
+});
+
+// ─── SETUP WORKSPACE ──────────────────────────────────────
 async function createWorkspace() {
   const name = document.getElementById('setup-name').value.trim();
   const slug = document.getElementById('setup-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
   if (!name || !slug) { showSetupError('Preencha nome e slug.'); return; }
-  const { data: ws, error } = await sb.from('workspaces').insert({ user_id: currentUser.id, name, slug, plan:'free' }).select().single();
+  const { data: ws, error } = await sb.from('workspaces')
+    .insert({ user_id: currentUser.id, name, slug, plan:'free' }).select().single();
   if (error) { showSetupError(error.message); return; }
   await sb.from('overlay_state').insert({ workspace_id: ws.id });
   workspaceId = ws.id; workspaceSlug = ws.slug;
-  document.getElementById('setup-screen').style.display = 'none';
+  hideAll();
   showMainPanel();
 }
 function showSetupError(msg) { const el = document.getElementById('setup-error'); el.textContent = msg; el.style.display = 'block'; }
+
+// ─── PAINEL PRINCIPAL ──────────────────────────────────────
 function showMainPanel() {
   document.getElementById('main-panel').style.display = 'block';
   const overlayUrl = `${location.origin}${location.pathname.replace('control.html','')}overlay.html?w=${workspaceSlug}`;
-  document.getElementById('workspace-info').innerHTML = `🔗 URL do Overlay: <a href="${overlayUrl}" target="_blank">${overlayUrl}</a>`;
+  document.getElementById('workspace-info').innerHTML =
+    `🔗 URL do Overlay: <a href="${overlayUrl}" target="_blank">${overlayUrl}</a>`;
   buildSwitches(); loadPresetsFromDB(); subscribeToConnection();
   setTimeout(() => pushUpdate(), 600);
 }
@@ -277,7 +383,11 @@ function importPresets(event) {
   };
   reader.readAsText(file); event.target.value = '';
 }
-sb.auth.getSession().then(({ data: { session } }) => { if (session) { currentUser = session.user; afterLogin(); } });
+
+// ─── INIT ──────────────────────────────────────────────────
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session) { currentUser = session.user; afterLogin(); }
+});
 </script>
 </body>
 </html>
