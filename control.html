@@ -5,159 +5,370 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PontoView Control</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#0b0e14; --card:#161b22; --accent:#58a6ff; --take:#218bff; --off:#da3633; --on:#238636; --all:#f39c12; --safe: env(safe-area-inset-bottom, 0px); }
+  :root {
+    --bg:#07111f;
+    --bg2:#0c1a2e;
+    --card:rgba(13,23,39,.78);
+    --card-strong:rgba(10,18,31,.92);
+    --line:rgba(255,255,255,.08);
+    --line-strong:rgba(255,255,255,.12);
+    --text:#ecf3ff;
+    --muted:#97a7c3;
+    --accent:#28c0ff;
+    --accent-2:#5a7cff;
+    --success:#19c37d;
+    --danger:#ff5d73;
+    --warn:#f6b73c;
+    --shadow:0 20px 60px rgba(0,0,0,.35);
+    --radius:18px;
+    --radius-sm:12px;
+    --safe: env(safe-area-inset-bottom, 0px);
+  }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { background:var(--bg); color:#c9d1d9; font-family:'Segoe UI',sans-serif; margin:0; padding:10px 10px calc(10px + var(--safe)) 10px; font-size:13px; min-height:100dvh; }
-  #conn-status { font-size:11px; padding:6px 10px; border-radius:6px; margin-bottom:10px; text-align:center; background:#2d1b1b; color:#f85149; border:1px solid var(--off); }
-  #conn-status.connected { background:#1b2d1b; color:#56d364; border-color:var(--on); }
-  #workspace-info { font-size:10px; color:#8b949e; text-align:center; margin-bottom:10px; word-break:break-all; }
-  #workspace-info a { color:var(--accent); text-decoration:none; }
-  .master-group { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:12px; }
-  .btn-main { padding:16px 4px; border-radius:8px; border:none; font-weight:900; cursor:pointer; text-transform:uppercase; font-size:11px; color:white; touch-action:manipulation; }
-  .btn-take { background:var(--take); } .btn-all { background:var(--all); } .btn-off { background:var(--off); } .btn-reset { background:#6e40c9; }
-  .sw-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px; }
-  .sw-item { background:var(--card); border:1px solid #30364d; padding:10px 12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; }
-  .sw-label { font-size:11px; font-weight:700; color:#8b949e; }
-  .btn-sw { padding:8px 14px; border-radius:6px; border:none; cursor:pointer; font-size:11px; font-weight:900; min-width:48px; touch-action:manipulation; }
-  .tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:#0d1117; padding:3px; border-radius:8px; margin-bottom:2px; }
-  .tab { text-align:center; padding:10px 2px; cursor:pointer; font-size:10px; font-weight:bold; border-radius:6px; color:#8b949e; touch-action:manipulation; }
-  .tab.active { background:var(--card); color:var(--accent); border-bottom:2px solid var(--accent); }
-  .tab-content { display:none; background:var(--card); border:1px solid #30364d; border-top:none; padding:14px; border-radius:0 0 8px 8px; }
+  html,body { margin:0; min-height:100%; }
+  body {
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(40,192,255,.16), transparent 28%),
+      radial-gradient(circle at top right, rgba(90,124,255,.16), transparent 24%),
+      linear-gradient(180deg, var(--bg), var(--bg2));
+    padding:18px 18px calc(18px + var(--safe)) 18px;
+  }
+  .shell {
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .panel {
+    background:var(--card);
+    border:1px solid var(--line);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  .hero {
+    padding:20px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    align-items:center;
+  }
+  .brand-row { display:flex; align-items:center; gap:14px; }
+  .brand-mark {
+    width:52px; height:52px; border-radius:16px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; box-shadow:0 12px 32px rgba(40,192,255,.28);
+  }
+  .eyebrow { color:var(--accent); font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:800; }
+  h1 { margin:4px 0 2px; font-size:28px; line-height:1.05; }
+  .hero p { margin:0; color:var(--muted); font-size:13px; }
+  .hero-badge {
+    border:1px solid var(--line-strong);
+    background:rgba(255,255,255,.04);
+    color:#d9e7ff;
+    padding:10px 14px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+
+  #login-screen, #confirm-screen, #setup-screen {
+    max-width:460px; margin:40px auto 0; padding:28px;
+  }
+  .auth-title { margin:0 0 6px; font-size:28px; font-weight:900; }
+  .auth-sub { margin:0 0 22px; color:var(--muted); line-height:1.5; font-size:14px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  label { display:block; font-size:11px; color:var(--muted); margin:0 0 6px; text-transform:uppercase; letter-spacing:.12em; font-weight:700; }
+  input[type=text], input[type=password], textarea, select {
+    width:100%; padding:14px 14px; border-radius:14px; border:1px solid var(--line-strong);
+    background:rgba(255,255,255,.04); color:var(--text); outline:none; font-size:14px;
+    transition:.2s border-color,.2s background,.2s transform;
+    margin-bottom:14px;
+  }
+  input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus {
+    border-color:rgba(40,192,255,.75); background:rgba(255,255,255,.06);
+  }
+  textarea { resize:vertical; min-height:88px; }
+  .btn, .btn-main, .btn-login, .btn-create, .btn-resend, .btn-sw {
+    border:none; cursor:pointer; color:white; font-family:inherit;
+    transition:.18s transform,.18s opacity,.18s box-shadow,.18s background;
+    touch-action:manipulation;
+  }
+  .btn:active, .btn-main:active, .btn-login:active, .btn-create:active, .btn-resend:active, .btn-sw:active { transform:translateY(1px) scale(.995); }
+  .btn-login, .btn-create {
+    width:100%; padding:15px 16px; border-radius:14px; font-size:14px; font-weight:800;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow:0 12px 30px rgba(40,192,255,.18);
+  }
+  .btn-secondary {
+    width:100%; padding:15px 16px; border-radius:14px; font-size:14px; font-weight:800;
+    background:rgba(255,255,255,.05); color:#dbe7ff; border:1px solid var(--line-strong);
+    margin-top:10px;
+  }
+  #login-error, #setup-error, #resend-msg {
+    font-size:12px; margin-top:6px; text-align:center; display:none;
+  }
+  #login-error, #setup-error { color:#ff93a1; }
+  #resend-msg { color:#87f0bd; }
+  .confirm-icon {
+    width:72px; height:72px; border-radius:22px; margin:0 auto 16px;
+    background:linear-gradient(135deg, rgba(40,192,255,.18), rgba(90,124,255,.18));
+    border:1px solid rgba(40,192,255,.28);
+    display:flex; align-items:center; justify-content:center; font-size:34px;
+  }
+  .confirm-email-box {
+    background:rgba(255,255,255,.04); border:1px solid var(--line-strong); border-radius:14px;
+    padding:14px; font-size:14px; font-weight:700; margin:16px 0 18px; word-break:break-all;
+  }
+  .confirm-tip {
+    background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:14px;
+    color:var(--muted); font-size:12px; line-height:1.6; padding:12px 14px; margin-top:16px;
+  }
+  .btn-resend {
+    width:100%; padding:13px 16px; border-radius:14px; font-size:13px; font-weight:800;
+    background:rgba(255,255,255,.05); border:1px solid var(--line-strong); color:#dce7ff;
+  }
+
+  #main-panel { display:none; }
+  .topbar {
+    display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-bottom:18px;
+  }
+  .status-card, .workspace-card { padding:18px; }
+  .mini-label { font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); font-weight:800; margin-bottom:8px; }
+  #conn-status {
+    display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700;
+    padding:10px 14px; border-radius:999px; background:rgba(255,93,115,.1); color:#ff93a1; border:1px solid rgba(255,93,115,.25);
+  }
+  #conn-status.connected { background:rgba(25,195,125,.12); color:#87f0bd; border-color:rgba(25,195,125,.25); }
+  #workspace-info { color:var(--text); font-size:13px; word-break:break-all; line-height:1.6; }
+  #workspace-info a { color:var(--accent); text-decoration:none; font-weight:700; }
+
+  .action-grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px;
+  }
+  .btn-main {
+    padding:16px; border-radius:16px; font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.05em;
+  }
+  .btn-take { background:linear-gradient(135deg, #1da9ff, #476cff); }
+  .btn-all { background:linear-gradient(135deg, #f6b73c, #ff8a3d); }
+  .btn-off { background:linear-gradient(135deg, #ff647b, #d83b57); }
+  .btn-reset { background:linear-gradient(135deg, #7a5cff, #5b3df5); }
+
+  .layout {
+    display:grid; grid-template-columns:320px 1fr; gap:18px;
+  }
+  .sidebar, .editor { padding:18px; }
+  .section-title { margin:0 0 14px; font-size:16px; font-weight:800; }
+  .section-sub { margin:-6px 0 16px; color:var(--muted); font-size:12px; line-height:1.5; }
+  .sw-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+  .sw-item {
+    background:rgba(255,255,255,.04); border:1px solid var(--line); padding:12px 14px; border-radius:16px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .sw-item strong { display:block; font-size:13px; }
+  .sw-item span { display:block; font-size:11px; color:var(--muted); margin-top:3px; }
+  .btn-sw {
+    min-width:68px; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:900;
+    background:rgba(255,255,255,.08); color:#dfe9ff; border:1px solid var(--line-strong);
+  }
+
+  .tabs {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px;
+    background:rgba(255,255,255,.03); border:1px solid var(--line); padding:8px; border-radius:18px;
+  }
+  .tab {
+    text-align:center; padding:12px 10px; cursor:pointer; font-size:12px; font-weight:800; border-radius:12px; color:var(--muted);
+  }
+  .tab.active { background:linear-gradient(135deg, rgba(40,192,255,.18), rgba(90,124,255,.18)); color:#e9f4ff; border:1px solid rgba(40,192,255,.22); }
+  .tab-content {
+    display:none; background:rgba(255,255,255,.03); border:1px solid var(--line); padding:18px; border-radius:18px;
+  }
   .tab-content.active { display:block; }
-  label { display:block; font-size:10px; color:#8b949e; margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px; }
-  input[type=text], input[type=password], textarea, select { width:100%; padding:10px; background:#0d1117; border:1px solid #30364d; color:white; border-radius:6px; font-size:14px; margin-bottom:12px; outline:none; }
-  input[type=text]:focus, textarea:focus, select:focus { border-color:var(--accent); }
-  textarea { resize:vertical; min-height:60px; }
-  input[type=range] { width:100%; margin-bottom:12px; accent-color:var(--accent); height:6px; }
-  .speed-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
-  .speed-val { font-size:12px; color:var(--accent); font-weight:bold; }
-  .color-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
-  input[type=color] { width:100%; height:42px; padding:2px; border-radius:6px; border:1px solid #30364d; background:#0d1117; cursor:pointer; }
-  .toggle-row { display:flex; align-items:center; gap:10px; padding:10px; background:#0d1117; border-radius:6px; margin-bottom:12px; cursor:pointer; }
+  .inline-card {
+    background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:14px;
+  }
+  .speed-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .speed-val { font-size:13px; color:var(--accent); font-weight:800; }
+  input[type=range] { width:100%; margin-bottom:14px; accent-color:var(--accent); }
+  .color-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  input[type=color] { width:100%; height:48px; padding:4px; border-radius:14px; border:1px solid var(--line-strong); background:rgba(255,255,255,.04); cursor:pointer; }
+  .toggle-row {
+    display:flex; align-items:center; gap:10px; padding:14px; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:16px; margin-bottom:14px; cursor:pointer;
+  }
   .toggle-row input { width:18px; height:18px; accent-color:var(--accent); }
-  .toggle-row span { font-size:12px; font-weight:600; }
-  .preset-actions { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:10px; }
-  .preset-actions button { padding:10px; font-size:11px; border-radius:6px; border:none; cursor:pointer; font-weight:bold; color:white; touch-action:manipulation; }
-  .btn-export { background:#1f6feb; } .btn-import { background:#388bfd; }
-  .preset-list { display:flex; flex-direction:column; gap:4px; max-height:200px; overflow-y:auto; }
-  .p-item { background:#0d1117; padding:10px; border-radius:6px; font-size:12px; cursor:pointer; border:1px solid #30364d; display:flex; justify-content:space-between; align-items:center; }
-  .p-del { color:#f85149; font-size:16px; padding:0 4px; }
+  .toggle-row span { font-size:13px; font-weight:700; }
+  .preset-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  .preset-actions button {
+    padding:13px 14px; font-size:12px; border-radius:14px; border:1px solid var(--line-strong); cursor:pointer; font-weight:800; color:white;
+    background:rgba(255,255,255,.05);
+  }
+  .preset-list { display:flex; flex-direction:column; gap:8px; max-height:300px; overflow:auto; }
+  .p-item {
+    background:rgba(255,255,255,.04); padding:14px; border-radius:16px; font-size:13px; cursor:pointer; border:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .p-item small { display:block; color:var(--muted); margin-top:3px; }
+  .p-del { color:#ff93a1; font-size:18px; padding:0 4px; }
 
-  /* LOGIN */
-  #login-screen { max-width:360px; margin:40px auto; padding:24px; background:var(--card); border-radius:12px; border:1px solid #30364d; }
-  #login-screen h2 { margin:0 0 20px; font-size:18px; color:var(--accent); text-align:center; }
-  .btn-login { width:100%; padding:14px; background:var(--take); border:none; border-radius:8px; color:white; font-size:14px; font-weight:900; cursor:pointer; margin-top:4px; }
-  #login-error { color:#f85149; font-size:12px; margin-top:8px; text-align:center; display:none; }
-
-  /* CONFIRMAÇÃO DE E-MAIL */
-  #confirm-screen { max-width:360px; margin:40px auto; padding:28px 24px; background:var(--card); border-radius:12px; border:1px solid #30364d; text-align:center; display:none; }
-  #confirm-screen .confirm-icon { font-size:48px; margin-bottom:12px; }
-  #confirm-screen h2 { margin:0 0 10px; font-size:18px; color:var(--accent); }
-  #confirm-screen p { font-size:13px; color:#8b949e; margin:0 0 20px; line-height:1.6; }
-  #confirm-screen .confirm-email-box { background:#0d1117; border:1px solid #30364d; border-radius:8px; padding:10px 14px; font-size:13px; color:white; font-weight:700; margin-bottom:20px; word-break:break-all; }
-  .btn-resend { width:100%; padding:12px; background:#30364d; border:none; border-radius:8px; color:#c9d1d9; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:8px; }
-  .btn-resend:active { background:#444d5c; }
-  #resend-msg { font-size:11px; color:#56d364; display:none; margin-top:4px; }
-  .confirm-tip { font-size:11px; color:#8b949e; margin-top:16px; padding:10px; background:#0d1117; border-radius:8px; line-height:1.5; }
-
-  /* SETUP */
-  #setup-screen { max-width:360px; margin:40px auto; padding:24px; background:var(--card); border-radius:12px; border:1px solid #30364d; display:none; }
-  #setup-screen h2 { margin:0 0 8px; font-size:16px; color:var(--accent); }
-  #setup-screen p { font-size:12px; color:#8b949e; margin-bottom:16px; }
-  .btn-create { width:100%; padding:14px; background:var(--on); border:none; border-radius:8px; color:white; font-size:14px; font-weight:900; cursor:pointer; }
-  #setup-error { color:#f85149; font-size:12px; margin-top:8px; text-align:center; display:none; }
+  @media (max-width: 940px) {
+    .topbar, .layout { grid-template-columns:1fr; }
+  }
+  @media (max-width: 640px) {
+    body { padding:12px 12px calc(12px + var(--safe)) 12px; }
+    .hero { padding:16px; flex-direction:column; align-items:flex-start; }
+    h1 { font-size:22px; }
+    .action-grid { grid-template-columns:1fr; }
+    .tabs { grid-template-columns:repeat(2,1fr); }
+    .color-grid, .grid-2, .preset-actions { grid-template-columns:1fr; }
+  }
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
-<div id="login-screen">
-  <h2>🎬 PontoView Overlay</h2>
-  <label>E-mail</label>
-  <input type="text" id="login-email" placeholder="seu@email.com" autocomplete="email">
-  <label>Senha</label>
-  <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
-  <button class="btn-login" onclick="doLogin()">ENTRAR</button>
-  <button class="btn-login" style="background:#238636;margin-top:8px" onclick="doSignup()">CRIAR CONTA</button>
-  <p id="login-error"></p>
-</div>
-
-<!-- TELA DE CONFIRMAÇÃO DE E-MAIL -->
-<div id="confirm-screen">
-  <div class="confirm-icon">✉️</div>
-  <h2>Confirme seu e-mail</h2>
-  <p>Enviamos um link de confirmação para:</p>
-  <div class="confirm-email-box" id="confirm-email-display"></div>
-  <p>Clique no link recebido no e-mail para ativar sua conta. Depois, <strong>volte a esta página</strong> — o login será feito automaticamente.</p>
-  <button class="btn-resend" onclick="resendEmail()">🔄 Reenviar e-mail</button>
-  <div id="resend-msg">✔ E-mail reenviado!</div>
-  <div class="confirm-tip">⚠️ Não encontrou o e-mail? Verifique a pasta de <strong>spam</strong> ou <strong>lixo eletrônico</strong>.</div>
-  <button class="btn-resend" style="margin-top:12px;color:var(--accent)" onclick="backToLogin()">← Voltar ao login</button>
-</div>
-
-<!-- SETUP WORKSPACE -->
-<div id="setup-screen">
-  <h2>🆕 Criar seu Workspace</h2>
-  <p>Escolha um slug único para sua URL do overlay.</p>
-  <label>Nome do Workspace</label>
-  <input type="text" id="setup-name" placeholder="Ex: TV Colatina">
-  <label>Slug (somente letras, números e -)</label>
-  <input type="text" id="setup-slug" placeholder="Ex: tv-colatina">
-  <button class="btn-create" onclick="createWorkspace()">CRIAR WORKSPACE</button>
-  <p id="setup-error"></p>
-</div>
-
-<!-- PAINEL PRINCIPAL -->
-<div id="main-panel" style="display:none">
-  <div id="conn-status">⚠ Conectando...</div>
-  <div id="workspace-info"></div>
-  <div class="master-group">
-    <button class="btn-main btn-take" onclick="pushUpdate()">ATUALIZAR GC</button>
-    <button class="btn-main btn-all"  onclick="activateAll()">ATIVAR TUDO</button>
-    <button class="btn-main btn-off"  onclick="clearAll()">LIMPAR TELA</button>
-  </div>
-  <div id="sw-list" class="sw-grid"></div>
-  <div class="tabs">
-    <div class="tab active" onclick="openTab(event,'t-gc')">GC</div>
-    <div class="tab"        onclick="openTab(event,'t-ticker')">TICKER</div>
-    <div class="tab"        onclick="openTab(event,'t-design')">ESTILO</div>
-    <div class="tab"        onclick="openTab(event,'t-presets')">PRESETS</div>
-  </div>
-  <div id="t-gc" class="tab-content active">
-    <label>Tag</label><input type="text" id="in-tag" value="URGENTE">
-    <label>Manchete</label><textarea id="in-headline" rows="2">PONTOVIEW BROADCAST v1.0</textarea>
-    <label>Detalhe</label><input type="text" id="in-detail" value="">
-    <button class="btn-main" style="background:var(--on);width:100%" onclick="savePreset()">💾 SALVAR PRESET</button>
-  </div>
-  <div id="t-ticker" class="tab-content">
-    <div class="speed-row"><label style="margin:0">Velocidade</label><span class="speed-val" id="speed-display">100</span></div>
-    <input type="range" id="in-speed" min="40" max="300" value="100" oninput="document.getElementById('speed-display').innerText=this.value">
-    <label>Texto do Rodapé</label>
-    <textarea id="in-ticker" rows="3">+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++ COLATINA - ES +++</textarea>
-  </div>
-  <div id="t-design" class="tab-content">
-    <div class="color-grid">
-      <div class="color-item"><label>Fundo Tema</label><input type="color" id="c-bg" value="#003366"></div>
-      <div class="color-item"><label>Cor Texto</label><input type="color" id="c-txt" value="#ffffff"></div>
+<div class="shell">
+  <div class="hero panel">
+    <div class="brand-row">
+      <div class="brand-mark">PV</div>
+      <div>
+        <div class="eyebrow">Broadcast Control</div>
+        <h1>PontoView Studio</h1>
+        <p>Painel profissional para controlar overlays em tempo real.</p>
+      </div>
     </div>
-    <label class="toggle-row" for="in-show-time"><input type="checkbox" id="in-show-time" checked><span>Exibir Relógio na Logo</span></label>
-    <label>Modo da Logo</label>
-    <select id="logo-mode" onchange="toggleLogoFields()">
-      <option value="text">Texto</option><option value="url">Link (URL)</option><option value="file">Arquivo Local</option>
-    </select>
-    <input type="text" id="in-logo-text" value="PONTO VIEW">
-    <input type="text" id="in-logo-url" style="display:none" placeholder="https://...">
-    <input type="file" id="in-logo-file" style="display:none" accept="image/*">
-    <button class="btn-main btn-reset" style="width:100%;margin-top:4px" onclick="resetConfig()">⟳ RESETAR CONFIGURAÇÕES</button>
+    <div class="hero-badge">Realtime · Mobile Ready · Supabase</div>
   </div>
-  <div id="t-presets" class="tab-content">
-    <div class="preset-actions">
-      <button class="btn-export" onclick="exportPresets()">⬇ EXPORTAR</button>
-      <button class="btn-import" onclick="document.getElementById('import-file').click()">⬆ IMPORTAR</button>
+
+  <div id="login-screen" class="panel">
+    <div class="eyebrow">Acesso seguro</div>
+    <h2 class="auth-title">Entrar no painel</h2>
+    <p class="auth-sub">Gerencie seu overlay, sua identidade visual e seus presets em uma interface mais limpa e profissional.</p>
+    <label>E-mail</label>
+    <input type="text" id="login-email" placeholder="voce@empresa.com" autocomplete="email">
+    <label>Senha</label>
+    <input type="password" id="login-pass" placeholder="Digite sua senha" autocomplete="current-password">
+    <button class="btn-login" onclick="doLogin()">Entrar</button>
+    <button class="btn-secondary btn" onclick="doSignup()">Criar conta</button>
+    <p id="login-error"></p>
+  </div>
+
+  <div id="confirm-screen" class="panel" style="display:none">
+    <div class="confirm-icon">✉️</div>
+    <div class="eyebrow" style="text-align:center">Confirmação</div>
+    <h2 class="auth-title" style="text-align:center">Ative seu acesso</h2>
+    <p class="auth-sub" style="text-align:center">Enviamos um link de confirmação para o e-mail abaixo. Depois de clicar no link, volte para esta página.</p>
+    <div class="confirm-email-box" id="confirm-email-display"></div>
+    <button class="btn-resend" onclick="resendEmail()">Reenviar e-mail</button>
+    <div id="resend-msg">✔ E-mail reenviado com sucesso.</div>
+    <div class="confirm-tip">Quando a confirmação for concluída, o painel detecta sua sessão automaticamente. Se não encontrar o e-mail, verifique spam ou promoções.</div>
+    <button class="btn-secondary btn" onclick="backToLogin()">Voltar ao login</button>
+  </div>
+
+  <div id="setup-screen" class="panel" style="display:none">
+    <div class="eyebrow">Primeiro acesso</div>
+    <h2 class="auth-title">Criar workspace</h2>
+    <p class="auth-sub">Seu workspace organiza o overlay, a URL pública e os presets do cliente.</p>
+    <label>Nome do workspace</label>
+    <input type="text" id="setup-name" placeholder="Ex: PontoView Colatina">
+    <label>Slug da URL</label>
+    <input type="text" id="setup-slug" placeholder="Ex: pontoview-colatina">
+    <button class="btn-create" onclick="createWorkspace()">Criar workspace</button>
+    <p id="setup-error"></p>
+  </div>
+
+  <div id="main-panel">
+    <div class="topbar">
+      <div class="status-card panel">
+        <div class="mini-label">Status do overlay</div>
+        <div id="conn-status">● Aguardando conexão</div>
+      </div>
+      <div class="workspace-card panel">
+        <div class="mini-label">URL do overlay</div>
+        <div id="workspace-info"></div>
+      </div>
     </div>
-    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importPresets(event)">
-    <div class="preset-list" id="preset-list"></div>
+
+    <div class="action-grid">
+      <button class="btn-main btn-take" onclick="pushUpdate()">Atualizar GC</button>
+      <button class="btn-main btn-all" onclick="activateAll()">Ativar tudo</button>
+      <button class="btn-main btn-off" onclick="clearAll()">Limpar tela</button>
+    </div>
+
+    <div class="layout">
+      <div class="sidebar panel">
+        <h3 class="section-title">Controles rápidos</h3>
+        <p class="section-sub">Ligue ou desligue cada bloco do overlay de forma independente.</p>
+        <div id="sw-list" class="sw-grid"></div>
+      </div>
+
+      <div class="editor panel">
+        <h3 class="section-title">Editor de overlay</h3>
+        <p class="section-sub">Ajuste conteúdo, ticker, identidade visual e presets sem sair do painel.</p>
+
+        <div class="tabs">
+          <div class="tab active" onclick="openTab(event,'t-gc')">GC</div>
+          <div class="tab" onclick="openTab(event,'t-ticker')">Ticker</div>
+          <div class="tab" onclick="openTab(event,'t-design')">Estilo</div>
+          <div class="tab" onclick="openTab(event,'t-presets')">Presets</div>
+        </div>
+
+        <div id="t-gc" class="tab-content active">
+          <div class="inline-card">
+            <label>Tag</label>
+            <input type="text" id="in-tag" value="URGENTE">
+            <label>Manchete</label>
+            <textarea id="in-headline" rows="2">PONTOVIEW BROADCAST v1.0</textarea>
+            <label>Detalhe</label>
+            <input type="text" id="in-detail" value="">
+          </div>
+          <button class="btn-main" style="width:100%;background:linear-gradient(135deg,var(--success),#0ea76d)" onclick="savePreset()">Salvar preset atual</button>
+        </div>
+
+        <div id="t-ticker" class="tab-content">
+          <div class="inline-card">
+            <div class="speed-row"><label style="margin:0">Velocidade</label><span class="speed-val" id="speed-display">100</span></div>
+            <input type="range" id="in-speed" min="40" max="300" value="100" oninput="document.getElementById('speed-display').innerText=this.value">
+            <label>Texto do rodapé</label>
+            <textarea id="in-ticker" rows="3">+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++ COLATINA - ES +++</textarea>
+          </div>
+        </div>
+
+        <div id="t-design" class="tab-content">
+          <div class="inline-card">
+            <div class="color-grid">
+              <div><label>Fundo tema</label><input type="color" id="c-bg" value="#003366"></div>
+              <div><label>Cor do texto</label><input type="color" id="c-txt" value="#ffffff"></div>
+            </div>
+            <label class="toggle-row" for="in-show-time"><input type="checkbox" id="in-show-time" checked><span>Exibir relógio junto da marca</span></label>
+            <label>Modo da logo</label>
+            <select id="logo-mode" onchange="toggleLogoFields()">
+              <option value="text">Texto</option>
+              <option value="url">Link (URL)</option>
+              <option value="file">Arquivo local</option>
+            </select>
+            <input type="text" id="in-logo-text" value="PONTO VIEW" placeholder="Texto da logo">
+            <input type="text" id="in-logo-url" style="display:none" placeholder="https://...">
+            <input type="file" id="in-logo-file" style="display:none" accept="image/*">
+          </div>
+          <button class="btn-main btn-reset" style="width:100%" onclick="resetConfig()">Resetar configurações</button>
+        </div>
+
+        <div id="t-presets" class="tab-content">
+          <div class="preset-actions">
+            <button onclick="exportPresets()">Exportar presets</button>
+            <button onclick="document.getElementById('import-file').click()">Importar presets</button>
+          </div>
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="importPresets(event)">
+          <div class="preset-list" id="preset-list"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -168,129 +379,88 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null, workspaceId = null, workspaceSlug = null;
 let states = { live:false, side:false, tag:false, headline:false, ticker:false };
 let pendingEmail = null;
-
-function hideAll() {
-  ['login-screen','confirm-screen','setup-screen','main-panel']
-    .forEach(id => document.getElementById(id).style.display = 'none');
-}
-
-// ─── AUTH ──────────────────────────────────────────────────
+function hideAll() { ['login-screen','confirm-screen','setup-screen','main-panel'].forEach(id => document.getElementById(id).style.display = 'none'); }
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
   const { error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error) {
-    // Erro de e-mail não confirmado — orienta o usuário
     if (error.message.includes('Email not confirmed') || error.message.includes('email_not_confirmed')) {
-      pendingEmail = email;
-      showConfirmScreen(email);
-      return;
+      pendingEmail = email; showConfirmScreen(email); return;
     }
-    showLoginError(error.message);
-    return;
+    showLoginError(error.message); return;
   }
   afterLogin();
 }
-
 async function doSignup() {
   const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
   if (!email || !pass) { showLoginError('Preencha e-mail e senha.'); return; }
-  if (pass.length < 6)  { showLoginError('A senha deve ter pelo menos 6 caracteres.'); return; }
+  if (pass.length < 6) { showLoginError('A senha deve ter pelo menos 6 caracteres.'); return; }
   const { error } = await sb.auth.signUp({ email, password: pass });
   if (error) { showLoginError(error.message); return; }
-  // Signup OK → mostrar tela de confirmação
-  pendingEmail = email;
-  showConfirmScreen(email);
+  pendingEmail = email; showConfirmScreen(email);
 }
-
 function showLoginError(msg) {
   const el = document.getElementById('login-error');
-  const msgs = {
-    'Invalid login credentials': 'E-mail ou senha incorretos.',
-    'Email not confirmed': 'E-mail não confirmado. Verifique sua caixa de entrada.',
-  };
-  el.textContent = msgs[msg] || msg;
-  el.style.display = 'block';
+  const msgs = { 'Invalid login credentials':'E-mail ou senha incorretos.', 'Email not confirmed':'E-mail não confirmado. Verifique sua caixa de entrada.' };
+  el.textContent = msgs[msg] || msg; el.style.display = 'block';
 }
-
-function showConfirmScreen(email) {
-  hideAll();
-  document.getElementById('confirm-email-display').textContent = email;
-  document.getElementById('confirm-screen').style.display = 'block';
-}
-
-function backToLogin() {
-  hideAll();
-  document.getElementById('login-screen').style.display = 'block';
-}
-
+function showConfirmScreen(email) { hideAll(); document.getElementById('confirm-email-display').textContent = email; document.getElementById('confirm-screen').style.display = 'block'; }
+function backToLogin() { hideAll(); document.getElementById('login-screen').style.display = 'block'; }
 async function resendEmail() {
   const email = pendingEmail || document.getElementById('confirm-email-display').textContent;
   await sb.auth.resend({ type: 'signup', email });
-  const msg = document.getElementById('resend-msg');
-  msg.style.display = 'block';
-  setTimeout(() => msg.style.display = 'none', 4000);
+  const msg = document.getElementById('resend-msg'); msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 4000);
 }
-
 async function afterLogin() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
-  currentUser = user;
-  hideAll();
+  currentUser = user; hideAll();
   const { data: ws } = await sb.from('workspaces').select('*').eq('user_id', user.id).single();
   if (ws) { workspaceId = ws.id; workspaceSlug = ws.slug; showMainPanel(); }
   else { document.getElementById('setup-screen').style.display = 'block'; }
 }
-
-// ─── SUPABASE AUTH LISTENER ────────────────────────────────
-// Detecta quando o usuário confirma o e-mail e retorna à página
 sb.auth.onAuthStateChange((event, session) => {
   if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
-    // Se veio de uma confirmação de e-mail (tela de confirmação visível)
     const confirmVisible = document.getElementById('confirm-screen').style.display !== 'none';
     const loginVisible   = document.getElementById('login-screen').style.display !== 'none';
-    if (confirmVisible || loginVisible) {
-      currentUser = session.user;
-      afterLogin();
-    }
+    if (confirmVisible || loginVisible) { currentUser = session.user; afterLogin(); }
   }
 });
-
-// ─── SETUP WORKSPACE ──────────────────────────────────────
 async function createWorkspace() {
   const name = document.getElementById('setup-name').value.trim();
   const slug = document.getElementById('setup-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
   if (!name || !slug) { showSetupError('Preencha nome e slug.'); return; }
-  const { data: ws, error } = await sb.from('workspaces')
-    .insert({ user_id: currentUser.id, name, slug, plan:'free' }).select().single();
+  const { data: ws, error } = await sb.from('workspaces').insert({ user_id: currentUser.id, name, slug, plan:'free' }).select().single();
   if (error) { showSetupError(error.message); return; }
   await sb.from('overlay_state').insert({ workspace_id: ws.id });
-  workspaceId = ws.id; workspaceSlug = ws.slug;
-  hideAll();
-  showMainPanel();
+  workspaceId = ws.id; workspaceSlug = ws.slug; hideAll(); showMainPanel();
 }
 function showSetupError(msg) { const el = document.getElementById('setup-error'); el.textContent = msg; el.style.display = 'block'; }
-
-// ─── PAINEL PRINCIPAL ──────────────────────────────────────
 function showMainPanel() {
   document.getElementById('main-panel').style.display = 'block';
   const overlayUrl = `${location.origin}${location.pathname.replace('control.html','')}overlay.html?w=${workspaceSlug}`;
-  document.getElementById('workspace-info').innerHTML =
-    `🔗 URL do Overlay: <a href="${overlayUrl}" target="_blank">${overlayUrl}</a>`;
-  buildSwitches(); loadPresetsFromDB(); subscribeToConnection();
-  setTimeout(() => pushUpdate(), 600);
+  document.getElementById('workspace-info').innerHTML = `<a href="${overlayUrl}" target="_blank">${overlayUrl}</a>`;
+  buildSwitches(); loadPresetsFromDB(); subscribeToConnection(); setTimeout(() => pushUpdate(), 600);
 }
 function buildSwitches() {
-  const names = { live:'AO VIVO', side:'LOGO/HORA', tag:'TAG', headline:'GC', ticker:'TICKER' };
+  const names = {
+    live:{title:'Ao vivo',desc:'Selo de transmissão'},
+    side:{title:'Marca/Hora',desc:'Logo e relógio lateral'},
+    tag:{title:'Tag',desc:'Faixa superior'},
+    headline:{title:'GC',desc:'Manchete principal'},
+    ticker:{title:'Ticker',desc:'Rodapé rolante'}
+  };
   document.getElementById('sw-list').innerHTML = Object.keys(states).map(k =>
-    `<div class="sw-item"><span class="sw-label">${names[k]}</span><button id="sw-${k}" class="btn-sw" style="background:#444;color:white" onclick="toggle('${k}')">OFF</button></div>`
+    `<div class="sw-item"><div><strong>${names[k].title}</strong><span>${names[k].desc}</span></div><button id="sw-${k}" class="btn-sw" onclick="toggle('${k}')">OFF</button></div>`
   ).join('');
+  updateSwitchUI();
 }
 function subscribeToConnection() {
   sb.channel('ctrl_' + workspaceId).on('broadcast', { event: 'ping' }, () => {
-    document.getElementById('conn-status').textContent = '✔ Overlay conectado';
-    document.getElementById('conn-status').classList.add('connected');
+    const el = document.getElementById('conn-status');
+    el.textContent = '● Overlay conectado'; el.classList.add('connected');
   }).subscribe();
 }
 function toggle(k) { states[k] = !states[k]; updateSwitchUI(); pushUpdate(); }
@@ -298,8 +468,11 @@ function clearAll() { Object.keys(states).forEach(k => states[k] = false); updat
 async function activateAll() { Object.keys(states).forEach(k => states[k] = true); updateSwitchUI(); await pushUpdate(); }
 function updateSwitchUI() {
   Object.keys(states).forEach(k => {
-    const b = document.getElementById(`sw-${k}`);
-    if (b) { b.innerText = states[k] ? 'ON' : 'OFF'; b.style.background = states[k] ? 'var(--on)' : '#444'; }
+    const b = document.getElementById(`sw-${k}`); if (!b) return;
+    b.innerText = states[k] ? 'ON' : 'OFF';
+    b.style.background = states[k] ? 'linear-gradient(135deg, #19c37d, #0ea76d)' : 'rgba(255,255,255,.08)';
+    b.style.border = states[k] ? 'none' : '1px solid rgba(255,255,255,.12)';
+    b.style.color = states[k] ? '#fff' : '#dfe9ff';
   });
 }
 function toggleLogoFields() {
@@ -311,9 +484,9 @@ function toggleLogoFields() {
 async function getLogo() {
   const m = document.getElementById('logo-mode').value;
   if (m==='text') return { type:'text', val: document.getElementById('in-logo-text').value };
-  if (m==='url')  return { type:'img',  val: document.getElementById('in-logo-url').value };
+  if (m==='url') return { type:'img', val: document.getElementById('in-logo-url').value };
   const f = document.getElementById('in-logo-file').files[0];
-  if (f) return new Promise(r => { const rd = new FileReader(); rd.onload = e => r({ type:'img', val: e.target.result }); rd.readAsDataURL(f); });
+  if (f) return new Promise(r => { const rd = new FileReader(); rd.onload = e => r({ type:'img', val:e.target.result }); rd.readAsDataURL(f); });
   return { type:'text', val:'PONTO VIEW' };
 }
 async function pushUpdate() {
@@ -324,16 +497,22 @@ async function pushUpdate() {
     data: { tag: document.getElementById('in-tag').value, headline: document.getElementById('in-headline').value, detail: document.getElementById('in-detail').value, ticker: document.getElementById('in-ticker').value, speed: parseInt(document.getElementById('in-speed').value) },
     colors: { bg: document.getElementById('c-bg').value, txt: document.getElementById('c-txt').value },
     logo, show_time: document.getElementById('in-show-time').checked, updated_at: new Date().toISOString()
-  }, { onConflict: 'workspace_id' });
+  }, { onConflict:'workspace_id' });
 }
 function resetConfig() {
   if (!confirm('Resetar para o padrão?')) return;
-  document.getElementById('c-bg').value = '#003366'; document.getElementById('c-txt').value = '#ffffff';
-  document.getElementById('in-tag').value = 'URGENTE'; document.getElementById('in-headline').value = 'PONTOVIEW BROADCAST v1.0';
-  document.getElementById('in-detail').value = ''; document.getElementById('in-ticker').value = '+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++';
-  document.getElementById('in-speed').value = '100'; document.getElementById('speed-display').innerText = '100';
-  document.getElementById('in-show-time').checked = true; document.getElementById('logo-mode').value = 'text';
-  document.getElementById('in-logo-text').value = 'PONTO VIEW'; toggleLogoFields(); clearAll();
+  document.getElementById('c-bg').value = '#003366';
+  document.getElementById('c-txt').value = '#ffffff';
+  document.getElementById('in-tag').value = 'URGENTE';
+  document.getElementById('in-headline').value = 'PONTOVIEW BROADCAST v1.0';
+  document.getElementById('in-detail').value = '';
+  document.getElementById('in-ticker').value = '+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++';
+  document.getElementById('in-speed').value = '100';
+  document.getElementById('speed-display').innerText = '100';
+  document.getElementById('in-show-time').checked = true;
+  document.getElementById('logo-mode').value = 'text';
+  document.getElementById('in-logo-text').value = 'PONTO VIEW';
+  toggleLogoFields(); clearAll();
 }
 function openTab(e, id) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -341,19 +520,16 @@ function openTab(e, id) {
   document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
 }
 async function savePreset() {
-  const { data: list } = await sb.from('presets').select('id').eq('workspace_id', workspaceId).order('created_at', { ascending: true });
+  const { data:list } = await sb.from('presets').select('id').eq('workspace_id', workspaceId).order('created_at', { ascending:true });
   if (list && list.length >= 100) await sb.from('presets').delete().eq('id', list[0].id);
   await sb.from('presets').insert({ workspace_id: workspaceId, tag: document.getElementById('in-tag').value, headline: document.getElementById('in-headline').value, detail: document.getElementById('in-detail').value });
   loadPresetsFromDB();
 }
 async function loadPresetsFromDB() {
-  const { data } = await sb.from('presets').select('*').eq('workspace_id', workspaceId).order('created_at', { ascending: true });
+  const { data } = await sb.from('presets').select('*').eq('workspace_id', workspaceId).order('created_at', { ascending:true });
   if (!data) return;
   document.getElementById('preset-list').innerHTML = data.map(p =>
-    `<div class="p-item" onclick="applyPreset(${JSON.stringify(p.tag)},${JSON.stringify(p.headline)},${JSON.stringify(p.detail)})">
-      <span>${p.headline.substring(0,32)}...</span>
-      <span class="p-del" onclick="event.stopPropagation();deletePreset('${p.id}')">✕</span>
-    </div>`
+    `<div class="p-item" onclick="applyPreset(${JSON.stringify(p.tag)},${JSON.stringify(p.headline)},${JSON.stringify(p.detail)})"><div><strong>${p.headline.substring(0,44) || 'Sem título'}</strong><small>${p.tag || 'Sem tag'}</small></div><span class="p-del" onclick="event.stopPropagation();deletePreset('${p.id}')">✕</span></div>`
   ).join('');
 }
 function applyPreset(tag, headline, detail) {
@@ -374,20 +550,14 @@ function importPresets(event) {
   const reader = new FileReader();
   reader.onload = async e => {
     try {
-      const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data)) throw new Error();
+      const data = JSON.parse(e.target.result); if (!Array.isArray(data)) throw new Error();
       const rows = data.slice(-100).map(p => ({ workspace_id: workspaceId, tag: p.tag||'', headline: p.h||p.headline||'', detail: p.d||p.detail||'' }));
-      await sb.from('presets').insert(rows); loadPresetsFromDB();
-      alert(`✔ ${rows.length} presets importados.`);
+      await sb.from('presets').insert(rows); loadPresetsFromDB(); alert(`✔ ${rows.length} presets importados.`);
     } catch { alert('Arquivo JSON inválido.'); }
   };
   reader.readAsText(file); event.target.value = '';
 }
-
-// ─── INIT ──────────────────────────────────────────────────
-sb.auth.getSession().then(({ data: { session } }) => {
-  if (session) { currentUser = session.user; afterLogin(); }
-});
+sb.auth.getSession().then(({ data:{ session } }) => { if (session) { currentUser = session.user; afterLogin(); } });
 </script>
 </body>
 </html>
