@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PontoView Studio</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@400;700;900&family=Oswald:wght@400;700&family=Montserrat:wght@400;700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
@@ -43,7 +42,7 @@ body{
 .btn-logout{font-size:11px;font-weight:800;color:#ff93a1;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.2);padding:7px 14px;border-radius:999px;cursor:pointer;display:none;transition:.15s}
 .btn-logout:hover{background:rgba(255,93,115,.18)}
 
-/* LOGIN SaaS */
+/* LOGIN */
 .auth-page{min-height:calc(100dvh - 66px);display:flex;align-items:center;justify-content:center;padding:32px 18px}
 .auth-split{display:grid;grid-template-columns:1fr 1fr;max-width:900px;width:100%;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
 .auth-left{background:linear-gradient(145deg,rgba(40,192,255,.12),rgba(90,124,255,.18));border-right:1px solid var(--line);padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between}
@@ -139,12 +138,10 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 
 /* PRESETS */
 .preset-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;max-height:340px;overflow:auto}
-/* Wipe container: clip-path animado pelo GSAP */
 .p-card{
   background:rgba(255,255,255,.04);border:2px solid var(--line);
   border-radius:16px;padding:14px;cursor:pointer;
-  transition:.15s border-color,.15s background;position:relative;
-  clip-path:inset(0 100% 0 0); /* começa oculto, revelado por GSAP */
+  transition:.15s all;position:relative;
 }
 .p-card:hover{border-color:rgba(40,192,255,.4);background:rgba(40,192,255,.06)}
 .p-card.selected{border-color:var(--accent);background:rgba(40,192,255,.1);box-shadow:0 0 0 3px rgba(40,192,255,.15)}
@@ -185,18 +182,9 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
         <div class="auth-left-brand"><img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView"></div>
         <h1>Mídia indoor<br>no nível profissional</h1>
         <p>Controle GCs, tickers e identidade visual dos seus clientes em tempo real, direto do navegador.</p>
-        <div class="auth-feature">
-          <div class="auth-feature-icon">📡</div>
-          <div class="auth-feature-text"><strong>Transmissão em tempo real</strong><span>Alterações refletem no overlay instantaneamente</span></div>
-        </div>
-        <div class="auth-feature">
-          <div class="auth-feature-icon">🎨</div>
-          <div class="auth-feature-text"><strong>Identidade visual por cliente</strong><span>Cores, fontes e logos personalizados por workspace</span></div>
-        </div>
-        <div class="auth-feature">
-          <div class="auth-feature-icon">💾</div>
-          <div class="auth-feature-text"><strong>Presets completos</strong><span>Salve e acione layouts inteiros com um clique</span></div>
-        </div>
+        <div class="auth-feature"><div class="auth-feature-icon">📡</div><div class="auth-feature-text"><strong>Transmissão em tempo real</strong><span>Alterações refletem no overlay instantaneamente</span></div></div>
+        <div class="auth-feature"><div class="auth-feature-icon">🎨</div><div class="auth-feature-text"><strong>Identidade visual por cliente</strong><span>Cores, fontes e logos personalizados por workspace</span></div></div>
+        <div class="auth-feature"><div class="auth-feature-icon">💾</div><div class="auth-feature-text"><strong>Presets completos</strong><span>Salve e acione layouts inteiros com um clique</span></div></div>
       </div>
       <div class="auth-left-footer">© 2026 PontoView · Tecnologia em Mídia Indoor</div>
     </div>
@@ -571,6 +559,26 @@ async function pushUpdate(){
   },{onConflict:'workspace_id'});
   if(error)console.error('pushUpdate:',error.message);
 }
+// pushUpdate com flag preset_wipe=true para o overlay executar ciclo wipe out→in
+async function pushUpdateWithWipe(){
+  if(!workspaceId)return;
+  const logo=await getLogo();
+  const {error}=await sb.from('overlay_state').upsert({
+    workspace_id:workspaceId,states,
+    data:{tag:document.getElementById('in-tag').value,headline:document.getElementById('in-headline').value,detail:document.getElementById('in-detail').value,ticker:document.getElementById('in-ticker').value,speed:parseInt(document.getElementById('in-speed').value)},
+    colors:{bg:document.getElementById('c-bg').value,txt:document.getElementById('c-txt').value},
+    font_family:document.getElementById('in-font-family').value,
+    font_weight:document.getElementById('in-font-weight').value,
+    font_size:parseFloat(document.getElementById('in-font-size').value),
+    bar_opacity:parseFloat(document.getElementById('in-opacity').value),
+    logo,show_time:document.getElementById('in-show-time').checked,
+    preset_wipe:true,
+    updated_at:new Date().toISOString()
+  },{onConflict:'workspace_id'});
+  if(error)console.error('pushUpdateWithWipe:',error.message);
+  // Reseta a flag imediatamente para não travar em wipe permanentemente
+  setTimeout(()=>sb.from('overlay_state').update({preset_wipe:false}).eq('workspace_id',workspaceId),1200);
+}
 function resetConfig(){
   if(!confirm('Resetar para o padrão?'))return;
   document.getElementById('c-bg').value='#003366';document.getElementById('c-txt').value='#ffffff';
@@ -619,23 +627,14 @@ function renderPresetGrid(){
     grid.innerHTML='<div class="preset-empty" style="grid-column:1/-1">Nenhum preset salvo ainda.<br><small>Use a aba GC para salvar o primeiro.</small></div>';
     return;
   }
-  // Renderiza cards com clip-path fechado; GSAP anima a abertura (wipe da esquerda p/ direita)
   grid.innerHTML=presetsCache.map(p=>{
     const sel=p.id===selectedPresetId;
-    return `<div class="p-card${sel?' selected':''}" id="pcard-${p.id}" onclick="selectPreset('${p.id}')">
+    return `<div class="p-card${sel?' selected':''}" onclick="selectPreset('${p.id}')">
       <div class="p-card-title">${(p.headline||'Sem título').substring(0,60)}</div>
       <div class="p-card-tag">${p.tag||'Sem tag'}${p.colors?'<span class="p-badge">🎨</span>':''}</div>
       <span class="p-card-del" onclick="event.stopPropagation();deletePreset('${p.id}')">✕</span>
     </div>`;
   }).join('');
-  // Wipe de entrada: cada card abre com clip-path igual ao overlay
-  const cards=grid.querySelectorAll('.p-card');
-  gsap.to(cards,{
-    clipPath:'inset(0 0% 0 0)',
-    duration:0.55,
-    ease:'power3.inOut',
-    stagger:0.06
-  });
 }
 function selectPreset(id){selectedPresetId=id;renderPresetGrid();renderPresetBtn();}
 function renderPresetBtn(){
@@ -646,38 +645,23 @@ function applySelectedPreset(){
   if(!selectedPresetId)return;
   const p=presetsCache.find(x=>x.id===selectedPresetId);
   if(!p)return;
-  // Wipe de saída nos cards antes de aplicar e recarregar
-  const cards=document.querySelectorAll('#preset-list .p-card');
-  gsap.to(cards,{
-    clipPath:'inset(0 100% 0 0)',
-    duration:0.4,
-    ease:'power3.in',
-    stagger:0.04,
-    onComplete:()=>{
-      document.getElementById('in-tag').value=p.tag||'';
-      document.getElementById('in-headline').value=p.headline||'';
-      document.getElementById('in-detail').value=p.detail||'';
-      if(p.colors){document.getElementById('c-bg').value=p.colors.bg||'#003366';document.getElementById('c-txt').value=p.colors.txt||'#ffffff';}
-      if(p.font_family)document.getElementById('in-font-family').value=p.font_family;
-      if(p.font_weight)document.getElementById('in-font-weight').value=p.font_weight;
-      if(p.font_size!=null){document.getElementById('in-font-size').value=p.font_size;document.getElementById('font-size-display').innerText=p.font_size+'vw';}
-      if(p.bar_opacity!=null){document.getElementById('in-opacity').value=p.bar_opacity;document.getElementById('opacity-display').innerText=Math.round(p.bar_opacity*100)+'%';}
-      if(p.logo){
-        if(p.logo.type==='img'){document.getElementById('logo-mode').value='url';document.getElementById('in-logo-url').value=p.logo.val||'';}
-        else{document.getElementById('logo-mode').value='text';document.getElementById('in-logo-text').value=p.logo.val||'';}
-        toggleLogoFields();
-      }
-      pushUpdate();
-      // Re-renderiza com wipe de entrada
-      renderPresetGrid();
-    }
-  });
+  document.getElementById('in-tag').value=p.tag||'';
+  document.getElementById('in-headline').value=p.headline||'';
+  document.getElementById('in-detail').value=p.detail||'';
+  if(p.colors){document.getElementById('c-bg').value=p.colors.bg||'#003366';document.getElementById('c-txt').value=p.colors.txt||'#ffffff';}
+  if(p.font_family)document.getElementById('in-font-family').value=p.font_family;
+  if(p.font_weight)document.getElementById('in-font-weight').value=p.font_weight;
+  if(p.font_size!=null){document.getElementById('in-font-size').value=p.font_size;document.getElementById('font-size-display').innerText=p.font_size+'vw';}
+  if(p.bar_opacity!=null){document.getElementById('in-opacity').value=p.bar_opacity;document.getElementById('opacity-display').innerText=Math.round(p.bar_opacity*100)+'%';}
+  if(p.logo){
+    if(p.logo.type==='img'){document.getElementById('logo-mode').value='url';document.getElementById('in-logo-url').value=p.logo.val||'';}
+    else{document.getElementById('logo-mode').value='text';document.getElementById('in-logo-text').value=p.logo.val||'';}
+    toggleLogoFields();
+  }
+  // Envia com flag wipe para o overlay animar entrada/saída
+  pushUpdateWithWipe();
 }
 async function deletePreset(id){
-  const card=document.getElementById('pcard-'+id);
-  if(card){
-    await new Promise(resolve=>gsap.to(card,{clipPath:'inset(0 100% 0 0)',duration:0.35,ease:'power3.in',onComplete:resolve}));
-  }
   await sb.from('presets').delete().eq('id',id);
   if(selectedPresetId===id){selectedPresetId=null;renderPresetBtn();}
   presetsCache=presetsCache.filter(p=>p.id!==id);

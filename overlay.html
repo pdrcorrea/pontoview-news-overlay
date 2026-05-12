@@ -21,14 +21,12 @@
   #logo-area span{font-weight:900;color:#1a1a1a;font-size:1.2vw;text-align:center}
   #time-box{height:4vh;background:rgba(var(--tema-rgb),var(--opacity));color:var(--texto);font-weight:800;font-size:1.3vw;display:flex;align-items:center;justify-content:center}
   #news-content{flex:1;margin-left:2px;display:flex;flex-direction:column;overflow:hidden}
-  /* Manchete + detalhe em container flex; manchete expande quando detalhe está vazio */
   #headline-wrapper{background:white;color:#1a1a1a;padding:0 1.5vw;display:flex;align-items:center;flex:1;clip-path:inset(0 100% 0 0);border-right:0.8vw solid var(--tema);transition:flex .35s ease}
   #main-text{font-size:var(--font-size);font-weight:var(--font-weight);font-family:var(--font-family),sans-serif;text-transform:uppercase;line-height:1.1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
   #detail-box{background:rgba(var(--tema-rgb),var(--opacity));color:var(--texto);padding:0 1.5vw;font-size:1.3vw;display:flex;align-items:center;margin-top:2px;clip-path:inset(0 100% 0 0);height:0;overflow:hidden;transition:height .35s ease,opacity .3s ease;opacity:0}
   #detail-box.has-content{height:4vh;opacity:1}
   #ticker-wrap{width:99%;background:#000;height:4vh;overflow:hidden;display:flex;align-items:center;border-left:1vw solid var(--tema);clip-path:inset(0 100% 0 0);position:relative}
   #ticker-text{white-space:nowrap;color:white;font-size:1.2vw;font-weight:700;position:absolute;will-change:transform}
-  /* Animação de troca de conteúdo */
   .gc-fade-out{animation:gcOut .35s forwards}
   .gc-fade-in{animation:gcIn .45s forwards}
   @keyframes gcOut{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-12px)}}
@@ -88,7 +86,6 @@ function startTicker(){
   tickerTween=gsap.to(el,{x:-selfW,duration:(selfW+parentW)/tickerSpeed,ease:'none',repeat:-1});
 }
 
-// Anima saída + atualiza texto + anima entrada
 function animateContentChange(el,newText,cb){
   el.classList.remove('gc-fade-in');
   el.classList.add('gc-fade-out');
@@ -114,7 +111,63 @@ function updateDetail(text){
   });
 }
 
+// Elementos que recebem o wipe GSAP ao trocar preset
+const WIPE_TARGETS=['#live-label','#tag-top','#side-block','#headline-wrapper','#ticker-wrap'];
+
+// Executa ciclo wipe saída → troca conteúdo → wipe entrada nos elementos visíveis
+function wipeAndApply(applyFn){
+  const cfg={duration:0.55,ease:'power3.inOut'};
+  // Primeiro wipe de saída somente nos elementos que estão visíveis
+  const visibles=WIPE_TARGETS.filter(sel=>{
+    const el=document.querySelector(sel);
+    if(!el)return false;
+    // Elemento visível = clip-path já chegou em inset(0 0% 0 0)
+    const cp=el.style.clipPath||getComputedStyle(el).clipPath;
+    return cp.includes('inset(0 0%') || cp.includes('inset(0px 0%') || cp==='none' || cp==='';
+  });
+  if(visibles.length===0){
+    // Nenhum visível, só aplica e faz entrada
+    applyFn();
+    gsap.to(WIPE_TARGETS,{clipPath:'inset(0 0% 0 0)',...cfg,stagger:0.07});
+    return;
+  }
+  // Wipe out
+  gsap.to(visibles,{
+    clipPath:'inset(0 100% 0 0)',
+    duration:0.45,
+    ease:'power3.in',
+    stagger:0.05,
+    onComplete:()=>{
+      // Troca o conteúdo enquanto tudo está oculto
+      applyFn();
+      // Pequena pausa e então wipe in
+      setTimeout(()=>{
+        gsap.to(WIPE_TARGETS,{clipPath:'inset(0 0% 0 0)',...cfg,stagger:0.07});
+      },80);
+    }
+  });
+}
+
 function applyState(row){
+  const {states,data,colors,logo,show_time,font_family,font_weight,font_size,bar_opacity,preset_wipe}=row;
+
+  // Se vier com flag preset_wipe, executa ciclo wipe out→in
+  if(preset_wipe){
+    wipeAndApply(()=>_applyVisuals(row));
+    // Atualiza estados dos switches sem animar (conteúdo já trocado dentro do wipe)
+    if(states){
+      currentStates=states;
+      // Re-aplica clipPath correto após wipe in já cuidar de tudo
+    }
+    isFirstLoad=false;
+    return;
+  }
+
+  _applyVisuals(row);
+  isFirstLoad=false;
+}
+
+function _applyVisuals(row){
   const {states,data,colors,logo,show_time,font_family,font_weight,font_size,bar_opacity}=row;
   const root=document.documentElement;
   if(colors){
@@ -174,7 +227,6 @@ function applyState(row){
       }
     });
   }
-  isFirstLoad=false;
 }
 
 async function init(){
