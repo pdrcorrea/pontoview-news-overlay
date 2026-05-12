@@ -42,6 +42,18 @@ body{
 .btn-logout{font-size:11px;font-weight:800;color:#ff93a1;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.2);padding:7px 14px;border-radius:999px;cursor:pointer;display:none;transition:.15s}
 .btn-logout:hover{background:rgba(255,93,115,.18)}
 
+/* BANNER SESSÃO */
+#session-banner{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(7,17,31,.97);border-top:1px solid var(--line-strong);
+  padding:14px 24px;align-items:center;justify-content:space-between;gap:16px;
+  backdrop-filter:blur(20px);
+}
+#session-banner p{margin:0;font-size:12px;color:var(--muted);line-height:1.5;flex:1}
+#session-banner p strong{color:var(--text)}
+#session-banner a{color:var(--accent)}
+#session-banner button{white-space:nowrap;padding:9px 18px;border-radius:12px;font-size:12px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit}
+
 /* LOGIN */
 .auth-page{min-height:calc(100dvh - 66px);display:flex;align-items:center;justify-content:center;padding:32px 18px}
 .auth-split{display:grid;grid-template-columns:1fr 1fr;max-width:900px;width:100%;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
@@ -65,6 +77,10 @@ label{display:block;font-size:11px;color:var(--muted);margin:0 0 6px;text-transf
 .input-wrap{position:relative;margin-bottom:16px}
 .input-wrap input{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line-strong);background:rgba(255,255,255,.04);color:var(--text);outline:none;font-size:14px;transition:.2s border-color;font-family:inherit}
 .input-wrap input:focus{border-color:rgba(40,192,255,.75);background:rgba(40,192,255,.04)}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;cursor:pointer}
+.check-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;margin-top:2px}
+.check-row span{font-size:12px;color:var(--muted);line-height:1.5}
+.check-row a{color:var(--accent)}
 .btn-auth-primary{width:100%;padding:15px;border-radius:14px;font-size:14px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(40,192,255,.22);transition:.18s transform}
 .btn-auth-primary:active{transform:scale(.98)}
 #login-error,#setup-error{font-size:12px;margin-top:8px;text-align:center;display:none;color:#ff93a1;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.2);border-radius:10px;padding:10px}
@@ -138,11 +154,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 
 /* PRESETS */
 .preset-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;max-height:340px;overflow:auto}
-.p-card{
-  background:rgba(255,255,255,.04);border:2px solid var(--line);
-  border-radius:16px;padding:14px;cursor:pointer;
-  transition:.15s all;position:relative;
-}
+.p-card{background:rgba(255,255,255,.04);border:2px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;transition:.15s all;position:relative}
 .p-card:hover{border-color:rgba(40,192,255,.4);background:rgba(40,192,255,.06)}
 .p-card.selected{border-color:var(--accent);background:rgba(40,192,255,.1);box-shadow:0 0 0 3px rgba(40,192,255,.15)}
 .p-card-title{font-size:13px;font-weight:800;margin:0 0 4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -156,11 +168,24 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 .btn-apply-preset.ready{opacity:1;pointer-events:auto}
 .preset-empty{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
 
+/* ZONA DE PERIGO */
+.danger-zone{margin-top:28px;border:1px solid rgba(255,93,115,.25);border-radius:18px;padding:20px;background:rgba(255,93,115,.04)}
+.danger-zone h4{margin:0 0 6px;color:#ff93a1;font-size:14px;font-weight:800}
+.danger-zone p{margin:0 0 14px;color:var(--muted);font-size:12px;line-height:1.6}
+.btn-danger{width:100%;padding:13px;border-radius:14px;font-size:13px;font-weight:800;background:rgba(255,93,115,.1);border:1px solid rgba(255,93,115,.3);color:#ff93a1;cursor:pointer;font-family:inherit;transition:.15s}
+.btn-danger:hover{background:rgba(255,93,115,.2)}
+
 @media(max-width:940px){.layout{grid-template-columns:1fr}.auth-split{grid-template-columns:1fr}.auth-left{display:none}}
 @media(max-width:640px){.shell{padding:0 12px}.action-grid{grid-template-columns:1fr}.tabs{grid-template-columns:repeat(2,1fr)}.color-grid,.preset-actions-row{grid-template-columns:1fr}.topbar-nav{padding:0 16px}.preset-select-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+
+<!-- BANNER AVISO DE SESSÃO (LGPD/ANPD) -->
+<div id="session-banner">
+  <p><strong>🔒 Uso de armazenamento local</strong> — Este sistema utiliza <em>localStorage</em> exclusivamente para manter sua sessão autenticada ativa. Nenhum dado de rastreamento ou publicidade é coletado. <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a></p>
+  <button onclick="dismissSessionBanner()">Entendido</button>
+</div>
 
 <nav class="topbar-nav">
   <div class="brand-row">
@@ -186,7 +211,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
         <div class="auth-feature"><div class="auth-feature-icon">🎨</div><div class="auth-feature-text"><strong>Identidade visual por cliente</strong><span>Cores, fontes e logos personalizados por workspace</span></div></div>
         <div class="auth-feature"><div class="auth-feature-icon">💾</div><div class="auth-feature-text"><strong>Presets completos</strong><span>Salve e acione layouts inteiros com um clique</span></div></div>
       </div>
-      <div class="auth-left-footer">© 2026 PontoView · Tecnologia em Mídia Indoor</div>
+      <div class="auth-left-footer">© 2026 PontoView · Tecnologia em Mídia Indoor · <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank" style="color:var(--accent)">Privacidade</a></div>
     </div>
     <div class="auth-right">
       <p class="auth-form-sub" style="margin-bottom:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--accent)">Acesso seguro</p>
@@ -200,8 +225,20 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
       <div class="input-wrap"><input type="text" id="login-email" placeholder="voce@empresa.com" autocomplete="email"></div>
       <label>Senha</label>
       <div class="input-wrap"><input type="password" id="login-pass" placeholder="Mínimo 6 caracteres" autocomplete="current-password"></div>
+      <!-- Campos exclusivos do cadastro -->
+      <div id="signup-extra" style="display:none">
+        <label class="check-row" for="chk-age">
+          <input type="checkbox" id="chk-age">
+          <span>Declaro ter <strong>18 anos ou mais</strong> e capacidade civil plena para contratar serviços.</span>
+        </label>
+        <label class="check-row" for="chk-terms">
+          <input type="checkbox" id="chk-terms">
+          <span>Li e aceito os <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Termos de Uso e Política de Privacidade</a> do PontoView.</span>
+        </label>
+      </div>
       <button class="btn-auth-primary" id="btn-auth" onclick="doAuth()">Entrar</button>
       <p id="login-error"></p>
+      <p style="margin:14px 0 0;text-align:center;font-size:11px;color:var(--muted)">Ao entrar, você concorda com nossa <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank" style="color:var(--accent)">Política de Privacidade</a>.</p>
     </div>
   </div>
 </div>
@@ -259,6 +296,13 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
           <h3 class="section-title">Controles rápidos</h3>
           <p class="section-sub">Ligue ou desligue cada bloco independentemente.</p>
           <div id="sw-list" class="sw-grid"></div>
+
+          <!-- ZONA DE PERIGO -->
+          <div class="danger-zone">
+            <h4>⚠️ Zona de perigo</h4>
+            <p>A exclusão da conta remove permanentemente todos os seus dados, workspaces, presets e registros de acesso. Esta ação não pode ser desfeita.</p>
+            <button class="btn-danger" onclick="requestAccountDeletion()">🗑️ Excluir minha conta e dados</button>
+          </div>
         </div>
         <div class="editor panel">
           <h3 class="section-title">Editor de overlay</h3>
@@ -352,6 +396,30 @@ let pendingEmail=null,connChannel=null;
 let selectedPresetId=null,presetsCache=[];
 let authMode='login';
 
+// ── BANNER SESSÃO ──
+function dismissSessionBanner(){
+  localStorage.setItem('pv_session_notice','1');
+  document.getElementById('session-banner').style.display='none';
+}
+function checkSessionBanner(){
+  if(!localStorage.getItem('pv_session_notice')){
+    document.getElementById('session-banner').style.display='flex';
+  }
+}
+checkSessionBanner();
+
+// ── AUDIT LOG ──
+async function auditLog(event,detail={}){
+  try{
+    await sb.from('audit_logs').insert({
+      user_id:currentUser?.id||null,
+      workspace_id:workspaceId||null,
+      event,
+      detail
+    });
+  }catch(e){console.warn('auditLog:',e.message);}
+}
+
 function hideAll(){
   document.getElementById('login-page').style.display='none';
   document.getElementById('confirm-page').style.display='none';
@@ -369,6 +437,7 @@ function switchAuthTab(mode){
   authMode=mode;
   document.getElementById('tab-login').classList.toggle('active',mode==='login');
   document.getElementById('tab-signup').classList.toggle('active',mode==='signup');
+  document.getElementById('signup-extra').style.display=mode==='signup'?'block':'none';
   if(mode==='login'){
     document.getElementById('auth-form-title').textContent='Entrar no Studio';
     document.getElementById('auth-form-sub').textContent='Gerencie seus clientes e transmissões em tempo real.';
@@ -391,13 +460,15 @@ async function doLogin(){
     }
     showLoginError(error.message);return;
   }
-  afterLogin();
+  await afterLogin();
 }
 async function doSignup(){
   const email=document.getElementById('login-email').value.trim();
   const pass=document.getElementById('login-pass').value;
   if(!email||!pass){showLoginError('Preencha e-mail e senha.');return;}
   if(pass.length<6){showLoginError('A senha deve ter pelo menos 6 caracteres.');return;}
+  if(!document.getElementById('chk-age').checked){showLoginError('Você precisa declarar que tem 18 anos ou mais.');return;}
+  if(!document.getElementById('chk-terms').checked){showLoginError('Você precisa aceitar os Termos de Uso e Política de Privacidade.');return;}
   const {error}=await sb.auth.signUp({email,password:pass});
   if(error){showLoginError(error.message);return;}
   pendingEmail=email;showConfirmScreen(email);
@@ -418,10 +489,13 @@ async function resendEmail(){
 async function afterLogin(){
   const {data:{user}}=await sb.auth.getUser();
   if(!user)return;
-  currentUser=user;setLoggedIn(true);hideAll();showWsScreen();
+  currentUser=user;setLoggedIn(true);hideAll();
+  await auditLog('login',{email:user.email});
+  showWsScreen();
 }
 async function doLogout(){
   if(!confirm('Sair do PontoView Studio?'))return;
+  await auditLog('logout');
   if(connChannel){sb.removeChannel(connChannel);connChannel=null;}
   await sb.auth.signOut();
   currentUser=null;workspaceId=null;workspaceSlug=null;workspaceName=null;
@@ -435,6 +509,39 @@ async function doLogout(){
   document.getElementById('login-error').style.display='none';
   switchAuthTab('login');
 }
+
+// ── EXCLUSÃO DE CONTA (LGPD art. 18 VI) ──
+async function requestAccountDeletion(){
+  const confirm1=confirm('⚠️ Tem certeza que deseja excluir sua conta?\n\nTodos os seus workspaces, presets e dados serão removidos permanentemente. Esta ação não pode ser desfeita.');
+  if(!confirm1)return;
+  const input=prompt('Para confirmar, digite seu e-mail:');
+  if(!input||input.trim().toLowerCase()!==currentUser.email.toLowerCase()){
+    alert('E-mail incorreto. Exclusão cancelada.');return;
+  }
+  try{
+    await auditLog('account_deletion_requested',{email:currentUser.email});
+    // Remove dados em cascata
+    const {data:wsList}=await sb.from('workspaces').select('id').eq('user_id',currentUser.id);
+    if(wsList&&wsList.length>0){
+      const ids=wsList.map(w=>w.id);
+      await sb.from('presets').delete().in('workspace_id',ids);
+      await sb.from('overlay_state').delete().in('workspace_id',ids);
+      await sb.from('audit_logs').delete().in('workspace_id',ids);
+      await sb.from('workspaces').delete().eq('user_id',currentUser.id);
+    }
+    // Remove logs do próprio user sem workspace
+    await sb.from('audit_logs').delete().eq('user_id',currentUser.id);
+    await sb.auth.signOut();
+    alert('✔ Sua conta e todos os dados foram removidos. Obrigado por usar o PontoView.');
+    currentUser=null;workspaceId=null;setLoggedIn(false);setConnected(false);
+    hideAll();
+    document.getElementById('login-page').style.display='flex';
+    switchAuthTab('login');
+  }catch(e){
+    alert('Erro ao excluir conta: '+e.message+'\n\nEntre em contato: privacidade@pontoview.com.br');
+  }
+}
+
 sb.auth.onAuthStateChange((event,session)=>{
   if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED')&&session?.user){
     const confirmV=document.getElementById('confirm-page').style.display!=='none';
@@ -462,6 +569,7 @@ async function showWsScreen(){
 }
 function selectWorkspace(id,slug,nameEnc){
   workspaceId=id;workspaceSlug=slug;workspaceName=decodeURIComponent(nameEnc);
+  auditLog('workspace_selected',{workspace_id:id,slug});
   hideAll();showMainPanel();
 }
 async function createWorkspace(){
@@ -471,6 +579,7 @@ async function createWorkspace(){
   const {data:ws,error}=await sb.from('workspaces').insert({user_id:currentUser.id,name,slug,plan:'free'}).select().single();
   if(error){showSetupError(error.message.includes('duplicate')?'Esse slug já existe.':error.message);return;}
   await sb.from('overlay_state').insert({workspace_id:ws.id});
+  await auditLog('workspace_created',{workspace_id:ws.id,name,slug});
   document.getElementById('ws-name').value='';document.getElementById('ws-slug').value='';
   selectWorkspace(ws.id,ws.slug,encodeURIComponent(ws.name));
 }
@@ -559,7 +668,6 @@ async function pushUpdate(){
   },{onConflict:'workspace_id'});
   if(error)console.error('pushUpdate:',error.message);
 }
-// pushUpdate com flag preset_wipe=true para o overlay executar ciclo wipe out→in
 async function pushUpdateWithWipe(){
   if(!workspaceId)return;
   const logo=await getLogo();
@@ -576,7 +684,6 @@ async function pushUpdateWithWipe(){
     updated_at:new Date().toISOString()
   },{onConflict:'workspace_id'});
   if(error)console.error('pushUpdateWithWipe:',error.message);
-  // Reseta a flag imediatamente para não travar em wipe permanentemente
   setTimeout(()=>sb.from('overlay_state').update({preset_wipe:false}).eq('workspace_id',workspaceId),1200);
 }
 function resetConfig(){
@@ -613,6 +720,7 @@ async function savePreset(){
     font_size:parseFloat(document.getElementById('in-font-size').value),
     bar_opacity:parseFloat(document.getElementById('in-opacity').value)
   });
+  await auditLog('preset_saved',{headline:document.getElementById('in-headline').value});
   selectedPresetId=null;renderPresetBtn();
   loadPresetsFromDB();
 }
@@ -658,11 +766,12 @@ function applySelectedPreset(){
     else{document.getElementById('logo-mode').value='text';document.getElementById('in-logo-text').value=p.logo.val||'';}
     toggleLogoFields();
   }
-  // Envia com flag wipe para o overlay animar entrada/saída
+  auditLog('preset_applied',{preset_id:selectedPresetId,headline:p.headline});
   pushUpdateWithWipe();
 }
 async function deletePreset(id){
   await sb.from('presets').delete().eq('id',id);
+  await auditLog('preset_deleted',{preset_id:id});
   if(selectedPresetId===id){selectedPresetId=null;renderPresetBtn();}
   presetsCache=presetsCache.filter(p=>p.id!==id);
   renderPresetGrid();
@@ -678,7 +787,9 @@ function importPresets(event){
     try{
       const data=JSON.parse(e.target.result);if(!Array.isArray(data))throw new Error();
       const rows=data.slice(-100).map(p=>({workspace_id:workspaceId,tag:p.tag||'',headline:p.headline||'',detail:p.detail||'',colors:p.colors||null,logo:p.logo||null,font_family:p.font_family||null,font_weight:p.font_weight||null,font_size:p.font_size||null,bar_opacity:p.bar_opacity||null}));
-      await sb.from('presets').insert(rows);loadPresetsFromDB();alert(`✔ ${rows.length} presets importados.`);
+      await sb.from('presets').insert(rows);
+      await auditLog('presets_imported',{count:rows.length});
+      loadPresetsFromDB();alert(`✔ ${rows.length} presets importados.`);
     }catch{alert('Arquivo JSON inválido.');}
   };
   reader.readAsText(file);event.target.value='';
