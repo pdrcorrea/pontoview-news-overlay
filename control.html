@@ -7,22 +7,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@400;700;900&family=Oswald:wght@400;700&family=Montserrat:wght@400;700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#07111f;
-    --bg2:#0c1a2e;
-    --card:rgba(13,23,39,.78);
-    --line:rgba(255,255,255,.08);
-    --line-strong:rgba(255,255,255,.12);
-    --text:#ecf3ff;
-    --muted:#97a7c3;
-    --accent:#28c0ff;
-    --accent-2:#5a7cff;
-    --success:#19c37d;
-    --danger:#ff5d73;
-    --shadow:0 20px 60px rgba(0,0,0,.35);
-    --radius:18px;
+    --bg:#07111f; --bg2:#0c1a2e; --card:rgba(13,23,39,.78);
+    --line:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.12);
+    --text:#ecf3ff; --muted:#97a7c3; --accent:#28c0ff; --accent-2:#5a7cff;
+    --success:#19c37d; --danger:#ff5d73; --warn:#f6b73c;
+    --shadow:0 20px 60px rgba(0,0,0,.35); --radius:18px;
     --safe: env(safe-area-inset-bottom, 0px);
   }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -46,31 +38,37 @@
   }
   .brand-row { display:flex; align-items:center; gap:12px; }
   .brand-logo { height:34px; width:auto; display:block; }
-  .nav-badge {
-    font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--muted); background:rgba(255,255,255,.05); border:1px solid var(--line-strong);
-    padding:7px 14px; border-radius:999px;
-  }
+  .nav-badge { font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); background:rgba(255,255,255,.05); border:1px solid var(--line-strong); padding:7px 14px; border-radius:999px; }
   .nav-status { display:flex; align-items:center; gap:8px; }
-  #conn-dot {
-    width:8px; height:8px; border-radius:50%;
-    background:var(--danger); box-shadow:0 0 6px var(--danger); transition:.3s;
-  }
+  #conn-dot { width:8px; height:8px; border-radius:50%; background:var(--danger); box-shadow:0 0 6px var(--danger); transition:.3s; }
   #conn-dot.connected { background:var(--success); box-shadow:0 0 8px var(--success); }
   #conn-label { font-size:12px; font-weight:700; color:var(--muted); }
+
+  /* WORKSPACE SWITCHER */
+  #ws-screen { max-width:560px; margin:40px auto 0; padding:28px; }
+  .ws-list { display:flex; flex-direction:column; gap:10px; margin-bottom:18px; max-height:320px; overflow:auto; }
+  .ws-item {
+    background:rgba(255,255,255,.04); border:1px solid var(--line-strong); border-radius:16px;
+    padding:16px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+    transition:.15s background;
+  }
+  .ws-item:hover { background:rgba(40,192,255,.08); border-color:rgba(40,192,255,.3); }
+  .ws-item strong { display:block; font-size:14px; font-weight:800; }
+  .ws-item small { color:var(--muted); font-size:12px; }
+  .ws-item .ws-arrow { color:var(--accent); font-size:20px; }
+  .ws-new-form { background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:16px; padding:16px; }
 
   /* PÁGINA */
   .page-content { padding-top:22px; }
   .workspace-bar { display:flex; align-items:center; gap:10px; padding:13px 18px; margin-bottom:18px; }
-  #workspace-info { font-size:13px; color:var(--muted); word-break:break-all; }
+  #workspace-info { font-size:13px; color:var(--muted); word-break:break-all; flex:1; }
   #workspace-info a { color:var(--accent); text-decoration:none; font-weight:700; }
+  .ws-switch-btn { font-size:11px; font-weight:800; color:var(--accent); background:rgba(40,192,255,.08); border:1px solid rgba(40,192,255,.2); padding:6px 12px; border-radius:999px; cursor:pointer; white-space:nowrap; }
   .eyebrow { color:var(--accent); font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:800; }
 
   /* AÇÕES */
   .action-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
-  .btn, .btn-main, .btn-login, .btn-create, .btn-resend, .btn-sw {
-    border:none; cursor:pointer; color:white; font-family:inherit; transition:.18s transform; touch-action:manipulation;
-  }
+  .btn, .btn-main, .btn-login, .btn-create, .btn-resend, .btn-sw { border:none; cursor:pointer; color:white; font-family:inherit; transition:.18s transform; touch-action:manipulation; }
   .btn:active, .btn-main:active, .btn-login:active, .btn-create:active { transform:scale(.97); }
   .btn-main { padding:16px; border-radius:16px; font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.04em; }
   .btn-take { background:linear-gradient(135deg,#1da9ff,#476cff); }
@@ -122,6 +120,7 @@
   .p-item { background:rgba(255,255,255,.04); padding:14px; border-radius:16px; font-size:13px; cursor:pointer; border:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:10px; }
   .p-item small { display:block; color:var(--muted); margin-top:3px; }
   .p-del { color:#ff93a1; font-size:18px; padding:0 4px; }
+  .p-badge { font-size:10px; background:rgba(40,192,255,.12); color:var(--accent); border-radius:6px; padding:2px 6px; margin-left:6px; }
 
   /* AUTH */
   #login-screen, #confirm-screen, #setup-screen { max-width:460px; margin:40px auto 0; padding:28px; }
@@ -136,13 +135,10 @@
   .btn-resend { width:100%; padding:13px 16px; border-radius:14px; font-size:13px; font-weight:800; background:rgba(255,255,255,.05); border:1px solid var(--line-strong); color:#dce7ff; font-family:inherit; cursor:pointer; }
   #resend-msg { font-size:12px; margin-top:6px; text-align:center; display:none; color:#87f0bd; }
 
-  /* RESPONSIVE */
   @media (max-width:940px) { .layout { grid-template-columns:1fr; } }
   @media (max-width:640px) {
-    .shell { padding:0 12px; }
-    .action-grid { grid-template-columns:1fr; }
-    .tabs { grid-template-columns:repeat(2,1fr); }
-    .color-grid, .preset-actions { grid-template-columns:1fr; }
+    .shell { padding:0 12px; } .action-grid { grid-template-columns:1fr; }
+    .tabs { grid-template-columns:repeat(2,1fr); } .color-grid, .preset-actions { grid-template-columns:1fr; }
     .topbar-nav { padding:0 16px; }
   }
 </style>
@@ -161,6 +157,8 @@
 </nav>
 
 <div class="shell">
+
+  <!-- AUTH -->
   <div id="login-screen" class="panel">
     <div class="eyebrow" style="margin-bottom:8px">Acesso seguro</div>
     <h2 class="auth-title">Entrar no painel</h2>
@@ -178,31 +176,38 @@
     <div class="confirm-icon">✉️</div>
     <div class="eyebrow" style="text-align:center">Confirmação</div>
     <h2 class="auth-title" style="text-align:center">Ative seu acesso</h2>
-    <p class="auth-sub" style="text-align:center">Enviamos um link para o e-mail abaixo. Clique nele e volte aqui — o login é automático.</p>
+    <p class="auth-sub" style="text-align:center">Enviamos um link para o e-mail abaixo. Clique nele e volte aqui.</p>
     <div class="confirm-email-box" id="confirm-email-display"></div>
     <button class="btn-resend" onclick="resendEmail()">Reenviar e-mail</button>
-    <div id="resend-msg">✔ E-mail reenviado com sucesso.</div>
-    <div class="confirm-tip">Não encontrou? Verifique sua pasta de spam ou promoções.</div>
+    <div id="resend-msg">✔ E-mail reenviado.</div>
+    <div class="confirm-tip">Não encontrou? Verifique spam ou promoções.</div>
     <button class="btn-secondary" onclick="backToLogin()">Voltar ao login</button>
   </div>
 
-  <div id="setup-screen" class="panel" style="display:none">
-    <div class="eyebrow" style="margin-bottom:8px">Primeiro acesso</div>
-    <h2 class="auth-title">Criar workspace</h2>
-    <p class="auth-sub">Seu workspace organiza o overlay, a URL pública e os presets do cliente.</p>
-    <label>Nome do workspace</label>
-    <input type="text" id="setup-name" placeholder="Ex: TV Colatina">
-    <label>Slug da URL (letras, números e -)</label>
-    <input type="text" id="setup-slug" placeholder="Ex: tv-colatina">
-    <button class="btn-create" onclick="createWorkspace()">Criar workspace</button>
-    <p id="setup-error"></p>
+  <!-- WORKSPACE SELECTOR -->
+  <div id="ws-screen" class="panel" style="display:none">
+    <div class="eyebrow" style="margin-bottom:8px">Seus workspaces</div>
+    <h2 class="auth-title">Selecionar cliente</h2>
+    <p class="auth-sub">Escolha um workspace existente ou crie um novo.</p>
+    <div class="ws-list" id="ws-list"></div>
+    <div class="ws-new-form">
+      <div class="eyebrow" style="margin-bottom:10px">Novo workspace</div>
+      <label>Nome</label>
+      <input type="text" id="ws-name" placeholder="Ex: TV Colatina">
+      <label>Slug da URL</label>
+      <input type="text" id="ws-slug" placeholder="Ex: tv-colatina">
+      <button class="btn-create" onclick="createWorkspace()">Criar workspace</button>
+      <p id="setup-error"></p>
+    </div>
   </div>
 
+  <!-- PAINEL PRINCIPAL -->
   <div id="main-panel" style="display:none">
     <div class="page-content">
       <div class="workspace-bar panel">
         <span style="font-size:16px">🔗</span>
         <div id="workspace-info">Carregando...</div>
+        <button class="ws-switch-btn" onclick="showWsScreen()">⇄ Trocar</button>
       </div>
       <div class="action-grid">
         <button class="btn-main btn-take" onclick="pushUpdate()">Atualizar GC</button>
@@ -212,7 +217,7 @@
       <div class="layout">
         <div class="sidebar panel">
           <h3 class="section-title">Controles rápidos</h3>
-          <p class="section-sub">Ligue ou desligue cada bloco do overlay independentemente.</p>
+          <p class="section-sub">Ligue ou desligue cada bloco independentemente.</p>
           <div id="sw-list" class="sw-grid"></div>
         </div>
         <div class="editor panel">
@@ -224,17 +229,19 @@
             <div class="tab" onclick="openTab(event,'t-design')">Estilo</div>
             <div class="tab" onclick="openTab(event,'t-presets')">Presets</div>
           </div>
+
           <div id="t-gc" class="tab-content active">
             <div class="inline-card">
               <label>Tag</label>
               <input type="text" id="in-tag" value="URGENTE">
               <label>Manchete</label>
-              <textarea id="in-headline" rows="2">PONTOVIEW BROADCAST v1.0</textarea>
+              <textarea id="in-headline" rows="2">PONTOVIEW BROADCAST v2.0</textarea>
               <label>Detalhe</label>
               <input type="text" id="in-detail" value="">
             </div>
-            <button class="btn-main" style="width:100%;background:linear-gradient(135deg,#19c37d,#0ea76d)" onclick="savePreset()">Salvar preset atual</button>
+            <button class="btn-main" style="width:100%;background:linear-gradient(135deg,#19c37d,#0ea76d)" onclick="savePreset()">Salvar preset completo</button>
           </div>
+
           <div id="t-ticker" class="tab-content">
             <div class="inline-card">
               <div class="speed-row"><label style="margin:0">Velocidade</label><span class="speed-val" id="speed-display">100</span></div>
@@ -243,12 +250,48 @@
               <textarea id="in-ticker" rows="3">+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++ COLATINA - ES +++</textarea>
             </div>
           </div>
+
           <div id="t-design" class="tab-content">
             <div class="inline-card">
+              <p style="margin:0 0 12px;font-size:12px;color:var(--muted)">🎨 Cores das barras</p>
               <div class="color-grid">
-                <div><label>Fundo tema</label><input type="color" id="c-bg" value="#003366"></div>
-                <div><label>Cor do texto</label><input type="color" id="c-txt" value="#ffffff"></div>
+                <div><label>Cor das barras</label><input type="color" id="c-bg" value="#003366" oninput="pushUpdate()"></div>
+                <div><label>Cor do texto</label><input type="color" id="c-txt" value="#ffffff" oninput="pushUpdate()"></div>
               </div>
+            </div>
+            <div class="inline-card">
+              <p style="margin:0 0 12px;font-size:12px;color:var(--muted)">🔤 Tipografia da manchete</p>
+              <label>Família da fonte</label>
+              <select id="in-font-family" onchange="pushUpdate()">
+                <option value="Inter">Inter (padrão)</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Oswald">Oswald</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="Lato">Lato</option>
+              </select>
+              <label>Peso da fonte</label>
+              <select id="in-font-weight" onchange="pushUpdate()">
+                <option value="900">Black (900)</option>
+                <option value="800">ExtraBold (800)</option>
+                <option value="700">Bold (700)</option>
+                <option value="400">Regular (400)</option>
+              </select>
+              <div class="speed-row">
+                <label style="margin:0">Tamanho da manchete</label>
+                <span class="speed-val" id="font-size-display">2.8vw</span>
+              </div>
+              <input type="range" id="in-font-size" min="1.2" max="5" step="0.1" value="2.8" oninput="document.getElementById('font-size-display').innerText=this.value+'vw';pushUpdate()">
+            </div>
+            <div class="inline-card">
+              <p style="margin:0 0 12px;font-size:12px;color:var(--muted)">💧 Opacidade das barras coloridas</p>
+              <div class="speed-row">
+                <label style="margin:0">Opacidade</label>
+                <span class="speed-val" id="opacity-display">100%</span>
+              </div>
+              <input type="range" id="in-opacity" min="0.1" max="1" step="0.05" value="1" oninput="document.getElementById('opacity-display').innerText=Math.round(this.value*100)+'%';pushUpdate()">
+            </div>
+            <div class="inline-card">
+              <p style="margin:0 0 12px;font-size:12px;color:var(--muted)">🖼 Logo</p>
               <label class="toggle-row" for="in-show-time"><input type="checkbox" id="in-show-time" checked><span>Exibir relógio junto da marca</span></label>
               <label>Modo da logo</label>
               <select id="logo-mode" onchange="toggleLogoFields()">
@@ -262,10 +305,12 @@
             </div>
             <button class="btn-main btn-reset" style="width:100%" onclick="resetConfig()">Resetar configurações</button>
           </div>
+
           <div id="t-presets" class="tab-content">
+            <p style="font-size:12px;color:var(--muted);margin:0 0 12px">Os presets salvam GC + identidade visual completa (cores, fonte, opacidade e logo).</p>
             <div class="preset-actions">
-              <button onclick="exportPresets()">Exportar presets</button>
-              <button onclick="document.getElementById('import-file').click()">Importar presets</button>
+              <button onclick="exportPresets()">Exportar</button>
+              <button onclick="document.getElementById('import-file').click()">Importar</button>
             </div>
             <input type="file" id="import-file" accept=".json" style="display:none" onchange="importPresets(event)">
             <div class="preset-list" id="preset-list"></div>
@@ -280,12 +325,12 @@
 const SUPABASE_URL = 'https://gwawftcyltlmnunttyxj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3YXdmdGN5bHRsbW51bnR0eXhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1OTU0OTQsImV4cCI6MjA5NDE3MTQ5NH0.ZoglWSlO7Cb37GuG8mIESSGP4z33dh-3uz6nMiwx8uY';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser = null, workspaceId = null, workspaceSlug = null;
+let currentUser = null, workspaceId = null, workspaceSlug = null, workspaceName = null;
 let states = { live:false, side:false, tag:false, headline:false, ticker:false };
-let pendingEmail = null;
+let pendingEmail = null, connChannel = null;
 
 function hideAll() {
-  ['login-screen','confirm-screen','setup-screen','main-panel']
+  ['login-screen','confirm-screen','ws-screen','main-panel']
     .forEach(id => document.getElementById(id).style.display = 'none');
 }
 function setConnected(ok) {
@@ -293,7 +338,7 @@ function setConnected(ok) {
   document.getElementById('conn-label').textContent = ok ? 'Overlay conectado' : 'Aguardando overlay';
 }
 
-// ── AUTH ──────────────────────────────────────────────────
+// ─── AUTH ───────────────────────────────────────────────
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
@@ -317,7 +362,7 @@ async function doSignup() {
 }
 function showLoginError(msg) {
   const el = document.getElementById('login-error');
-  const msgs = { 'Invalid login credentials':'E-mail ou senha incorretos.', 'Email not confirmed':'E-mail não confirmado.' };
+  const msgs = { 'Invalid login credentials':'E-mail ou senha incorretos.' };
   el.textContent = msgs[msg] || msg; el.style.display = 'block';
 }
 function showConfirmScreen(email) { hideAll(); document.getElementById('confirm-email-display').textContent = email; document.getElementById('confirm-screen').style.display = 'block'; }
@@ -332,9 +377,7 @@ async function afterLogin() {
   const { data:{ user } } = await sb.auth.getUser();
   if (!user) return;
   currentUser = user; hideAll();
-  const { data: ws } = await sb.from('workspaces').select('*').eq('user_id', user.id).single();
-  if (ws) { workspaceId = ws.id; workspaceSlug = ws.slug; showMainPanel(); }
-  else { document.getElementById('setup-screen').style.display = 'block'; }
+  showWsScreen();
 }
 sb.auth.onAuthStateChange((event, session) => {
   if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
@@ -344,27 +387,71 @@ sb.auth.onAuthStateChange((event, session) => {
   }
 });
 
-// ── SETUP ─────────────────────────────────────────────────
+// ─── WORKSPACE SELECTOR ─────────────────────────────────
+async function showWsScreen() {
+  hideAll();
+  document.getElementById('ws-screen').style.display = 'block';
+  const { data: wsList } = await sb.from('workspaces').select('*').eq('user_id', currentUser.id).order('created_at');
+  const container = document.getElementById('ws-list');
+  if (!wsList || wsList.length === 0) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:13px;text-align:center;padding:10px">Nenhum workspace ainda. Crie o primeiro abaixo.</p>';
+    return;
+  }
+  container.innerHTML = wsList.map(ws =>
+    `<div class="ws-item" onclick="selectWorkspace('${ws.id}','${ws.slug}','${ws.name}')">
+      <div><strong>${ws.name}</strong><small>pontoview-overlay.pages.dev/overlay.html?w=${ws.slug}</small></div>
+      <span class="ws-arrow">›</span>
+    </div>`
+  ).join('');
+}
+async function selectWorkspace(id, slug, name) {
+  workspaceId = id; workspaceSlug = slug; workspaceName = name;
+  hideAll();
+  showMainPanel();
+}
 async function createWorkspace() {
-  const name = document.getElementById('setup-name').value.trim();
-  const slug = document.getElementById('setup-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
+  const name = document.getElementById('ws-name').value.trim();
+  const slug = document.getElementById('ws-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
   if (!name || !slug) { showSetupError('Preencha nome e slug.'); return; }
   const { data: ws, error } = await sb.from('workspaces').insert({ user_id:currentUser.id, name, slug, plan:'free' }).select().single();
-  if (error) { showSetupError(error.message); return; }
+  if (error) { showSetupError(error.message.includes('duplicate') ? 'Esse slug já existe. Escolha outro.' : error.message); return; }
   await sb.from('overlay_state').insert({ workspace_id: ws.id });
-  workspaceId = ws.id; workspaceSlug = ws.slug; hideAll(); showMainPanel();
+  document.getElementById('ws-name').value = ''; document.getElementById('ws-slug').value = '';
+  selectWorkspace(ws.id, ws.slug, ws.name);
 }
 function showSetupError(msg) { const el = document.getElementById('setup-error'); el.textContent = msg; el.style.display = 'block'; }
 
-// ── PAINEL ────────────────────────────────────────────────
+// ─── PAINEL PRINCIPAL ────────────────────────────────────
 function showMainPanel() {
   document.getElementById('main-panel').style.display = 'block';
-  // URL do overlay: sempre origin + /overlay.html (independente do nome deste arquivo)
   const overlayUrl = location.origin + '/overlay.html?w=' + workspaceSlug;
   document.getElementById('workspace-info').innerHTML =
-    'URL do Overlay (cole no OBS) → <a href="' + overlayUrl + '" target="_blank">' + overlayUrl + '</a>';
+    `<strong style="color:var(--text)">${workspaceName}</strong> — <a href="${overlayUrl}" target="_blank">${overlayUrl}</a>`;
   buildSwitches(); loadPresetsFromDB(); subscribeToConnection();
-  setTimeout(() => pushUpdate(), 800);
+  loadCurrentState();
+}
+async function loadCurrentState() {
+  const { data } = await sb.from('overlay_state').select('*').eq('workspace_id', workspaceId).single();
+  if (!data) return;
+  if (data.colors) { document.getElementById('c-bg').value = data.colors.bg || '#003366'; document.getElementById('c-txt').value = data.colors.txt || '#ffffff'; }
+  if (data.font_family) { document.getElementById('in-font-family').value = data.font_family; }
+  if (data.font_weight) { document.getElementById('in-font-weight').value = data.font_weight; }
+  if (data.font_size)   { document.getElementById('in-font-size').value = data.font_size; document.getElementById('font-size-display').innerText = data.font_size + 'vw'; }
+  if (data.bar_opacity !== undefined) { document.getElementById('in-opacity').value = data.bar_opacity; document.getElementById('opacity-display').innerText = Math.round(data.bar_opacity*100)+'%'; }
+  if (data.data) {
+    if (data.data.tag)      document.getElementById('in-tag').value = data.data.tag;
+    if (data.data.headline) document.getElementById('in-headline').value = data.data.headline;
+    if (data.data.detail)   document.getElementById('in-detail').value = data.data.detail;
+    if (data.data.ticker)   document.getElementById('in-ticker').value = data.data.ticker;
+    if (data.data.speed) { document.getElementById('in-speed').value = data.data.speed; document.getElementById('speed-display').innerText = data.data.speed; }
+  }
+  if (data.show_time !== undefined) document.getElementById('in-show-time').checked = data.show_time;
+  if (data.logo) {
+    if (data.logo.type === 'img') { document.getElementById('logo-mode').value = 'url'; document.getElementById('in-logo-url').value = data.logo.val; }
+    else if (data.logo.val) { document.getElementById('in-logo-text').value = data.logo.val; }
+    toggleLogoFields();
+  }
+  if (data.states) { states = data.states; updateSwitchUI(); }
 }
 function buildSwitches() {
   const names = {
@@ -380,7 +467,8 @@ function buildSwitches() {
   updateSwitchUI();
 }
 function subscribeToConnection() {
-  sb.channel('ctrl_' + workspaceId)
+  if (connChannel) sb.removeChannel(connChannel);
+  connChannel = sb.channel('ctrl_' + workspaceId)
     .on('broadcast', { event: 'ping' }, () => setConnected(true))
     .subscribe();
 }
@@ -417,6 +505,10 @@ async function pushUpdate() {
     workspace_id: workspaceId, states,
     data: { tag:document.getElementById('in-tag').value, headline:document.getElementById('in-headline').value, detail:document.getElementById('in-detail').value, ticker:document.getElementById('in-ticker').value, speed:parseInt(document.getElementById('in-speed').value) },
     colors: { bg:document.getElementById('c-bg').value, txt:document.getElementById('c-txt').value },
+    font_family: document.getElementById('in-font-family').value,
+    font_weight: document.getElementById('in-font-weight').value,
+    font_size:   parseFloat(document.getElementById('in-font-size').value),
+    bar_opacity: parseFloat(document.getElementById('in-opacity').value),
     logo, show_time: document.getElementById('in-show-time').checked,
     updated_at: new Date().toISOString()
   }, { onConflict:'workspace_id' });
@@ -425,11 +517,15 @@ async function pushUpdate() {
 function resetConfig() {
   if (!confirm('Resetar para o padrão?')) return;
   document.getElementById('c-bg').value='#003366'; document.getElementById('c-txt').value='#ffffff';
-  document.getElementById('in-tag').value='URGENTE'; document.getElementById('in-headline').value='PONTOVIEW BROADCAST v1.0';
+  document.getElementById('in-tag').value='URGENTE'; document.getElementById('in-headline').value='PONTOVIEW BROADCAST v2.0';
   document.getElementById('in-detail').value=''; document.getElementById('in-ticker').value='+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++';
   document.getElementById('in-speed').value='100'; document.getElementById('speed-display').innerText='100';
   document.getElementById('in-show-time').checked=true; document.getElementById('logo-mode').value='text';
-  document.getElementById('in-logo-text').value='PONTO VIEW'; toggleLogoFields(); clearAll();
+  document.getElementById('in-logo-text').value='PONTO VIEW'; toggleLogoFields();
+  document.getElementById('in-font-family').value='Inter'; document.getElementById('in-font-weight').value='900';
+  document.getElementById('in-font-size').value='2.8'; document.getElementById('font-size-display').innerText='2.8vw';
+  document.getElementById('in-opacity').value='1'; document.getElementById('opacity-display').innerText='100%';
+  clearAll();
 }
 function openTab(e, id) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -437,32 +533,60 @@ function openTab(e, id) {
   document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
 }
 async function savePreset() {
+  const logo = await getLogo();
   const { data:list } = await sb.from('presets').select('id').eq('workspace_id', workspaceId).order('created_at',{ascending:true});
   if (list && list.length >= 100) await sb.from('presets').delete().eq('id', list[0].id);
-  await sb.from('presets').insert({ workspace_id:workspaceId, tag:document.getElementById('in-tag').value, headline:document.getElementById('in-headline').value, detail:document.getElementById('in-detail').value });
+  await sb.from('presets').insert({
+    workspace_id: workspaceId,
+    tag:          document.getElementById('in-tag').value,
+    headline:     document.getElementById('in-headline').value,
+    detail:       document.getElementById('in-detail').value,
+    colors:       { bg:document.getElementById('c-bg').value, txt:document.getElementById('c-txt').value },
+    logo,
+    font_family:  document.getElementById('in-font-family').value,
+    font_weight:  document.getElementById('in-font-weight').value,
+    font_size:    parseFloat(document.getElementById('in-font-size').value),
+    bar_opacity:  parseFloat(document.getElementById('in-opacity').value)
+  });
   loadPresetsFromDB();
 }
 async function loadPresetsFromDB() {
   const { data } = await sb.from('presets').select('*').eq('workspace_id', workspaceId).order('created_at',{ascending:true});
   if (!data) return;
   document.getElementById('preset-list').innerHTML = data.map(p =>
-    `<div class="p-item" onclick="applyPreset(${JSON.stringify(p.tag)},${JSON.stringify(p.headline)},${JSON.stringify(p.detail)})">
-      <div><strong>${p.headline.substring(0,44)||'Sem título'}</strong><small>${p.tag||'Sem tag'}</small></div>
+    `<div class="p-item" onclick="applyPreset(${JSON.stringify(p)})">
+      <div>
+        <strong>${p.headline ? p.headline.substring(0,44) : 'Sem título'}</strong>
+        <small>${p.tag||'Sem tag'}${p.colors ? '<span class="p-badge">🎨 estilo</span>' : ''}</small>
+      </div>
       <span class="p-del" onclick="event.stopPropagation();deletePreset('${p.id}')">&#x2715;</span>
     </div>`
   ).join('');
 }
-function applyPreset(tag, headline, detail) {
-  document.getElementById('in-tag').value=tag;
-  document.getElementById('in-headline').value=headline;
-  document.getElementById('in-detail').value=detail;
+function applyPreset(p) {
+  document.getElementById('in-tag').value      = p.tag || '';
+  document.getElementById('in-headline').value = p.headline || '';
+  document.getElementById('in-detail').value   = p.detail || '';
+  if (p.colors) {
+    document.getElementById('c-bg').value  = p.colors.bg  || '#003366';
+    document.getElementById('c-txt').value = p.colors.txt || '#ffffff';
+  }
+  if (p.font_family) document.getElementById('in-font-family').value = p.font_family;
+  if (p.font_weight) document.getElementById('in-font-weight').value = p.font_weight;
+  if (p.font_size)   { document.getElementById('in-font-size').value = p.font_size; document.getElementById('font-size-display').innerText = p.font_size + 'vw'; }
+  if (p.bar_opacity !== null && p.bar_opacity !== undefined) { document.getElementById('in-opacity').value = p.bar_opacity; document.getElementById('opacity-display').innerText = Math.round(p.bar_opacity*100)+'%'; }
+  if (p.logo) {
+    if (p.logo.type === 'img') { document.getElementById('logo-mode').value = 'url'; document.getElementById('in-logo-url').value = p.logo.val; }
+    else { document.getElementById('logo-mode').value = 'text'; document.getElementById('in-logo-text').value = p.logo.val || ''; }
+    toggleLogoFields();
+  }
   pushUpdate();
 }
 async function deletePreset(id) { await sb.from('presets').delete().eq('id',id); loadPresetsFromDB(); }
 function exportPresets() {
   sb.from('presets').select('*').eq('workspace_id', workspaceId).then(({ data }) => {
     const blob = new Blob([JSON.stringify(data,null,2)], { type:'application/json' });
-    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pvv3-presets.json'; a.click();
+    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`pv-presets-${workspaceSlug}.json`; a.click();
   });
 }
 function importPresets(event) {
@@ -471,14 +595,14 @@ function importPresets(event) {
   reader.onload = async e => {
     try {
       const data = JSON.parse(e.target.result); if (!Array.isArray(data)) throw new Error();
-      const rows = data.slice(-100).map(p => ({ workspace_id:workspaceId, tag:p.tag||'', headline:p.h||p.headline||'', detail:p.d||p.detail||'' }));
+      const rows = data.slice(-100).map(p => ({ workspace_id:workspaceId, tag:p.tag||'', headline:p.headline||'', detail:p.detail||'', colors:p.colors||null, logo:p.logo||null, font_family:p.font_family||null, font_weight:p.font_weight||null, font_size:p.font_size||null, bar_opacity:p.bar_opacity||null }));
       await sb.from('presets').insert(rows); loadPresetsFromDB(); alert(`✔ ${rows.length} presets importados.`);
     } catch { alert('Arquivo JSON inválido.'); }
   };
   reader.readAsText(file); event.target.value='';
 }
 
-// ── INIT ─────────────────────────────────────────────────
+// ─── INIT ────────────────────────────────────────────────
 sb.auth.getSession().then(({ data:{ session } }) => {
   if (session) { currentUser = session.user; afterLogin(); }
 });
