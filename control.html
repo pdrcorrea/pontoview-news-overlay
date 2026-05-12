@@ -32,7 +32,7 @@ body{
 .shell{max-width:1180px;margin:0 auto;padding:0 18px}
 .panel{background:var(--card);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:var(--radius);box-shadow:var(--shadow)}
 
-/* TOPBAR — compacta */
+/* TOPBAR */
 .topbar-nav{background:rgba(7,17,31,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);position:sticky;top:0;z-index:100;padding:0 22px;height:52px;display:flex;align-items:center;justify-content:space-between}
 .brand-row{display:flex;align-items:center;gap:10px}
 .brand-logo{height:26px;width:auto;display:block}
@@ -43,7 +43,7 @@ body{
 .btn-logout{font-size:11px;font-weight:800;color:#ff93a1;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.2);padding:6px 12px;border-radius:999px;cursor:pointer;display:none;transition:.15s;display:flex;align-items:center;gap:5px}
 .btn-logout:hover{background:rgba(255,93,115,.18)}
 
-/* BANNER SESSÃO */
+/* BANNER */
 #session-banner{
   display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
   background:rgba(7,17,31,.97);border-top:1px solid var(--line-strong);
@@ -55,7 +55,7 @@ body{
 #session-banner a{color:var(--accent)}
 #session-banner button{white-space:nowrap;padding:9px 18px;border-radius:12px;font-size:12px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit}
 
-/* LOGIN — sem cabeçalho no painel direito */
+/* LOGIN */
 .auth-page{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:32px 18px}
 .auth-split{display:grid;grid-template-columns:1fr 1fr;max-width:900px;width:100%;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
 .auth-left{background:linear-gradient(145deg,rgba(40,192,255,.12),rgba(90,124,255,.18));border-right:1px solid var(--line);padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between}
@@ -115,14 +115,14 @@ textarea{resize:vertical;min-height:80px}
 .eyebrow{color:var(--accent);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
 .btn-create{width:100%;padding:14px;border-radius:14px;font-size:14px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit}
 
-/* PAINEL PRINCIPAL — abas */
+/* PAINEL PRINCIPAL */
 .page-content{padding-top:18px}
 .workspace-bar{display:flex;align-items:center;gap:10px;padding:11px 16px;margin-bottom:16px}
 #workspace-info{font-size:13px;color:var(--muted);word-break:break-all;flex:1}
 #workspace-info a{color:var(--accent);text-decoration:none;font-weight:700}
 .ws-switch-btn{font-size:11px;font-weight:800;color:var(--accent);background:rgba(40,192,255,.08);border:1px solid rgba(40,192,255,.2);padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
 
-/* Abas do painel principal */
+/* Abas principais */
 .main-tabs{display:flex;gap:4px;padding:6px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:18px;margin-bottom:16px}
 .main-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 8px;cursor:pointer;font-size:12px;font-weight:800;border-radius:13px;color:var(--muted);transition:.15s;white-space:nowrap}
 .main-tab .material-symbols-rounded{font-size:17px}
@@ -130,7 +130,7 @@ textarea{resize:vertical;min-height:80px}
 .main-tab-panel{display:none}
 .main-tab-panel.active{display:block}
 
-/* Aba Controles Rápidos */
+/* Controles Rápidos */
 .quick-controls-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
 .btn,.btn-main,.btn-sw{border:none;cursor:pointer;color:white;font-family:inherit;transition:.18s transform;touch-action:manipulation}
 .btn:active,.btn-main:active{transform:scale(.97)}
@@ -146,7 +146,7 @@ textarea{resize:vertical;min-height:80px}
 .sw-item span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
 .btn-sw{min-width:68px;padding:9px 12px;border-radius:12px;font-size:12px;font-weight:900;background:rgba(255,255,255,.08);color:#dfe9ff;border:1px solid var(--line-strong)}
 
-/* Aba Editor */
+/* Editor */
 .editor-panel{padding:20px}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);padding:8px;border-radius:18px}
 .tab{text-align:center;padding:11px;cursor:pointer;font-size:12px;font-weight:800;border-radius:12px;color:var(--muted)}
@@ -165,7 +165,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 .toggle-row input{width:18px;height:18px;accent-color:var(--accent)}
 .toggle-row span{font-size:13px;font-weight:700}
 
-/* Aba Presets */
+/* Presets */
 .presets-panel{padding:20px}
 .preset-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;max-height:340px;overflow:auto}
 .p-card{background:rgba(255,255,255,.04);border:2px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;transition:.15s all;position:relative}
@@ -179,12 +179,12 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 .preset-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .preset-actions-row button{padding:12px 14px;font-size:12px;border-radius:14px;border:1px solid var(--line-strong);cursor:pointer;font-weight:800;color:var(--text);background:rgba(255,255,255,.05);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
 .preset-actions-row button .material-symbols-rounded{font-size:16px}
-.btn-apply-preset{width:100%;padding:14px;border-radius:14px;font-size:13px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit;margin-bottom:8px;opacity:.4;pointer-events:none;transition:.2s opacity;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-apply-preset{width:100%;padding:14px;border-radius:14px;font-size:13px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit;margin-bottom:12px;opacity:.4;pointer-events:none;transition:.2s opacity;display:flex;align-items:center;justify-content:center;gap:6px}
 .btn-apply-preset .material-symbols-rounded{font-size:17px}
 .btn-apply-preset.ready{opacity:1;pointer-events:auto}
 .preset-empty{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
 
-/* Aba Configurações (zona de perigo) */
+/* Config */
 .settings-panel{padding:20px}
 .danger-zone{border:1px solid rgba(255,93,115,.25);border-radius:18px;padding:20px;background:rgba(255,93,115,.04)}
 .danger-zone h4{margin:0 0 6px;color:#ff93a1;font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px}
@@ -201,7 +201,6 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 </head>
 <body>
 
-<!-- BANNER AVISO DE SESSÃO -->
 <div id="session-banner">
   <p><strong>Uso de armazenamento local</strong> — Este sistema utiliza <em>localStorage</em> exclusivamente para manter sua sessão autenticada ativa. Nenhum dado de rastreamento ou publicidade é coletado. <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a></p>
   <button onclick="dismissSessionBanner()">Entendido</button>
@@ -309,7 +308,6 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
   <div class="shell">
     <div class="page-content">
 
-      <!-- Barra do workspace -->
       <div class="workspace-bar panel">
         <span class="material-symbols-rounded" style="color:var(--accent)">link</span>
         <div id="workspace-info">Carregando...</div>
@@ -318,7 +316,6 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
         </button>
       </div>
 
-      <!-- Abas principais -->
       <div class="main-tabs panel">
         <div class="main-tab active" id="mtab-quick" onclick="openMainTab('quick')">
           <span class="material-symbols-rounded">bolt</span>
@@ -338,7 +335,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
         </div>
       </div>
 
-      <!-- ABA: Controles Rápidos -->
+      <!-- ABA: Controles -->
       <div id="mpanel-quick" class="main-tab-panel active panel" style="padding:20px">
         <h3 class="section-title">Controles rápidos</h3>
         <p class="section-sub">Ações globais e ativação individual de cada bloco.</p>
@@ -388,29 +385,29 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
           <div class="inline-card">
             <p class="inline-card-title"><span class="material-symbols-rounded">palette</span> Cores das barras</p>
             <div class="color-grid">
-              <div><label>Cor das barras</label><input type="color" id="c-bg" value="#003366" oninput="pushUpdate()"></div>
-              <div><label>Cor do texto</label><input type="color" id="c-txt" value="#ffffff" oninput="pushUpdate()"></div>
+              <div><label>Cor das barras</label><input type="color" id="c-bg" value="#003366" oninput="pushStyleOnly()"></div>
+              <div><label>Cor do texto</label><input type="color" id="c-txt" value="#ffffff" oninput="pushStyleOnly()"></div>
             </div>
           </div>
           <div class="inline-card">
             <p class="inline-card-title"><span class="material-symbols-rounded">text_fields</span> Tipografia</p>
             <label>Família</label>
-            <select id="in-font-family" onchange="pushUpdate()">
+            <select id="in-font-family" onchange="pushStyleOnly()">
               <option value="Inter">Inter (padrão)</option><option value="Roboto">Roboto</option>
               <option value="Oswald">Oswald</option><option value="Montserrat">Montserrat</option><option value="Lato">Lato</option>
             </select>
             <label>Peso</label>
-            <select id="in-font-weight" onchange="pushUpdate()">
+            <select id="in-font-weight" onchange="pushStyleOnly()">
               <option value="900">Black (900)</option><option value="800">ExtraBold (800)</option>
               <option value="700">Bold (700)</option><option value="400">Regular (400)</option>
             </select>
             <div class="speed-row"><label style="margin:0">Tamanho</label><span class="speed-val" id="font-size-display">2.8vw</span></div>
-            <input type="range" id="in-font-size" min="1.2" max="5" step="0.1" value="2.8" oninput="document.getElementById('font-size-display').innerText=this.value+'vw';pushUpdate()">
+            <input type="range" id="in-font-size" min="1.2" max="5" step="0.1" value="2.8" oninput="document.getElementById('font-size-display').innerText=this.value+'vw';pushStyleOnly()">
           </div>
           <div class="inline-card">
             <p class="inline-card-title"><span class="material-symbols-rounded">opacity</span> Opacidade</p>
             <div class="speed-row"><label style="margin:0">Opacidade</label><span class="speed-val" id="opacity-display">100%</span></div>
-            <input type="range" id="in-opacity" min="0.1" max="1" step="0.05" value="1" oninput="document.getElementById('opacity-display').innerText=Math.round(this.value*100)+'%';pushUpdate()">
+            <input type="range" id="in-opacity" min="0.1" max="1" step="0.05" value="1" oninput="document.getElementById('opacity-display').innerText=Math.round(this.value*100)+'%';pushStyleOnly()">
           </div>
           <button class="btn-main btn-reset" style="width:100%" onclick="resetConfig()">
             <span class="material-symbols-rounded">restart_alt</span> Resetar configurações
@@ -426,7 +423,10 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
             </select>
             <input type="text" id="in-logo-text" value="PONTO VIEW" placeholder="Texto da logo">
             <input type="text" id="in-logo-url" style="display:none" placeholder="https://...">
-            <input type="file" id="in-logo-file" style="display:none" accept="image/*">
+            <input type="file" id="in-logo-file" style="display:none" accept="image/*" onchange="onLogoFileChange(event)">
+            <button class="btn-main btn-take" style="width:100%;margin-top:4px" onclick="applyLogo()">
+              <span class="material-symbols-rounded">check_circle</span> Aplicar logo
+            </button>
           </div>
         </div>
       </div>
@@ -446,7 +446,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
         <div class="preset-select-grid" id="preset-list"></div>
       </div>
 
-      <!-- ABA: Configurações -->
+      <!-- ABA: Config -->
       <div id="mpanel-settings" class="main-tab-panel panel settings-panel" style="display:none">
         <h3 class="section-title">Configurações</h3>
         <p class="section-sub">Gerenciamento de conta e dados.</p>
@@ -472,22 +472,21 @@ let states={live:false,side:false,tag:false,headline:false,ticker:false};
 let pendingEmail=null,connChannel=null;
 let selectedPresetId=null,presetsCache=[];
 let authMode='login';
+// Cache do logo resolvido — evita re-leitura de FileReader a cada pushUpdate
+let logoCache={type:'text',val:'PONTO VIEW'};
 
 function dismissSessionBanner(){
   localStorage.setItem('pv_session_notice','1');
   document.getElementById('session-banner').style.display='none';
 }
 function checkSessionBanner(){
-  if(!localStorage.getItem('pv_session_notice')){
+  if(!localStorage.getItem('pv_session_notice'))
     document.getElementById('session-banner').style.display='flex';
-  }
 }
 checkSessionBanner();
 
 async function auditLog(event,detail={}){
-  try{
-    await sb.from('audit_logs').insert({user_id:currentUser?.id||null,workspace_id:workspaceId||null,event,detail});
-  }catch(e){console.warn('auditLog:',e.message);}
+  try{await sb.from('audit_logs').insert({user_id:currentUser?.id||null,workspace_id:workspaceId||null,event,detail});}catch(e){}
 }
 
 function hideAll(){
@@ -502,9 +501,10 @@ function setConnected(ok){
 function openMainTab(name){
   ['quick','editor','presets','settings'].forEach(n=>{
     document.getElementById('mtab-'+n).classList.toggle('active',n===name);
-    document.getElementById('mpanel-'+n).style.display=n===name?'block':'none';
+    const panel=document.getElementById('mpanel-'+n);
+    panel.style.display=n===name?'block':'none';
+    panel.classList.toggle('active',n===name);
   });
-  document.getElementById('mpanel-'+name).classList.add('active');
 }
 
 function switchAuthTab(mode){
@@ -566,10 +566,9 @@ async function doLogout(){
   if(connChannel){sb.removeChannel(connChannel);connChannel=null;}
   await sb.auth.signOut();
   currentUser=null;workspaceId=null;workspaceSlug=null;workspaceName=null;
-  selectedPresetId=null;presetsCache=[];
+  selectedPresetId=null;presetsCache=[];logoCache={type:'text',val:'PONTO VIEW'};
   states={live:false,side:false,tag:false,headline:false,ticker:false};
-  setLoggedIn(false);setConnected(false);
-  hideAll();
+  setLoggedIn(false);setConnected(false);hideAll();
   document.getElementById('login-page').style.display='flex';
   document.getElementById('login-email').value='';
   document.getElementById('login-pass').value='';
@@ -578,12 +577,10 @@ async function doLogout(){
 }
 
 async function requestAccountDeletion(){
-  const confirm1=confirm('Tem certeza que deseja excluir sua conta?\n\nTodos os seus workspaces, presets e dados serão removidos permanentemente. Esta ação não pode ser desfeita.');
-  if(!confirm1)return;
+  const c=confirm('Tem certeza que deseja excluir sua conta?\n\nTodos os seus workspaces, presets e dados serão removidos permanentemente.');
+  if(!c)return;
   const input=prompt('Para confirmar, digite seu e-mail:');
-  if(!input||input.trim().toLowerCase()!==currentUser.email.toLowerCase()){
-    alert('E-mail incorreto. Exclusão cancelada.');return;
-  }
+  if(!input||input.trim().toLowerCase()!==currentUser.email.toLowerCase()){alert('E-mail incorreto. Exclusão cancelada.');return;}
   try{
     await auditLog('account_deletion_requested',{email:currentUser.email});
     const {data:wsList}=await sb.from('workspaces').select('id').eq('user_id',currentUser.id);
@@ -596,14 +593,11 @@ async function requestAccountDeletion(){
     }
     await sb.from('audit_logs').delete().eq('user_id',currentUser.id);
     await sb.auth.signOut();
-    alert('Sua conta e todos os dados foram removidos. Obrigado por usar o PontoView.');
-    currentUser=null;workspaceId=null;setLoggedIn(false);setConnected(false);
-    hideAll();
+    alert('Sua conta e todos os dados foram removidos.');
+    currentUser=null;workspaceId=null;setLoggedIn(false);setConnected(false);hideAll();
     document.getElementById('login-page').style.display='flex';
     switchAuthTab('login');
-  }catch(e){
-    alert('Erro ao excluir conta: '+e.message+'\n\nEntre em contato: pontoviewmidia@gmail.com');
-  }
+  }catch(e){alert('Erro ao excluir conta: '+e.message);}
 }
 
 sb.auth.onAuthStateChange((event,session)=>{
@@ -657,6 +651,7 @@ function showMainPanel(){
     `<strong style="color:var(--text)">${workspaceName}</strong> &mdash; <a href="${overlayUrl}" target="_blank">${overlayUrl}</a>`;
   buildSwitches();loadPresetsFromDB();subscribeToConnection();loadCurrentState();
 }
+
 async function loadCurrentState(){
   const {data}=await sb.from('overlay_state').select('*').eq('workspace_id',workspaceId).single();
   if(!data)return;
@@ -668,18 +663,25 @@ async function loadCurrentState(){
   if(data.data){
     if(data.data.tag)document.getElementById('in-tag').value=data.data.tag;
     if(data.data.headline)document.getElementById('in-headline').value=data.data.headline;
-    if(data.data.detail)document.getElementById('in-detail').value=data.data.detail;
+    if(data.data.detail!=null)document.getElementById('in-detail').value=data.data.detail;
     if(data.data.ticker)document.getElementById('in-ticker').value=data.data.ticker;
     if(data.data.speed){document.getElementById('in-speed').value=data.data.speed;document.getElementById('speed-display').innerText=data.data.speed;}
   }
   if(data.show_time!==undefined)document.getElementById('in-show-time').checked=data.show_time;
   if(data.logo){
-    if(data.logo.type==='img'){document.getElementById('logo-mode').value='url';document.getElementById('in-logo-url').value=data.logo.val||'';}
-    else if(data.logo.val){document.getElementById('in-logo-text').value=data.logo.val;}
+    logoCache=data.logo;
+    if(data.logo.type==='img'){
+      document.getElementById('logo-mode').value='url';
+      document.getElementById('in-logo-url').value=data.logo.val||'';
+    } else {
+      document.getElementById('logo-mode').value='text';
+      document.getElementById('in-logo-text').value=data.logo.val||'';
+    }
     toggleLogoFields();
   }
   if(data.states){states=data.states;updateSwitchUI();}
 }
+
 function buildSwitches(){
   const names={live:{title:'Ao vivo',desc:'Selo de transmissão'},side:{title:'Marca / Hora',desc:'Logo e relógio lateral'},tag:{title:'Tag',desc:'Faixa superior'},headline:{title:'GC',desc:'Manchete principal'},ticker:{title:'Ticker',desc:'Rodapé rolante'}};
   document.getElementById('sw-list').innerHTML=Object.keys(states).map(k=>
@@ -709,47 +711,91 @@ function toggleLogoFields(){
   document.getElementById('in-logo-url').style.display=m==='url'?'block':'none';
   document.getElementById('in-logo-file').style.display=m==='file'?'block':'none';
 }
-async function getLogo(){
-  const m=document.getElementById('logo-mode').value;
-  if(m==='text')return{type:'text',val:document.getElementById('in-logo-text').value};
-  if(m==='url')return{type:'img',val:document.getElementById('in-logo-url').value};
-  const f=document.getElementById('in-logo-file').files[0];
-  if(f)return new Promise(r=>{const rd=new FileReader();rd.onload=e=>r({type:'img',val:e.target.result});rd.readAsDataURL(f);});
-  return{type:'text',val:'PONTO VIEW'};
+
+// Lê arquivo local e atualiza logoCache — chamado apenas no onchange do input file
+function onLogoFileChange(event){
+  const f=event.target.files[0];
+  if(!f)return;
+  const rd=new FileReader();
+  rd.onload=e=>{logoCache={type:'img',val:e.target.result};};
+  rd.readAsDataURL(f);
 }
+
+// Botão explícito de aplicar logo — lê URL ou texto e envia
+async function applyLogo(){
+  const m=document.getElementById('logo-mode').value;
+  if(m==='text') logoCache={type:'text',val:document.getElementById('in-logo-text').value};
+  else if(m==='url') logoCache={type:'img',val:document.getElementById('in-logo-url').value};
+  // se file, logoCache já foi preenchido pelo onLogoFileChange
+  await pushUpdate();
+}
+
+// pushUpdate usa logoCache (já resolvido) — nunca trava esperando FileReader
 async function pushUpdate(){
   if(!workspaceId)return;
-  const logo=await getLogo();
   const {error}=await sb.from('overlay_state').upsert({
-    workspace_id:workspaceId,states,
-    data:{tag:document.getElementById('in-tag').value,headline:document.getElementById('in-headline').value,detail:document.getElementById('in-detail').value,ticker:document.getElementById('in-ticker').value,speed:parseInt(document.getElementById('in-speed').value)},
+    workspace_id:workspaceId,
+    states,
+    data:{
+      tag:document.getElementById('in-tag').value,
+      headline:document.getElementById('in-headline').value,
+      detail:document.getElementById('in-detail').value,
+      ticker:document.getElementById('in-ticker').value,
+      speed:parseInt(document.getElementById('in-speed').value)
+    },
     colors:{bg:document.getElementById('c-bg').value,txt:document.getElementById('c-txt').value},
     font_family:document.getElementById('in-font-family').value,
     font_weight:document.getElementById('in-font-weight').value,
     font_size:parseFloat(document.getElementById('in-font-size').value),
     bar_opacity:parseFloat(document.getElementById('in-opacity').value),
-    logo,show_time:document.getElementById('in-show-time').checked,
+    logo:logoCache,
+    show_time:document.getElementById('in-show-time').checked,
+    preset_wipe:false,
     updated_at:new Date().toISOString()
   },{onConflict:'workspace_id'});
   if(error)console.error('pushUpdate:',error.message);
 }
-async function pushUpdateWithWipe(){
+
+// Atualiza apenas estilo (cores, fonte, opacidade) sem tocar em data.tag/headline
+// → overlay recebe a mudança mas não dispara animação de texto
+async function pushStyleOnly(){
   if(!workspaceId)return;
-  const logo=await getLogo();
-  await sb.from('overlay_state').upsert({
-    workspace_id:workspaceId,states,
-    data:{tag:document.getElementById('in-tag').value,headline:document.getElementById('in-headline').value,detail:document.getElementById('in-detail').value,ticker:document.getElementById('in-ticker').value,speed:parseInt(document.getElementById('in-speed').value)},
+  await sb.from('overlay_state').update({
     colors:{bg:document.getElementById('c-bg').value,txt:document.getElementById('c-txt').value},
     font_family:document.getElementById('in-font-family').value,
     font_weight:document.getElementById('in-font-weight').value,
     font_size:parseFloat(document.getElementById('in-font-size').value),
     bar_opacity:parseFloat(document.getElementById('in-opacity').value),
-    logo,show_time:document.getElementById('in-show-time').checked,
+    updated_at:new Date().toISOString()
+  }).eq('workspace_id',workspaceId);
+}
+
+async function pushUpdateWithWipe(presetLogo){
+  if(!workspaceId)return;
+  await sb.from('overlay_state').upsert({
+    workspace_id:workspaceId,
+    states,
+    data:{
+      tag:document.getElementById('in-tag').value,
+      headline:document.getElementById('in-headline').value,
+      detail:document.getElementById('in-detail').value,
+      ticker:document.getElementById('in-ticker').value,
+      speed:parseInt(document.getElementById('in-speed').value)
+    },
+    colors:{bg:document.getElementById('c-bg').value,txt:document.getElementById('c-txt').value},
+    font_family:document.getElementById('in-font-family').value,
+    font_weight:document.getElementById('in-font-weight').value,
+    font_size:parseFloat(document.getElementById('in-font-size').value),
+    bar_opacity:parseFloat(document.getElementById('in-opacity').value),
+    logo:presetLogo||logoCache,
+    show_time:document.getElementById('in-show-time').checked,
     preset_wipe:true,
     updated_at:new Date().toISOString()
   },{onConflict:'workspace_id'});
-  setTimeout(()=>sb.from('overlay_state').update({preset_wipe:false}).eq('workspace_id',workspaceId),1200);
+  // Limpa a flag wipe após 1.5s para não re-triggar em futuras leituras
+  setTimeout(()=>sb.from('overlay_state').update({preset_wipe:false}).eq('workspace_id',workspaceId),1500);
 }
+
 function resetConfig(){
   if(!confirm('Resetar para o padrão?'))return;
   document.getElementById('c-bg').value='#003366';document.getElementById('c-txt').value='#ffffff';
@@ -761,6 +807,7 @@ function resetConfig(){
   document.getElementById('in-font-family').value='Inter';document.getElementById('in-font-weight').value='900';
   document.getElementById('in-font-size').value='2.8';document.getElementById('font-size-display').innerText='2.8vw';
   document.getElementById('in-opacity').value='1';document.getElementById('opacity-display').innerText='100%';
+  logoCache={type:'text',val:'PONTO VIEW'};
   clearAll();
 }
 function openTab(e,id){
@@ -769,7 +816,6 @@ function openTab(e,id){
   document.getElementById(id).classList.add('active');e.currentTarget.classList.add('active');
 }
 async function savePreset(){
-  const logo=await getLogo();
   const {data:list}=await sb.from('presets').select('id').eq('workspace_id',workspaceId).order('created_at',{ascending:true});
   if(list&&list.length>=100)await sb.from('presets').delete().eq('id',list[0].id);
   await sb.from('presets').insert({
@@ -778,7 +824,7 @@ async function savePreset(){
     headline:document.getElementById('in-headline').value,
     detail:document.getElementById('in-detail').value,
     colors:{bg:document.getElementById('c-bg').value,txt:document.getElementById('c-txt').value},
-    logo,
+    logo:logoCache,
     font_family:document.getElementById('in-font-family').value,
     font_weight:document.getElementById('in-font-weight').value,
     font_size:parseFloat(document.getElementById('in-font-size').value),
@@ -810,29 +856,55 @@ function renderPresetGrid(){
 }
 function selectPreset(id){selectedPresetId=id;renderPresetGrid();renderPresetBtn();}
 function renderPresetBtn(){
-  const btn=document.getElementById('btn-apply-preset');
-  btn.classList.toggle('ready',!!selectedPresetId);
+  document.getElementById('btn-apply-preset').classList.toggle('ready',!!selectedPresetId);
 }
+
+// Aplica preset: preenche campos, atualiza logoCache com o logo do preset
+// e chama pushUpdateWithWipe passando o logo já resolvido — sem FileReader pendente
 function applySelectedPreset(){
   if(!selectedPresetId)return;
   const p=presetsCache.find(x=>x.id===selectedPresetId);
-  if(!p)return;
+  if(!p){console.warn('Preset não encontrado no cache');return;}
+
   document.getElementById('in-tag').value=p.tag||'';
   document.getElementById('in-headline').value=p.headline||'';
   document.getElementById('in-detail').value=p.detail||'';
-  if(p.colors){document.getElementById('c-bg').value=p.colors.bg||'#003366';document.getElementById('c-txt').value=p.colors.txt||'#ffffff';}
+
+  if(p.colors){
+    document.getElementById('c-bg').value=p.colors.bg||'#003366';
+    document.getElementById('c-txt').value=p.colors.txt||'#ffffff';
+  }
   if(p.font_family)document.getElementById('in-font-family').value=p.font_family;
   if(p.font_weight)document.getElementById('in-font-weight').value=p.font_weight;
-  if(p.font_size!=null){document.getElementById('in-font-size').value=p.font_size;document.getElementById('font-size-display').innerText=p.font_size+'vw';}
-  if(p.bar_opacity!=null){document.getElementById('in-opacity').value=p.bar_opacity;document.getElementById('opacity-display').innerText=Math.round(p.bar_opacity*100)+'%';}
+  if(p.font_size!=null){
+    document.getElementById('in-font-size').value=p.font_size;
+    document.getElementById('font-size-display').innerText=p.font_size+'vw';
+  }
+  if(p.bar_opacity!=null){
+    document.getElementById('in-opacity').value=p.bar_opacity;
+    document.getElementById('opacity-display').innerText=Math.round(p.bar_opacity*100)+'%';
+  }
+
+  // Resolve logo do preset e atualiza logoCache
+  let presetLogo=logoCache;
   if(p.logo){
-    if(p.logo.type==='img'){document.getElementById('logo-mode').value='url';document.getElementById('in-logo-url').value=p.logo.val||'';}
-    else{document.getElementById('logo-mode').value='text';document.getElementById('in-logo-text').value=p.logo.val||'';}
+    presetLogo=p.logo;
+    logoCache=p.logo;
+    if(p.logo.type==='img'){
+      document.getElementById('logo-mode').value='url';
+      document.getElementById('in-logo-url').value=p.logo.val||'';
+    } else {
+      document.getElementById('logo-mode').value='text';
+      document.getElementById('in-logo-text').value=p.logo.val||'';
+    }
     toggleLogoFields();
   }
+
   auditLog('preset_applied',{preset_id:selectedPresetId,headline:p.headline});
-  pushUpdateWithWipe();
+  // Passa o logo já resolvido — nenhuma Promise pendente de FileReader
+  pushUpdateWithWipe(presetLogo);
 }
+
 async function deletePreset(id){
   await sb.from('presets').delete().eq('id',id);
   await auditLog('preset_deleted',{preset_id:id});
