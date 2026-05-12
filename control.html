@@ -211,7 +211,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
         <div class="auth-feature"><div class="auth-feature-icon">🎨</div><div class="auth-feature-text"><strong>Identidade visual por cliente</strong><span>Cores, fontes e logos personalizados por workspace</span></div></div>
         <div class="auth-feature"><div class="auth-feature-icon">💾</div><div class="auth-feature-text"><strong>Presets completos</strong><span>Salve e acione layouts inteiros com um clique</span></div></div>
       </div>
-      <div class="auth-left-footer">© 2026 PontoView · Tecnologia em Mídia Indoor · <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank" style="color:var(--accent)">Privacidade</a></div>
+      <div class="auth-left-footer">© 2026 PontoView · Tecnologia em Mídia Indoor · <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank" style="color:var(--accent)">Privacidade</a> · <a href="https://pontoview.com.br/termos-de-uso" target="_blank" style="color:var(--accent)">Termos</a></div>
     </div>
     <div class="auth-right">
       <p class="auth-form-sub" style="margin-bottom:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--accent)">Acesso seguro</p>
@@ -233,12 +233,12 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
         </label>
         <label class="check-row" for="chk-terms">
           <input type="checkbox" id="chk-terms">
-          <span>Li e aceito os <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Termos de Uso e Política de Privacidade</a> do PontoView.</span>
+          <span>Li e aceito os <a href="https://pontoview.com.br/termos-de-uso" target="_blank">Termos de Uso</a> e a <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a> do PontoView.</span>
         </label>
       </div>
       <button class="btn-auth-primary" id="btn-auth" onclick="doAuth()">Entrar</button>
       <p id="login-error"></p>
-      <p style="margin:14px 0 0;text-align:center;font-size:11px;color:var(--muted)">Ao entrar, você concorda com nossa <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank" style="color:var(--accent)">Política de Privacidade</a>.</p>
+      <p style="margin:14px 0 0;text-align:center;font-size:11px;color:var(--muted)">Ao entrar, você concorda com nossos <a href="https://pontoview.com.br/termos-de-uso" target="_blank" style="color:var(--accent)">Termos de Uso</a> e <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank" style="color:var(--accent)">Política de Privacidade</a>.</p>
     </div>
   </div>
 </div>
@@ -538,7 +538,7 @@ async function requestAccountDeletion(){
     document.getElementById('login-page').style.display='flex';
     switchAuthTab('login');
   }catch(e){
-    alert('Erro ao excluir conta: '+e.message+'\n\nEntre em contato: privacidade@pontoview.com.br');
+    alert('Erro ao excluir conta: '+e.message+'\n\nEntre em contato: pontoviewmidia@gmail.com');
   }
 }
 
