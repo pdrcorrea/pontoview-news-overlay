@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<!-- GSAP embutido via CDN (substituir por arquivo local para versão offline) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<!-- Google Fonts (substituir por fonte local para versão offline) -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --tema: #003366;
+    --texto: #ffffff;
+    --ciano: #00e5ff;
+  }
+  body, html {
+    margin: 0; padding: 0;
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background: transparent;
+  }
+  #pv-canvas {
+    position: relative;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 5vw 5vh 5vw;
+    box-sizing: border-box;
+  }
+  #pv-master {
+    display: flex;
+    flex-direction: column;
+    width: 90vw;
+  }
+  .top-row {
+    display: flex;
+    height: 4.2vh;
+    margin-bottom: 2px;
+  }
+  #live-label, #tag-top {
+    background: var(--tema);
+    display: flex;
+    align-items: center;
+    clip-path: inset(0 100% 0 0);
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+  #live-label {
+    color: var(--texto);
+    width: 10vw;
+    justify-content: center;
+    font-size: 1.1vw;
+  }
+  #tag-top {
+    color: var(--ciano);
+    padding: 0 1.5vw;
+    margin-left: 2px;
+    font-size: 1.2vw;
+  }
+  .main-bar {
+    display: flex;
+    height: 12vh;
+    margin-bottom: 2px;
+  }
+  #side-block {
+    width: 10vw;
+    display: flex;
+    flex-direction: column;
+    clip-path: inset(0 100% 0 0);
+    flex-shrink: 0;
+  }
+  #logo-area {
+    height: 8vh;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  #logo-area img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  #logo-area span {
+    font-weight: 900;
+    color: #1a1a1a;
+    font-size: 1.2vw;
+    text-align: center;
+  }
+  #time-box {
+    height: 4vh;
+    background: #e0e0e0;
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 1.3vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 4px solid var(--tema);
+  }
+  #news-content {
+    flex: 1;
+    margin-left: 2px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  #headline-wrapper {
+    background: white;
+    color: #1a1a1a;
+    padding: 0 1.5vw;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    clip-path: inset(0 100% 0 0);
+    border-right: 0.8vw solid var(--tema);
+  }
+  #main-text {
+    font-size: 2.8vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 1.1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+  }
+  #detail-box {
+    height: 4vh;
+    background: rgba(0,0,0,0.9);
+    color: #eee;
+    padding: 0 1.5vw;
+    font-size: 1.3vw;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+    clip-path: inset(0 100% 0 0);
+  }
+  #ticker-wrap {
+    width: 99%;
+    background: #000;
+    height: 4vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-left: 1vw solid var(--ciano);
+    clip-path: inset(0 100% 0 0);
+    position: relative;
+  }
+  #ticker-text {
+    white-space: nowrap;
+    color: white;
+    font-size: 1.2vw;
+    font-weight: 700;
+    position: absolute;
+    will-change: transform;
+  }
+</style>
+</head>
+<body>
+<div id="pv-canvas">
+  <div id="pv-master">
+    <div class="top-row">
+      <div id="live-label">AO VIVO</div>
+      <div id="tag-top">---</div>
+    </div>
+    <div class="main-bar">
+      <div id="side-block">
+        <div id="logo-area"></div>
+        <div id="time-box">00:00</div>
+      </div>
+      <div id="news-content">
+        <div id="headline-wrapper">
+          <div id="main-text">---</div>
+        </div>
+        <div id="detail-box">---</div>
+      </div>
+    </div>
+    <div id="ticker-wrap">
+      <div id="ticker-text">---</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const bc = new BroadcastChannel('pvv3hub');
+  let tickerTween, currentStates = {}, tickerSpeed = 100, lastTickerText = '';
+  let clockInterval = null;
+
+  function startClock() {
+    if (clockInterval) clearInterval(clockInterval);
+    clockInterval = setInterval(() => {
+      const n = new Date();
+      document.getElementById('time-box').innerText =
+        n.getHours().toString().padStart(2,'0') + ':' +
+        n.getMinutes().toString().padStart(2,'0');
+    }, 1000);
+  }
+  startClock();
+
+  bc.onmessage = ev => {
+    const { action, data, states, colors, showTime } = ev.data;
+
+    if (colors) {
+      document.documentElement.style.setProperty('--tema', colors.bg);
+      document.documentElement.style.setProperty('--texto', colors.txt);
+    }
+
+    if (showTime !== undefined) {
+      document.getElementById('time-box').style.display = showTime ? 'flex' : 'none';
+      document.getElementById('logo-area').style.height = showTime ? '8vh' : '12vh';
+    }
+
+    if (action === 'ping') {
+      bc.postMessage({ action: 'pong' });
+    }
+
+    if (action === 'take') {
+      const tl = gsap.timeline();
+      tl.to(['#headline-wrapper', '#detail-box', '#tag-top'],
+        { clipPath: 'inset(0 100% 0 0)', duration: 0.3, ease: 'power3.inOut' })
+        .add(() => {
+          document.getElementById('tag-top').innerText = data.tag;
+          document.getElementById('main-text').innerText = data.headline;
+          document.getElementById('detail-box').innerText = data.detail;
+
+          if (lastTickerText !== data.ticker) {
+            document.getElementById('ticker-text').innerText = data.ticker;
+            lastTickerText = data.ticker;
+            if (currentStates.ticker) {
+              if (tickerTween) tickerTween.kill();
+              setTimeout(startTicker, 200);
+            }
+          }
+
+          if (tickerSpeed !== data.speed) {
+            tickerSpeed = data.speed;
+            if (currentStates.ticker) {
+              if (tickerTween) tickerTween.kill();
+              setTimeout(startTicker, 200);
+            }
+          } else {
+            tickerSpeed = data.speed;
+          }
+
+          const logoArea = document.getElementById('logo-area');
+          if (data.logo && data.logo.type === 'img') {
+            const url = data.logo.val;
+            const isImageUrl = /\.(png|jpg|jpeg|gif|webp|svg)(\?.*)?$/i.test(url) || url.startsWith('data:image');
+            if (isImageUrl || url.startsWith('data:image')) {
+              logoArea.innerHTML = `<img src="${url}" alt="logo">`;
+            } else {
+              logoArea.innerHTML = `<span>${url}</span>`;
+            }
+          } else if (data.logo) {
+            logoArea.innerHTML = `<span>${data.logo.val || 'PONTO VIEW'}</span>`;
+          }
+        })
+        .add(() => {
+          if (currentStates.tag)
+            gsap.to('#tag-top', { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power3.inOut' });
+          if (currentStates.headline)
+            gsap.to('#headline-wrapper', { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power3.inOut' });
+
+          if (data.detail && data.detail.trim() !== '') {
+            gsap.to('#detail-box', { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power3.inOut', delay: 0.1 });
+          } else {
+            gsap.to('#detail-box', { clipPath: 'inset(0 100% 0 0)', duration: 0.3, ease: 'power3.inOut' });
+          }
+        });
+    }
+
+    if (action === 'sync') {
+      currentStates = states;
+      const cfg = { duration: 0.6, ease: 'power3.inOut' };
+      gsap.to('#live-label',       { clipPath: states.live      ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+      gsap.to('#tag-top',          { clipPath: states.tag       ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+      gsap.to('#side-block',       { clipPath: states.side      ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+      gsap.to('#headline-wrapper', { clipPath: states.headline  ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+      const hasD = document.getElementById('detail-box').innerText.trim() !== '';
+      gsap.to('#detail-box',       { clipPath: (states.headline && hasD) ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+      gsap.to('#ticker-wrap',      { clipPath: states.ticker    ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg,
+        onComplete: () => { if (states.ticker && !tickerTween) startTicker(); }
+      });
+    }
+  };
+
+  function startTicker() {
+    if (tickerTween) tickerTween.kill();
+    const el = document.getElementById('ticker-text');
+    const parentW = document.getElementById('ticker-wrap').offsetWidth;
+    const selfW = el.offsetWidth;
+    if (selfW === 0 || !currentStates.ticker) return;
+    gsap.set(el, { x: parentW });
+    tickerTween = gsap.to(el, {
+      x: -selfW,
+      duration: (selfW + parentW) / tickerSpeed,
+      ease: 'none',
+      repeat: -1
+    });
+  }
+</script>
+</body>
+</html>

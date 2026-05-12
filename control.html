@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>PontoView Control Overlay</title>
+<style>
+  :root {
+    --bg: #0b0e14; --card: #161b22; --accent: #58a6ff;
+    --take: #218bff; --off: #da3633; --on: #238636; --all: #f39c12;
+  }
+  body {
+    background: var(--bg); color: #c9d1d9;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 10px; margin: 0; font-size: 12px;
+  }
+  .master-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; }
+  .btn-main {
+    padding: 12px 2px; border-radius: 4px; border: none;
+    font-weight: 900; cursor: pointer; text-transform: uppercase;
+    font-size: 10px; color: white;
+  }
+  .btn-take { background: var(--take); }
+  .btn-all  { background: var(--all); }
+  .btn-off  { background: var(--off); }
+  .btn-reset { background: #6e40c9; }
+  .tabs { display: flex; gap: 2px; background: #0d1117; padding: 2px; border-radius: 4px; flex-wrap: wrap; }
+  .tab {
+    flex: 1; text-align: center; padding: 10px 2px;
+    cursor: pointer; font-size: 10px; font-weight: bold;
+    border-radius: 3px; color: #8b949e;
+  }
+  .tab.active { background: var(--card); color: var(--accent); border-bottom: 2px solid var(--accent); }
+  .tab-content { display: none; background: var(--card); border: 1px solid #30364d; border-top: none; padding: 15px; border-radius: 0 0 6px 6px; }
+  .tab-content.active { display: block; }
+  label { display: block; font-size: 10px; color: #8b949e; margin-bottom: 4px; text-transform: uppercase; }
+  input, textarea, select {
+    width: 100%; padding: 8px; background: #0d1117;
+    border: 1px solid #30364d; color: white; border-radius: 4px;
+    box-sizing: border-box; font-size: 12px; margin-bottom: 12px;
+  }
+  .sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 10px; }
+  .sw-item {
+    background: var(--card); border: 1px solid #30364d;
+    padding: 6px 10px; border-radius: 4px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .btn-sw { padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 9px; font-weight: bold; min-width: 40px; }
+  .preset-list { display: flex; flex-direction: column; gap: 4px; max-height: 120px; overflow-y: auto; }
+  .p-item {
+    background: #0d1117; padding: 8px; border-radius: 4px;
+    font-size: 11px; cursor: pointer; border: 1px solid #30364d;
+    display: flex; justify-content: space-between;
+  }
+  .preset-actions { display: flex; gap: 4px; margin-bottom: 8px; }
+  .preset-actions button { flex: 1; padding: 6px; font-size: 10px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; color: white; }
+  .btn-export { background: #1f6feb; }
+  .btn-import { background: #388bfd; }
+  #conn-status {
+    font-size: 10px; padding: 4px 8px; border-radius: 3px;
+    margin-bottom: 8px; text-align: center;
+    background: #2d1b1b; color: #f85149; border: 1px solid #da3633;
+  }
+  #conn-status.connected { background: #1b2d1b; color: #56d364; border-color: #238636; }
+</style>
+</head>
+<body>
+
+<div id="conn-status">⚠ Overlay não detectado — abra o overlay.html na mesma origem</div>
+
+<div class="master-group">
+  <button class="btn-main btn-take" onclick="updateData()">ATUALIZAR GC</button>
+  <button class="btn-main btn-all"  onclick="takeAll()">ATIVAR TUDO</button>
+  <button class="btn-main btn-off"  onclick="setMaster(false)">LIMPAR TELA</button>
+</div>
+
+<div id="sw-list" class="sw-grid"></div>
+
+<div class="tabs" style="margin-top:15px">
+  <div class="tab active" onclick="openTab(event,'t-gc')">CONTEÚDO</div>
+  <div class="tab"        onclick="openTab(event,'t-ticker')">RODAPÉ</div>
+  <div class="tab"        onclick="openTab(event,'t-design')">ESTILO</div>
+  <div class="tab"        onclick="openTab(event,'t-presets')">MEMÓRIA</div>
+</div>
+
+<div id="t-gc" class="tab-content active">
+  <label>Tag / Manchete / Detalhe</label>
+  <input  type="text"     id="in-tag"      value="URGENTE">
+  <textarea id="in-headline" rows="2">PONTOVIEW BROADCAST v1.0</textarea>
+  <input  type="text"     id="in-detail"   value="Estabilidade total nas transições">
+  <button class="btn-main" style="background:var(--on);width:100%" onclick="savePreset()">SALVAR NOS PRESETS</button>
+</div>
+
+<div id="t-ticker" class="tab-content">
+  <label>Velocidade</label>
+  <input type="range" id="in-speed" min="40" max="300" value="100">
+  <label>Conteúdo do Rodapé</label>
+  <textarea id="in-ticker" rows="3">+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++ COLATINA - ES +++</textarea>
+</div>
+
+<div id="t-design" class="tab-content">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div><label>Fundo Tema</label><input type="color" id="c-bg"  value="#003366"></div>
+    <div><label>Cor Texto</label> <input type="color" id="c-txt" value="#ffffff"></div>
+  </div>
+  <div style="margin:10px 0;padding:10px;background:#0d1117;border-radius:4px">
+    <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">
+      <input type="checkbox" id="in-show-time" checked style="width:auto;margin:0">
+      EXIBIR RELÓGIO NA LOGO
+    </label>
+  </div>
+  <label>Modo da Logo</label>
+  <select id="logo-mode" onchange="toggleLogoFields()">
+    <option value="text">Texto</option>
+    <option value="url">Link (URL)</option>
+    <option value="file">Arquivo Local</option>
+  </select>
+  <input type="text"  id="in-logo-text" value="PONTO VIEW">
+  <input type="text"  id="in-logo-url"  style="display:none" placeholder="https://...">
+  <input type="file"  id="in-logo-file" style="display:none" accept="image/*">
+  <button class="btn-main btn-reset" style="width:100%;margin-top:8px" onclick="resetConfig()">⟳ RESETAR CONFIGURAÇÕES</button>
+</div>
+
+<div id="t-presets" class="tab-content">
+  <div class="preset-actions">
+    <button class="btn-export" onclick="exportPresets()">⬇ EXPORTAR JSON</button>
+    <button class="btn-import" onclick="document.getElementById('import-file').click()">⬆ IMPORTAR JSON</button>
+  </div>
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="importPresets(event)">
+  <div class="preset-list" id="preset-list"></div>
+</div>
+
+<script>
+  const bc = new BroadcastChannel('pvv3hub');
+
+  let overlayAlive = false;
+  bc.onmessage = ev => {
+    if (ev.data && ev.data.action === 'pong') {
+      overlayAlive = true;
+      document.getElementById('conn-status').textContent = '✔ Overlay conectado';
+      document.getElementById('conn-status').classList.add('connected');
+    }
+  };
+  function pingOverlay() {
+    overlayAlive = false;
+    bc.postMessage({ action: 'ping' });
+    setTimeout(() => {
+      if (!overlayAlive) {
+        document.getElementById('conn-status').textContent = '⚠ Overlay não detectado — abra o overlay.html na mesma origem';
+        document.getElementById('conn-status').classList.remove('connected');
+      }
+    }, 600);
+  }
+  setInterval(pingOverlay, 5000);
+  pingOverlay();
+
+  let states = { live: false, side: false, tag: false, headline: false, ticker: false };
+
+  function init() {
+    const names = { live: 'AO VIVO', side: 'LOGO/HORA', tag: 'TAG', headline: 'GC PRINCIPAL', ticker: 'TICKER' };
+    document.getElementById('sw-list').innerHTML = Object.keys(states).map(k =>
+      `<div class="sw-item"><span>${names[k]}</span>
+       <button id="sw-${k}" class="btn-sw" style="background:#444;color:white" onclick="toggle('${k}')">OFF</button></div>`
+    ).join('');
+    renderPresets();
+    setTimeout(() => { updateData(); sync(); }, 500);
+  }
+
+  function toggle(k) { states[k] = !states[k]; updateUI(); sync(); }
+  function setMaster(v) { Object.keys(states).forEach(k => states[k] = v); updateUI(); sync(); }
+
+  function sync() {
+    bc.postMessage({ action: 'sync', states, showTime: document.getElementById('in-show-time').checked });
+  }
+
+  function updateUI() {
+    Object.keys(states).forEach(k => {
+      const b = document.getElementById(`sw-${k}`);
+      if (b) {
+        b.innerText = states[k] ? 'ON' : 'OFF';
+        b.style.background = states[k] ? 'var(--on)' : '#444';
+      }
+    });
+  }
+
+  function toggleLogoFields() {
+    const m = document.getElementById('logo-mode').value;
+    document.getElementById('in-logo-text').style.display = m === 'text' ? 'block' : 'none';
+    document.getElementById('in-logo-url').style.display  = m === 'url'  ? 'block' : 'none';
+    document.getElementById('in-logo-file').style.display = m === 'file' ? 'block' : 'none';
+  }
+
+  async function getLogo() {
+    const m = document.getElementById('logo-mode').value;
+    if (m === 'text') return { type: 'text', val: document.getElementById('in-logo-text').value };
+    if (m === 'url')  return { type: 'img',  val: document.getElementById('in-logo-url').value };
+    const f = document.getElementById('in-logo-file').files[0];
+    if (f) return new Promise(r => {
+      const rd = new FileReader();
+      rd.onload = e => r({ type: 'img', val: e.target.result });
+      rd.readAsDataURL(f);
+    });
+    return { type: 'text', val: 'PONTO VIEW' };
+  }
+
+  async function updateData() {
+    const logo = await getLogo();
+    bc.postMessage({
+      action: 'take',
+      showTime: document.getElementById('in-show-time').checked,
+      colors: {
+        bg:  document.getElementById('c-bg').value,
+        txt: document.getElementById('c-txt').value
+      },
+      data: {
+        tag:      document.getElementById('in-tag').value,
+        headline: document.getElementById('in-headline').value,
+        detail:   document.getElementById('in-detail').value,
+        ticker:   document.getElementById('in-ticker').value,
+        speed:    parseInt(document.getElementById('in-speed').value),
+        logo
+      }
+    });
+  }
+
+  async function takeAll() {
+    Object.keys(states).forEach(k => states[k] = true);
+    updateUI();
+    await updateData();
+    sync();
+  }
+
+  function openTab(e, id) {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    e.currentTarget.classList.add('active');
+  }
+
+  function savePreset() {
+    let l = JSON.parse(localStorage.getItem('pvpresetsv15') || '[]');
+    if (l.length >= 100) l.shift();
+    l.push({
+      tag: document.getElementById('in-tag').value,
+      h:   document.getElementById('in-headline').value,
+      d:   document.getElementById('in-detail').value
+    });
+    localStorage.setItem('pvpresetsv15', JSON.stringify(l));
+    renderPresets();
+  }
+
+  function renderPresets() {
+    let l = JSON.parse(localStorage.getItem('pvpresetsv15') || '[]');
+    document.getElementById('preset-list').innerHTML = l.map((p, i) =>
+      `<div class="p-item" onclick="loadPreset(${i})">
+        <span>${p.h.substring(0,30)}...</span>
+        <span onclick="event.stopPropagation();deletePreset(${i})" style="color:#f85149;cursor:pointer">✕</span>
+      </div>`
+    ).join('');
+  }
+
+  function loadPreset(i) {
+    let p = JSON.parse(localStorage.getItem('pvpresetsv15') || '[]')[i];
+    document.getElementById('in-tag').value      = p.tag;
+    document.getElementById('in-headline').value = p.h;
+    document.getElementById('in-detail').value   = p.d;
+    updateData();
+  }
+
+  function deletePreset(i) {
+    let l = JSON.parse(localStorage.getItem('pvpresetsv15') || '[]');
+    l.splice(i, 1);
+    localStorage.setItem('pvpresetsv15', JSON.stringify(l));
+    renderPresets();
+  }
+
+  function exportPresets() {
+    const l = localStorage.getItem('pvpresetsv15') || '[]';
+    const blob = new Blob([l], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'pvv3-presets.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function importPresets(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) throw new Error('Formato inválido');
+        const existing = JSON.parse(localStorage.getItem('pvpresetsv15') || '[]');
+        const merged = [...existing, ...data].slice(-100);
+        localStorage.setItem('pvpresetsv15', JSON.stringify(merged));
+        renderPresets();
+        alert(`✔ ${data.length} presets importados com sucesso.`);
+      } catch(err) {
+        alert('Erro ao importar: arquivo JSON inválido.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function resetConfig() {
+    if (!confirm('Resetar todas as configurações para o padrão?')) return;
+    document.getElementById('c-bg').value       = '#003366';
+    document.getElementById('c-txt').value      = '#ffffff';
+    document.getElementById('in-tag').value     = 'URGENTE';
+    document.getElementById('in-headline').value = 'PONTOVIEW BROADCAST v1.0';
+    document.getElementById('in-detail').value  = '';
+    document.getElementById('in-ticker').value  = '+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++ COLATINA - ES ///';
+    document.getElementById('in-speed').value   = '100';
+    document.getElementById('in-show-time').checked = true;
+    document.getElementById('logo-mode').value  = 'text';
+    document.getElementById('in-logo-text').value = 'PONTO VIEW';
+    toggleLogoFields();
+    setMaster(false);
+  }
+
+  init();
+</script>
+</body>
+</html>
