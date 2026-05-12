@@ -21,7 +21,6 @@
     --accent-2:#5a7cff;
     --success:#19c37d;
     --danger:#ff5d73;
-    --warn:#f6b73c;
     --shadow:0 20px 60px rgba(0,0,0,.35);
     --radius:18px;
     --safe: env(safe-area-inset-bottom, 0px);
@@ -29,79 +28,48 @@
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { margin:0; min-height:100%; }
   body {
-    font-family:'Inter',sans-serif;
-    color:var(--text);
+    font-family:'Inter',sans-serif; color:var(--text);
     background: radial-gradient(circle at top left, rgba(40,192,255,.16), transparent 28%),
                 radial-gradient(circle at top right, rgba(90,124,255,.16), transparent 24%),
                 linear-gradient(180deg, var(--bg), var(--bg2));
-    padding:0 0 calc(18px + var(--safe)) 0;
-    min-height:100dvh;
+    padding:0 0 calc(18px + var(--safe)) 0; min-height:100dvh;
   }
   .shell { max-width:1180px; margin:0 auto; padding:0 18px; }
-  .panel {
-    background:var(--card);
-    border:1px solid var(--line);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-  }
+  .panel { background:var(--card); border:1px solid var(--line); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border-radius:var(--radius); box-shadow:var(--shadow); }
 
-  /* ─── TOPBAR ─────────────────────────────────────── */
+  /* TOPBAR */
   .topbar-nav {
-    background:rgba(7,17,31,.92);
-    border-bottom:1px solid var(--line);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-    position:sticky; top:0; z-index:100;
-    padding:0 24px;
-    height:64px;
+    background:rgba(7,17,31,.92); border-bottom:1px solid var(--line);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    position:sticky; top:0; z-index:100; padding:0 24px; height:64px;
     display:flex; align-items:center; justify-content:space-between;
   }
   .brand-row { display:flex; align-items:center; gap:12px; }
-  .brand-logo {
-    height:34px; width:auto; display:block;
-  }
-  .brand-wordmark {
-    font-size:21px; font-weight:800; letter-spacing:-.5px; color:var(--text);
-    display:flex; gap:4px; align-items:baseline;
-  }
-  .brand-wordmark em { font-style:normal; color:var(--accent); }
+  .brand-logo { height:34px; width:auto; display:block; }
   .nav-badge {
     font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--muted);
-    background:rgba(255,255,255,.05);
-    border:1px solid var(--line-strong);
+    color:var(--muted); background:rgba(255,255,255,.05); border:1px solid var(--line-strong);
     padding:7px 14px; border-radius:999px;
   }
-  .nav-status {
-    display:flex; align-items:center; gap:8px;
-  }
+  .nav-status { display:flex; align-items:center; gap:8px; }
   #conn-dot {
     width:8px; height:8px; border-radius:50%;
-    background:var(--danger); box-shadow:0 0 6px var(--danger);
-    transition:.3s;
+    background:var(--danger); box-shadow:0 0 6px var(--danger); transition:.3s;
   }
   #conn-dot.connected { background:var(--success); box-shadow:0 0 8px var(--success); }
   #conn-label { font-size:12px; font-weight:700; color:var(--muted); }
 
-  /* ─── PÁGINA ─────────────────────────────────────── */
+  /* PÁGINA */
   .page-content { padding-top:22px; }
-  .workspace-bar {
-    display:flex; align-items:center; gap:10px;
-    padding:13px 18px; margin-bottom:18px;
-  }
-  .workspace-bar .ico { font-size:16px; }
+  .workspace-bar { display:flex; align-items:center; gap:10px; padding:13px 18px; margin-bottom:18px; }
   #workspace-info { font-size:13px; color:var(--muted); word-break:break-all; }
   #workspace-info a { color:var(--accent); text-decoration:none; font-weight:700; }
   .eyebrow { color:var(--accent); font-size:11px; letter-spacing:.18em; text-transform:uppercase; font-weight:800; }
 
-  /* ─── AÇÕES ─────────────────────────────────────── */
+  /* AÇÕES */
   .action-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
   .btn, .btn-main, .btn-login, .btn-create, .btn-resend, .btn-sw {
-    border:none; cursor:pointer; color:white; font-family:inherit;
-    transition:.18s transform,.18s opacity;
-    touch-action:manipulation;
+    border:none; cursor:pointer; color:white; font-family:inherit; transition:.18s transform; touch-action:manipulation;
   }
   .btn:active, .btn-main:active, .btn-login:active, .btn-create:active { transform:scale(.97); }
   .btn-main { padding:16px; border-radius:16px; font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.04em; }
@@ -110,34 +78,25 @@
   .btn-off  { background:linear-gradient(135deg,#ff647b,#d83b57); }
   .btn-reset{ background:linear-gradient(135deg,#7a5cff,#5b3df5); }
 
-  /* ─── LAYOUT PRINCIPAL ───────────────────────────── */
+  /* LAYOUT */
   .layout { display:grid; grid-template-columns:300px 1fr; gap:18px; }
   .sidebar, .editor { padding:20px; }
   .section-title { margin:0 0 6px; font-size:16px; font-weight:800; }
   .section-sub { margin:0 0 16px; color:var(--muted); font-size:12px; line-height:1.5; }
   .sw-grid { display:grid; grid-template-columns:1fr; gap:10px; }
-  .sw-item {
-    background:rgba(255,255,255,.04); border:1px solid var(--line); padding:12px 14px; border-radius:16px;
-    display:flex; justify-content:space-between; align-items:center;
-  }
+  .sw-item { background:rgba(255,255,255,.04); border:1px solid var(--line); padding:12px 14px; border-radius:16px; display:flex; justify-content:space-between; align-items:center; }
   .sw-item strong { display:block; font-size:13px; }
   .sw-item span { display:block; font-size:11px; color:var(--muted); margin-top:3px; }
-  .btn-sw {
-    min-width:68px; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:900;
-    background:rgba(255,255,255,.08); color:#dfe9ff; border:1px solid var(--line-strong);
-  }
+  .btn-sw { min-width:68px; padding:10px 12px; border-radius:12px; font-size:12px; font-weight:900; background:rgba(255,255,255,.08); color:#dfe9ff; border:1px solid var(--line-strong); }
 
-  /* ─── TABS ───────────────────────────────────────── */
-  .tabs {
-    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px;
-    background:rgba(255,255,255,.03); border:1px solid var(--line); padding:8px; border-radius:18px;
-  }
+  /* TABS */
+  .tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; background:rgba(255,255,255,.03); border:1px solid var(--line); padding:8px; border-radius:18px; }
   .tab { text-align:center; padding:12px; cursor:pointer; font-size:12px; font-weight:800; border-radius:12px; color:var(--muted); }
   .tab.active { background:linear-gradient(135deg,rgba(40,192,255,.18),rgba(90,124,255,.18)); color:#e9f4ff; border:1px solid rgba(40,192,255,.22); }
   .tab-content { display:none; background:rgba(255,255,255,.03); border:1px solid var(--line); padding:18px; border-radius:18px; }
   .tab-content.active { display:block; }
 
-  /* ─── CAMPOS ─────────────────────────────────────── */
+  /* CAMPOS */
   label { display:block; font-size:11px; color:var(--muted); margin:0 0 6px; text-transform:uppercase; letter-spacing:.12em; font-weight:700; }
   input[type=text], input[type=password], textarea, select {
     width:100%; padding:13px 14px; border-radius:14px; border:1px solid var(--line-strong);
@@ -156,58 +115,28 @@
   .toggle-row input { width:18px; height:18px; accent-color:var(--accent); }
   .toggle-row span { font-size:13px; font-weight:700; }
 
-  /* ─── PRESETS ────────────────────────────────────── */
+  /* PRESETS */
   .preset-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-  .preset-actions button {
-    padding:13px 14px; font-size:12px; border-radius:14px; border:1px solid var(--line-strong);
-    cursor:pointer; font-weight:800; color:var(--text); background:rgba(255,255,255,.05); font-family:inherit;
-  }
+  .preset-actions button { padding:13px 14px; font-size:12px; border-radius:14px; border:1px solid var(--line-strong); cursor:pointer; font-weight:800; color:var(--text); background:rgba(255,255,255,.05); font-family:inherit; }
   .preset-list { display:flex; flex-direction:column; gap:8px; max-height:300px; overflow:auto; }
-  .p-item {
-    background:rgba(255,255,255,.04); padding:14px; border-radius:16px; font-size:13px;
-    cursor:pointer; border:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:10px;
-  }
+  .p-item { background:rgba(255,255,255,.04); padding:14px; border-radius:16px; font-size:13px; cursor:pointer; border:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:10px; }
   .p-item small { display:block; color:var(--muted); margin-top:3px; }
   .p-del { color:#ff93a1; font-size:18px; padding:0 4px; }
 
-  /* ─── AUTH ───────────────────────────────────────── */
-  #login-screen, #confirm-screen, #setup-screen {
-    max-width:460px; margin:40px auto 0; padding:28px;
-  }
+  /* AUTH */
+  #login-screen, #confirm-screen, #setup-screen { max-width:460px; margin:40px auto 0; padding:28px; }
   .auth-title { margin:0 0 6px; font-size:26px; font-weight:900; }
   .auth-sub { margin:0 0 22px; color:var(--muted); line-height:1.5; font-size:14px; }
-  .btn-login, .btn-create {
-    width:100%; padding:15px 16px; border-radius:14px; font-size:14px; font-weight:800;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    box-shadow:0 12px 30px rgba(40,192,255,.18);
-  }
-  .btn-secondary {
-    width:100%; padding:15px 16px; border-radius:14px; font-size:14px; font-weight:800;
-    background:rgba(255,255,255,.05); color:#dbe7ff; border:1px solid var(--line-strong);
-    margin-top:10px; font-family:inherit; cursor:pointer;
-  }
+  .btn-login, .btn-create { width:100%; padding:15px 16px; border-radius:14px; font-size:14px; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow:0 12px 30px rgba(40,192,255,.18); }
+  .btn-secondary { width:100%; padding:15px 16px; border-radius:14px; font-size:14px; font-weight:800; background:rgba(255,255,255,.05); color:#dbe7ff; border:1px solid var(--line-strong); margin-top:10px; font-family:inherit; cursor:pointer; }
   #login-error, #setup-error { font-size:12px; margin-top:6px; text-align:center; display:none; color:#ff93a1; }
-  .confirm-icon {
-    width:72px; height:72px; border-radius:22px; margin:0 auto 16px;
-    background:linear-gradient(135deg,rgba(40,192,255,.18),rgba(90,124,255,.18));
-    border:1px solid rgba(40,192,255,.28);
-    display:flex; align-items:center; justify-content:center; font-size:34px;
-  }
-  .confirm-email-box {
-    background:rgba(255,255,255,.04); border:1px solid var(--line-strong); border-radius:14px;
-    padding:14px; font-size:14px; font-weight:700; margin:16px 0 18px; word-break:break-all;
-  }
-  .confirm-tip {
-    background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:14px;
-    color:var(--muted); font-size:12px; line-height:1.6; padding:12px 14px; margin-top:16px;
-  }
-  .btn-resend {
-    width:100%; padding:13px 16px; border-radius:14px; font-size:13px; font-weight:800;
-    background:rgba(255,255,255,.05); border:1px solid var(--line-strong); color:#dce7ff; font-family:inherit; cursor:pointer;
-  }
+  .confirm-icon { width:72px; height:72px; border-radius:22px; margin:0 auto 16px; background:linear-gradient(135deg,rgba(40,192,255,.18),rgba(90,124,255,.18)); border:1px solid rgba(40,192,255,.28); display:flex; align-items:center; justify-content:center; font-size:34px; }
+  .confirm-email-box { background:rgba(255,255,255,.04); border:1px solid var(--line-strong); border-radius:14px; padding:14px; font-size:14px; font-weight:700; margin:16px 0 18px; word-break:break-all; }
+  .confirm-tip { background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:14px; color:var(--muted); font-size:12px; line-height:1.6; padding:12px 14px; margin-top:16px; }
+  .btn-resend { width:100%; padding:13px 16px; border-radius:14px; font-size:13px; font-weight:800; background:rgba(255,255,255,.05); border:1px solid var(--line-strong); color:#dce7ff; font-family:inherit; cursor:pointer; }
   #resend-msg { font-size:12px; margin-top:6px; text-align:center; display:none; color:#87f0bd; }
 
-  /* ─── RESPONSIVE ─────────────────────────────────── */
+  /* RESPONSIVE */
   @media (max-width:940px) { .layout { grid-template-columns:1fr; } }
   @media (max-width:640px) {
     .shell { padding:0 12px; }
@@ -215,13 +144,11 @@
     .tabs { grid-template-columns:repeat(2,1fr); }
     .color-grid, .preset-actions { grid-template-columns:1fr; }
     .topbar-nav { padding:0 16px; }
-    .brand-wordmark { font-size:17px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ─── NAVBAR ───────────────────────────────────────────── -->
 <nav class="topbar-nav">
   <div class="brand-row">
     <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView" class="brand-logo">
@@ -234,7 +161,6 @@
 </nav>
 
 <div class="shell">
-  <!-- ─── AUTH SCREENS ─────────────────────────────────── -->
   <div id="login-screen" class="panel">
     <div class="eyebrow" style="margin-bottom:8px">Acesso seguro</div>
     <h2 class="auth-title">Entrar no painel</h2>
@@ -272,27 +198,23 @@
     <p id="setup-error"></p>
   </div>
 
-  <!-- ─── PAINEL PRINCIPAL ──────────────────────────────── -->
   <div id="main-panel" style="display:none">
     <div class="page-content">
       <div class="workspace-bar panel">
-        <span class="ico">🔗</span>
-        <div id="workspace-info">Carregando workspace...</div>
+        <span style="font-size:16px">🔗</span>
+        <div id="workspace-info">Carregando...</div>
       </div>
-
       <div class="action-grid">
         <button class="btn-main btn-take" onclick="pushUpdate()">Atualizar GC</button>
         <button class="btn-main btn-all"  onclick="activateAll()">Ativar tudo</button>
         <button class="btn-main btn-off"  onclick="clearAll()">Limpar tela</button>
       </div>
-
       <div class="layout">
         <div class="sidebar panel">
           <h3 class="section-title">Controles rápidos</h3>
           <p class="section-sub">Ligue ou desligue cada bloco do overlay independentemente.</p>
           <div id="sw-list" class="sw-grid"></div>
         </div>
-
         <div class="editor panel">
           <h3 class="section-title">Editor de overlay</h3>
           <p class="section-sub">Conteúdo, ticker, identidade visual e presets.</p>
@@ -302,7 +224,6 @@
             <div class="tab" onclick="openTab(event,'t-design')">Estilo</div>
             <div class="tab" onclick="openTab(event,'t-presets')">Presets</div>
           </div>
-
           <div id="t-gc" class="tab-content active">
             <div class="inline-card">
               <label>Tag</label>
@@ -312,9 +233,8 @@
               <label>Detalhe</label>
               <input type="text" id="in-detail" value="">
             </div>
-            <button class="btn-main" style="width:100%;background:linear-gradient(135deg,var(--success),#0ea76d)" onclick="savePreset()">Salvar preset atual</button>
+            <button class="btn-main" style="width:100%;background:linear-gradient(135deg,#19c37d,#0ea76d)" onclick="savePreset()">Salvar preset atual</button>
           </div>
-
           <div id="t-ticker" class="tab-content">
             <div class="inline-card">
               <div class="speed-row"><label style="margin:0">Velocidade</label><span class="speed-val" id="speed-display">100</span></div>
@@ -323,7 +243,6 @@
               <textarea id="in-ticker" rows="3">+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++ COLATINA - ES +++</textarea>
             </div>
           </div>
-
           <div id="t-design" class="tab-content">
             <div class="inline-card">
               <div class="color-grid">
@@ -343,7 +262,6 @@
             </div>
             <button class="btn-main btn-reset" style="width:100%" onclick="resetConfig()">Resetar configurações</button>
           </div>
-
           <div id="t-presets" class="tab-content">
             <div class="preset-actions">
               <button onclick="exportPresets()">Exportar presets</button>
@@ -371,13 +289,11 @@ function hideAll() {
     .forEach(id => document.getElementById(id).style.display = 'none');
 }
 function setConnected(ok) {
-  const dot = document.getElementById('conn-dot');
-  const lbl = document.getElementById('conn-label');
-  dot.classList.toggle('connected', ok);
-  lbl.textContent = ok ? 'Overlay conectado' : 'Aguardando overlay';
+  document.getElementById('conn-dot').classList.toggle('connected', ok);
+  document.getElementById('conn-label').textContent = ok ? 'Overlay conectado' : 'Aguardando overlay';
 }
 
-// ─── AUTH ────────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────────
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pass  = document.getElementById('login-pass').value;
@@ -401,17 +317,10 @@ async function doSignup() {
 }
 function showLoginError(msg) {
   const el = document.getElementById('login-error');
-  const msgs = {
-    'Invalid login credentials':'E-mail ou senha incorretos.',
-    'Email not confirmed':'E-mail não confirmado. Verifique sua caixa de entrada.'
-  };
+  const msgs = { 'Invalid login credentials':'E-mail ou senha incorretos.', 'Email not confirmed':'E-mail não confirmado.' };
   el.textContent = msgs[msg] || msg; el.style.display = 'block';
 }
-function showConfirmScreen(email) {
-  hideAll();
-  document.getElementById('confirm-email-display').textContent = email;
-  document.getElementById('confirm-screen').style.display = 'block';
-}
+function showConfirmScreen(email) { hideAll(); document.getElementById('confirm-email-display').textContent = email; document.getElementById('confirm-screen').style.display = 'block'; }
 function backToLogin() { hideAll(); document.getElementById('login-screen').style.display = 'block'; }
 async function resendEmail() {
   const email = pendingEmail || document.getElementById('confirm-email-display').textContent;
@@ -435,25 +344,25 @@ sb.auth.onAuthStateChange((event, session) => {
   }
 });
 
-// ─── SETUP WORKSPACE ─────────────────────────────────────
+// ── SETUP ─────────────────────────────────────────────────
 async function createWorkspace() {
   const name = document.getElementById('setup-name').value.trim();
   const slug = document.getElementById('setup-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
   if (!name || !slug) { showSetupError('Preencha nome e slug.'); return; }
-  const { data: ws, error } = await sb.from('workspaces')
-    .insert({ user_id: currentUser.id, name, slug, plan:'free' }).select().single();
+  const { data: ws, error } = await sb.from('workspaces').insert({ user_id:currentUser.id, name, slug, plan:'free' }).select().single();
   if (error) { showSetupError(error.message); return; }
   await sb.from('overlay_state').insert({ workspace_id: ws.id });
-  workspaceId = ws.id; workspaceSlug = ws.slug;
-  hideAll(); showMainPanel();
+  workspaceId = ws.id; workspaceSlug = ws.slug; hideAll(); showMainPanel();
 }
 function showSetupError(msg) { const el = document.getElementById('setup-error'); el.textContent = msg; el.style.display = 'block'; }
 
-// ─── PAINEL PRINCIPAL ─────────────────────────────────────
+// ── PAINEL ────────────────────────────────────────────────
 function showMainPanel() {
   document.getElementById('main-panel').style.display = 'block';
-  const overlayUrl = `${location.origin}${location.pathname.replace('control.html','')}overlay.html?w=${workspaceSlug}`;
-  document.getElementById('workspace-info').innerHTML = `URL do Overlay → <a href="${overlayUrl}" target="_blank">${overlayUrl}</a>`;
+  // URL do overlay: sempre origin + /overlay.html (independente do nome deste arquivo)
+  const overlayUrl = location.origin + '/overlay.html?w=' + workspaceSlug;
+  document.getElementById('workspace-info').innerHTML =
+    'URL do Overlay (cole no OBS) → <a href="' + overlayUrl + '" target="_blank">' + overlayUrl + '</a>';
   buildSwitches(); loadPresetsFromDB(); subscribeToConnection();
   setTimeout(() => pushUpdate(), 800);
 }
@@ -466,15 +375,11 @@ function buildSwitches() {
     ticker:  { title:'Ticker',       desc:'Rodapé rolante' }
   };
   document.getElementById('sw-list').innerHTML = Object.keys(states).map(k =>
-    `<div class="sw-item">
-      <div><strong>${names[k].title}</strong><span>${names[k].desc}</span></div>
-      <button id="sw-${k}" class="btn-sw" onclick="toggle('${k}')">OFF</button>
-    </div>`
+    `<div class="sw-item"><div><strong>${names[k].title}</strong><span>${names[k].desc}</span></div><button id="sw-${k}" class="btn-sw" onclick="toggle('${k}')">OFF</button></div>`
   ).join('');
   updateSwitchUI();
 }
 function subscribeToConnection() {
-  // O overlay envia pings via broadcast quando está ativo
   sb.channel('ctrl_' + workspaceId)
     .on('broadcast', { event: 'ping' }, () => setConnected(true))
     .subscribe();
@@ -509,16 +414,9 @@ async function pushUpdate() {
   if (!workspaceId) return;
   const logo = await getLogo();
   const { error } = await sb.from('overlay_state').upsert({
-    workspace_id: workspaceId,
-    states,
-    data: {
-      tag:      document.getElementById('in-tag').value,
-      headline: document.getElementById('in-headline').value,
-      detail:   document.getElementById('in-detail').value,
-      ticker:   document.getElementById('in-ticker').value,
-      speed:    parseInt(document.getElementById('in-speed').value)
-    },
-    colors: { bg: document.getElementById('c-bg').value, txt: document.getElementById('c-txt').value },
+    workspace_id: workspaceId, states,
+    data: { tag:document.getElementById('in-tag').value, headline:document.getElementById('in-headline').value, detail:document.getElementById('in-detail').value, ticker:document.getElementById('in-ticker').value, speed:parseInt(document.getElementById('in-speed').value) },
+    colors: { bg:document.getElementById('c-bg').value, txt:document.getElementById('c-txt').value },
     logo, show_time: document.getElementById('in-show-time').checked,
     updated_at: new Date().toISOString()
   }, { onConflict:'workspace_id' });
@@ -550,7 +448,7 @@ async function loadPresetsFromDB() {
   document.getElementById('preset-list').innerHTML = data.map(p =>
     `<div class="p-item" onclick="applyPreset(${JSON.stringify(p.tag)},${JSON.stringify(p.headline)},${JSON.stringify(p.detail)})">
       <div><strong>${p.headline.substring(0,44)||'Sem título'}</strong><small>${p.tag||'Sem tag'}</small></div>
-      <span class="p-del" onclick="event.stopPropagation();deletePreset('${p.id}')">✕</span>
+      <span class="p-del" onclick="event.stopPropagation();deletePreset('${p.id}')">&#x2715;</span>
     </div>`
   ).join('');
 }
@@ -580,7 +478,7 @@ function importPresets(event) {
   reader.readAsText(file); event.target.value='';
 }
 
-// ─── INIT ─────────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────────
 sb.auth.getSession().then(({ data:{ session } }) => {
   if (session) { currentUser = session.user; afterLogin(); }
 });
