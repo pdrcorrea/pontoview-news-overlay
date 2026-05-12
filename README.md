@@ -1,6 +1,6 @@
-# 🎬 PontoView News Overlay
+# 🎬 PontoView News Overlay — SaaS v2.0
 
-> Sistema de overlay de notícias para transmissões ao vivo e mídia indoor. Desenvolvido por [PontoView](https://github.com/pdrcorrea) — Tecnologia em Mídia Indoor · Colatina, ES.
+> Sistema SaaS de overlay de notícias para transmissões ao vivo e mídia indoor. Controle pelo celular, em qualquer lugar, em tempo real via Supabase Realtime.
 
 ---
 
@@ -8,51 +8,48 @@
 
 | Arquivo | Função |
 |---|---|
-| `overlay.html` | Tela do overlay — abrir no OBS como **Browser Source** |
-| `control.html` | Painel de controle — abrir no navegador do operador |
+| `overlay.html` | Tela do overlay — adicionar no OBS como **Browser Source** com URL |
+| `control.html` | Painel de controle — acessar do celular ou PC, de qualquer lugar |
 
 ---
 
 ## 🚀 Como usar
 
-1. Abra o `control.html` em qualquer navegador moderno
-2. Abra o `overlay.html` **na mesma origem** (mesmo navegador, outra aba) ou adicione ao OBS como Browser Source
-3. O indicador no topo do painel ficará **verde** quando a conexão for detectada
-4. Use os botões para controlar os elementos em tempo real
-
-> ⚠️ **Importante:** O BroadcastChannel só funciona entre abas/janelas da **mesma origem**. Ambos os arquivos devem estar na mesma pasta e abertos pelo mesmo computador.
-
----
-
-## 🎛️ Funcionalidades
-
-- **ATUALIZAR GC** — envia manchete, tag, detalhe e ticker para o overlay
-- **ATIVAR TUDO** — liga todos os elementos de uma vez
-- **LIMPAR TELA** — oculta tudo com animação
-- **Switches individuais** — controle por elemento (AO VIVO, LOGO/HORA, TAG, GC PRINCIPAL, TICKER)
-- **Aba Estilo** — troca de cores de tema e logo em tempo real
-- **Aba Memória** — presets salvos localmente, exportar/importar JSON
-- **Resetar Configurações** — volta ao padrão de fábrica
-- **Indicador de conexão** — mostra se o overlay está ativo
+1. Abra o `control.html` hospedado (Cloudflare Pages, etc.)
+2. Crie sua conta e seu **workspace** com um slug único
+3. Copie a URL do overlay gerada (ex: `https://seusite.com/overlay.html?w=meu-slug`)
+4. Cole no OBS como **Browser Source**
+5. Controle o overlay do celular ou de qualquer PC em tempo real
 
 ---
 
-## ⚙️ Requisitos
+## 🛠 Stack
 
-- Navegador moderno com suporte a **BroadcastChannel API** (Chrome, Edge, Firefox)
-- Conexão com internet para carregar GSAP (CDN) e fonte Inter (Google Fonts)
-- Para uso offline: substituir CDN por arquivos locais (ver seção abaixo)
+- **Frontend:** HTML + JavaScript puro
+- **Backend:** [Supabase](https://supabase.com) (Auth + PostgreSQL + Realtime)
+- **Animações:** GSAP 3
+- **Deploy sugerido:** Cloudflare Pages
 
-### Versão offline (opcional)
+---
+
+## 🗄 Banco de Dados (Supabase)
+
 ```
-lib/
-  gsap.min.js       ← baixar de https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js
-fonts/
-  inter.woff2       ← baixar de Google Fonts
+workspaces     — um por cliente (slug único = URL do overlay)
+overlay_state  — estado atual do overlay (sincronizado em tempo real)
+presets        — manchetes salvas por workspace
 ```
 
 ---
 
-## 🏷️ Versão
+## 💰 Planos sugeridos
 
-`v1.0` — Maio 2026
+| Plano | Preço | Recursos |
+|---|---|---|
+| Free | R$ 0 | 1 workspace, logo PontoView |
+| Pro | R$ 49/mês | Logo customizada, 100 presets, suporte |
+| Agency | R$ 149/mês | 5 workspaces, white-label |
+
+---
+
+`v2.0` — Maio 2026 · PontoView · Colatina, ES
