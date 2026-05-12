@@ -6,25 +6,29 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  :root { --tema: #003366; --texto: #ffffff; --ciano: #00e5ff; }
+  :root { --tema: #003366; --texto: #ffffff; }
   body, html { margin:0; padding:0; width:100vw; height:100vh; overflow:hidden; font-family:'Inter',sans-serif; background:transparent; }
   #pv-canvas { position:relative; width:100%; height:100%; display:flex; flex-direction:column; justify-content:flex-end; padding:0 5vw 5vh 5vw; box-sizing:border-box; }
   #pv-master { display:flex; flex-direction:column; width:90vw; }
   .top-row { display:flex; height:4.2vh; margin-bottom:2px; }
+  /* live-label e tag-top: fundo = --tema, texto = --texto */
   #live-label, #tag-top { background:var(--tema); display:flex; align-items:center; clip-path:inset(0 100% 0 0); text-transform:uppercase; font-weight:900; }
   #live-label { color:var(--texto); width:10vw; justify-content:center; font-size:1.1vw; }
-  #tag-top { color:var(--ciano); padding:0 1.5vw; margin-left:2px; font-size:1.2vw; }
+  #tag-top { color:var(--texto); padding:0 1.5vw; margin-left:2px; font-size:1.2vw; flex:1; }
   .main-bar { display:flex; height:12vh; margin-bottom:2px; }
   #side-block { width:10vw; display:flex; flex-direction:column; clip-path:inset(0 100% 0 0); flex-shrink:0; }
   #logo-area { height:8vh; background:white; display:flex; align-items:center; justify-content:center; overflow:hidden; padding:5px; box-sizing:border-box; }
   #logo-area img { max-width:100%; max-height:100%; object-fit:contain; }
   #logo-area span { font-weight:900; color:#1a1a1a; font-size:1.2vw; text-align:center; }
-  #time-box { height:4vh; background:#e0e0e0; color:#1a1a1a; font-weight:800; font-size:1.3vw; display:flex; align-items:center; justify-content:center; border-bottom:4px solid var(--tema); }
+  /* time-box: fundo = --tema, texto = --texto */
+  #time-box { height:4vh; background:var(--tema); color:var(--texto); font-weight:800; font-size:1.3vw; display:flex; align-items:center; justify-content:center; }
   #news-content { flex:1; margin-left:2px; display:flex; flex-direction:column; overflow:hidden; }
   #headline-wrapper { background:white; color:#1a1a1a; padding:0 1.5vw; display:flex; align-items:center; flex:1; clip-path:inset(0 100% 0 0); border-right:0.8vw solid var(--tema); }
   #main-text { font-size:2.8vw; font-weight:900; text-transform:uppercase; line-height:1.1; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; word-break:break-word; }
-  #detail-box { height:4vh; background:rgba(0,0,0,0.9); color:#eee; padding:0 1.5vw; font-size:1.3vw; display:flex; align-items:center; margin-top:2px; clip-path:inset(0 100% 0 0); }
-  #ticker-wrap { width:99%; background:#000; height:4vh; overflow:hidden; display:flex; align-items:center; border-left:1vw solid var(--ciano); clip-path:inset(0 100% 0 0); position:relative; }
+  /* detail-box: fundo = --tema, texto = --texto */
+  #detail-box { height:4vh; background:var(--tema); color:var(--texto); padding:0 1.5vw; font-size:1.3vw; display:flex; align-items:center; margin-top:2px; clip-path:inset(0 100% 0 0); }
+  /* ticker-wrap: fundo preto fixo, borda = --tema */
+  #ticker-wrap { width:99%; background:#000; height:4vh; overflow:hidden; display:flex; align-items:center; border-left:1vw solid var(--tema); clip-path:inset(0 100% 0 0); position:relative; }
   #ticker-text { white-space:nowrap; color:white; font-size:1.2vw; font-weight:700; position:absolute; will-change:transform; }
 </style>
 </head>
@@ -56,6 +60,7 @@ const params = new URLSearchParams(location.search);
 const workspaceSlug = params.get('w');
 let tickerTween, currentStates = {}, tickerSpeed = 100, lastTickerText = '';
 let clockInterval = null;
+
 function startClock() {
   if (clockInterval) clearInterval(clockInterval);
   clockInterval = setInterval(() => {
@@ -64,50 +69,7 @@ function startClock() {
   }, 1000);
 }
 startClock();
-function applyState(row) {
-  const { states, data, colors, logo, show_time } = row;
-  if (colors) {
-    document.documentElement.style.setProperty('--tema', colors.bg);
-    document.documentElement.style.setProperty('--texto', colors.txt);
-  }
-  if (show_time !== undefined) {
-    document.getElementById('time-box').style.display = show_time ? 'flex' : 'none';
-    document.getElementById('logo-area').style.height = show_time ? '8vh' : '12vh';
-  }
-  if (logo) {
-    const logoArea = document.getElementById('logo-area');
-    if (logo.type === 'img') {
-      const isImg = /\.(png|jpg|jpeg|gif|webp|svg)(\?.*)?$/i.test(logo.val) || logo.val.startsWith('data:image');
-      logoArea.innerHTML = isImg ? `<img src="${logo.val}" alt="logo">` : `<span>${logo.val}</span>`;
-    } else { logoArea.innerHTML = `<span>${logo.val || 'PONTO VIEW'}</span>`; }
-  }
-  if (data) {
-    document.getElementById('tag-top').innerText = data.tag || '';
-    document.getElementById('main-text').innerText = data.headline || '';
-    document.getElementById('detail-box').innerText = data.detail || '';
-    if (lastTickerText !== data.ticker) {
-      document.getElementById('ticker-text').innerText = data.ticker || '';
-      lastTickerText = data.ticker || '';
-    }
-    if (tickerSpeed !== (data.speed || 100)) {
-      tickerSpeed = data.speed || 100;
-      if (currentStates.ticker) { if (tickerTween) tickerTween.kill(); setTimeout(startTicker, 200); }
-    }
-  }
-  if (states) {
-    currentStates = states;
-    const cfg = { duration: 0.6, ease: 'power3.inOut' };
-    gsap.to('#live-label',       { clipPath: states.live     ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
-    gsap.to('#tag-top',          { clipPath: states.tag      ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
-    gsap.to('#side-block',       { clipPath: states.side     ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
-    gsap.to('#headline-wrapper', { clipPath: states.headline ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
-    const hasD = document.getElementById('detail-box').innerText.trim() !== '';
-    gsap.to('#detail-box',       { clipPath: (states.headline && hasD) ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
-    gsap.to('#ticker-wrap',      { clipPath: states.ticker   ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg,
-      onComplete: () => { if (states.ticker) { if (tickerTween) tickerTween.kill(); startTicker(); } }
-    });
-  }
-}
+
 function startTicker() {
   if (tickerTween) tickerTween.kill();
   const el = document.getElementById('ticker-text');
@@ -117,6 +79,82 @@ function startTicker() {
   gsap.set(el, { x: parentW });
   tickerTween = gsap.to(el, { x: -selfW, duration: (selfW + parentW) / tickerSpeed, ease: 'none', repeat: -1 });
 }
+
+function applyState(row) {
+  const { states, data, colors, logo, show_time } = row;
+
+  // Cores: atualiza CSS vars e o border do headline (que usa var(--tema) via CSS, ok)
+  if (colors) {
+    document.documentElement.style.setProperty('--tema', colors.bg);
+    document.documentElement.style.setProperty('--texto', colors.txt);
+  }
+
+  if (show_time !== undefined) {
+    document.getElementById('time-box').style.display = show_time ? 'flex' : 'none';
+    document.getElementById('logo-area').style.height = show_time ? '8vh' : '12vh';
+  }
+
+  if (logo) {
+    const logoArea = document.getElementById('logo-area');
+    if (logo.type === 'img') {
+      const isImg = /\.(png|jpg|jpeg|gif|webp|svg)(\?.*)?$/i.test(logo.val) || logo.val.startsWith('data:image');
+      logoArea.innerHTML = isImg ? `<img src="${logo.val}" alt="logo">` : `<span>${logo.val}</span>`;
+    } else { logoArea.innerHTML = `<span>${logo.val || 'PONTO VIEW'}</span>`; }
+  }
+
+  if (data) {
+    document.getElementById('tag-top').innerText = data.tag || '';
+    document.getElementById('main-text').innerText = data.headline || '';
+    document.getElementById('detail-box').innerText = data.detail || '';
+
+    // Ticker: só reinicia se o texto mudou ou a velocidade mudou
+    const newText = data.ticker || '';
+    const newSpeed = data.speed || 100;
+    const textChanged = lastTickerText !== newText;
+    const speedChanged = tickerSpeed !== newSpeed;
+
+    if (textChanged) {
+      document.getElementById('ticker-text').innerText = newText;
+      lastTickerText = newText;
+    }
+    if (speedChanged) {
+      tickerSpeed = newSpeed;
+    }
+    // Reinicia o ticker somente se algo que afeta a animação mudou
+    if ((textChanged || speedChanged) && currentStates.ticker) {
+      if (tickerTween) tickerTween.kill();
+      // Pequeno delay para o DOM atualizar o offsetWidth
+      setTimeout(startTicker, 50);
+    }
+  }
+
+  if (states) {
+    currentStates = states;
+    const cfg = { duration: 0.6, ease: 'power3.inOut' };
+    gsap.to('#live-label',       { clipPath: states.live     ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+    gsap.to('#tag-top',          { clipPath: states.tag      ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+    gsap.to('#side-block',       { clipPath: states.side     ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+    gsap.to('#headline-wrapper', { clipPath: states.headline ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+    const hasD = document.getElementById('detail-box').innerText.trim() !== '';
+    gsap.to('#detail-box',       { clipPath: (states.headline && hasD) ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg });
+
+    // Ticker: anima visibilidade mas SÓ reinicia a rolagem se o ticker não estava ativo antes
+    const tickerWasActive = currentStates.ticker; // já atualizado acima
+    gsap.to('#ticker-wrap', {
+      clipPath: states.ticker ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)', ...cfg,
+      onComplete: () => {
+        if (states.ticker) {
+          // Se o ticker não estava rodando, inicia
+          if (!tickerTween || tickerTween.killed) startTicker();
+        } else {
+          // Para o ticker ao esconder
+          if (tickerTween) { tickerTween.kill(); tickerTween = null; }
+        }
+      }
+    });
+  }
+}
+
 async function init() {
   if (!workspaceSlug) {
     document.body.style.background = '#111';
@@ -129,7 +167,8 @@ async function init() {
   const { data: state } = await sb.from('overlay_state').select('*').eq('workspace_id', workspaceId).single();
   if (state) applyState(state);
   sb.channel('overlay_' + workspaceId)
-    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'overlay_state', filter: `workspace_id=eq.${workspaceId}` }, (payload) => { applyState(payload.new); })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'overlay_state', filter: `workspace_id=eq.${workspaceId}` },
+      (payload) => { applyState(payload.new); })
     .subscribe();
 }
 init();
