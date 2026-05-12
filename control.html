@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PontoView Studio</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@400;700;900&family=Oswald:wght@400;700&family=Montserrat:wght@400;700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
@@ -35,29 +36,17 @@ body{
 .brand-row{display:flex;align-items:center;gap:14px}
 .brand-logo{height:36px;width:auto;display:block}
 .nav-badge{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--line-strong);padding:7px 14px;border-radius:999px}
-.nav-status{display:flex;align-items:center;gap:8px}
+.nav-right{display:flex;align-items:center;gap:10px}
 #conn-dot{width:8px;height:8px;border-radius:50%;background:var(--danger);box-shadow:0 0 6px var(--danger);transition:.3s}
 #conn-dot.connected{background:var(--success);box-shadow:0 0 8px var(--success)}
 #conn-label{font-size:12px;font-weight:700;color:var(--muted)}
+.btn-logout{font-size:11px;font-weight:800;color:#ff93a1;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.2);padding:7px 14px;border-radius:999px;cursor:pointer;display:none;transition:.15s}
+.btn-logout:hover{background:rgba(255,93,115,.18)}
 
-/* ─── TELA DE LOGIN SaaS ─── */
-.auth-page{
-  min-height:calc(100dvh - 66px);
-  display:flex;align-items:center;justify-content:center;
-  padding:32px 18px;
-}
-.auth-split{
-  display:grid;grid-template-columns:1fr 1fr;
-  max-width:900px;width:100%;
-  background:var(--card);border:1px solid var(--line);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-radius:24px;box-shadow:var(--shadow);overflow:hidden;
-}
-.auth-left{
-  background:linear-gradient(145deg,rgba(40,192,255,.12),rgba(90,124,255,.18));
-  border-right:1px solid var(--line);padding:48px 40px;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
+/* LOGIN SaaS */
+.auth-page{min-height:calc(100dvh - 66px);display:flex;align-items:center;justify-content:center;padding:32px 18px}
+.auth-split{display:grid;grid-template-columns:1fr 1fr;max-width:900px;width:100%;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.auth-left{background:linear-gradient(145deg,rgba(40,192,255,.12),rgba(90,124,255,.18));border-right:1px solid var(--line);padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between}
 .auth-left-brand{display:flex;align-items:center;gap:12px;margin-bottom:40px}
 .auth-left-brand img{height:40px}
 .auth-left h1{font-size:28px;font-weight:900;line-height:1.2;margin:0 0 14px}
@@ -79,8 +68,6 @@ label{display:block;font-size:11px;color:var(--muted);margin:0 0 6px;text-transf
 .input-wrap input:focus{border-color:rgba(40,192,255,.75);background:rgba(40,192,255,.04)}
 .btn-auth-primary{width:100%;padding:15px;border-radius:14px;font-size:14px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(40,192,255,.22);transition:.18s transform}
 .btn-auth-primary:active{transform:scale(.98)}
-.auth-divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:var(--muted);font-size:12px}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--line-strong)}
 #login-error,#setup-error{font-size:12px;margin-top:8px;text-align:center;display:none;color:#ff93a1;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.2);border-radius:10px;padding:10px}
 
 /* CONFIRM */
@@ -111,7 +98,7 @@ textarea{resize:vertical;min-height:80px}
 .eyebrow{color:var(--accent);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
 .btn-create{width:100%;padding:14px;border-radius:14px;font-size:14px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit}
 
-/* PAINEL PRINCIPAL */
+/* PAINEL */
 .page-content{padding-top:22px}
 .workspace-bar{display:flex;align-items:center;gap:10px;padding:13px 18px;margin-bottom:18px}
 #workspace-info{font-size:13px;color:var(--muted);word-break:break-all;flex:1}
@@ -150,12 +137,14 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 .toggle-row input{width:18px;height:18px;accent-color:var(--accent)}
 .toggle-row span{font-size:13px;font-weight:700}
 
-/* PRESETS – tela de seleção */
+/* PRESETS */
 .preset-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;max-height:340px;overflow:auto}
+/* Wipe container: clip-path animado pelo GSAP */
 .p-card{
   background:rgba(255,255,255,.04);border:2px solid var(--line);
   border-radius:16px;padding:14px;cursor:pointer;
-  transition:.15s all;position:relative;
+  transition:.15s border-color,.15s background;position:relative;
+  clip-path:inset(0 100% 0 0); /* começa oculto, revelado por GSAP */
 }
 .p-card:hover{border-color:rgba(40,192,255,.4);background:rgba(40,192,255,.06)}
 .p-card.selected{border-color:var(--accent);background:rgba(40,192,255,.1);box-shadow:0 0 0 3px rgba(40,192,255,.15)}
@@ -166,12 +155,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 .p-badge{font-size:10px;background:rgba(40,192,255,.12);color:var(--accent);border-radius:6px;padding:2px 6px;margin-left:4px}
 .preset-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .preset-actions-row button{padding:12px 14px;font-size:12px;border-radius:14px;border:1px solid var(--line-strong);cursor:pointer;font-weight:800;color:var(--text);background:rgba(255,255,255,.05);font-family:inherit}
-.btn-apply-preset{
-  width:100%;padding:14px;border-radius:14px;font-size:13px;font-weight:800;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;
-  border:none;cursor:pointer;font-family:inherit;margin-bottom:8px;
-  opacity:.4;pointer-events:none;transition:.2s opacity;
-}
+.btn-apply-preset{width:100%;padding:14px;border-radius:14px;font-size:13px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit;margin-bottom:8px;opacity:.4;pointer-events:none;transition:.2s opacity}
 .btn-apply-preset.ready{opacity:1;pointer-events:auto}
 .preset-empty{text-align:center;color:var(--muted);font-size:13px;padding:24px 0}
 
@@ -185,48 +169,37 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
   <div class="brand-row">
     <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView" class="brand-logo">
   </div>
-  <div class="nav-status">
+  <div class="nav-right">
     <div id="conn-dot"></div>
     <span id="conn-label">Desconectado</span>
-    <span class="nav-badge" style="margin-left:8px">Broadcast Control</span>
+    <span class="nav-badge">Broadcast Control</span>
+    <button class="btn-logout" id="btn-logout" onclick="doLogout()">⏻ Sair</button>
   </div>
 </nav>
 
+<!-- LOGIN -->
 <div id="login-page" class="auth-page" style="display:flex">
   <div class="auth-split">
-    <!-- Lado esquerdo – Marketing -->
     <div class="auth-left">
       <div>
-        <div class="auth-left-brand">
-          <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView">
-        </div>
+        <div class="auth-left-brand"><img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView"></div>
         <h1>Mídia indoor<br>no nível profissional</h1>
         <p>Controle GCs, tickers e identidade visual dos seus clientes em tempo real, direto do navegador.</p>
         <div class="auth-feature">
           <div class="auth-feature-icon">📡</div>
-          <div class="auth-feature-text">
-            <strong>Transmissão em tempo real</strong>
-            <span>Alterações refletem no overlay instantaneamente</span>
-          </div>
+          <div class="auth-feature-text"><strong>Transmissão em tempo real</strong><span>Alterações refletem no overlay instantaneamente</span></div>
         </div>
         <div class="auth-feature">
           <div class="auth-feature-icon">🎨</div>
-          <div class="auth-feature-text">
-            <strong>Identidade visual por cliente</strong>
-            <span>Cores, fontes e logos personalizados por workspace</span>
-          </div>
+          <div class="auth-feature-text"><strong>Identidade visual por cliente</strong><span>Cores, fontes e logos personalizados por workspace</span></div>
         </div>
         <div class="auth-feature">
           <div class="auth-feature-icon">💾</div>
-          <div class="auth-feature-text">
-            <strong>Presets completos</strong>
-            <span>Salve e acione layouts inteiros com um clique</span>
-          </div>
+          <div class="auth-feature-text"><strong>Presets completos</strong><span>Salve e acione layouts inteiros com um clique</span></div>
         </div>
       </div>
       <div class="auth-left-footer">© 2026 PontoView · Tecnologia em Mídia Indoor</div>
     </div>
-    <!-- Lado direito – Formulário -->
     <div class="auth-right">
       <p class="auth-form-sub" style="margin-bottom:8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--accent)">Acesso seguro</p>
       <h2 class="auth-form-title" id="auth-form-title">Entrar no Studio</h2>
@@ -245,7 +218,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
   </div>
 </div>
 
-<!-- CONFIRMAÇÃO DE E-MAIL -->
+<!-- CONFIRMAÇÃO -->
 <div id="confirm-page" class="confirm-page" style="display:none">
   <div class="confirm-card panel">
     <div class="confirm-icon">✉️</div>
@@ -256,11 +229,11 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
     <button class="btn-resend" onclick="resendEmail()">📨 Reenviar e-mail</button>
     <div id="resend-msg">✔ E-mail reenviado com sucesso.</div>
     <button class="btn-secondary-sm" onclick="backToLogin()">← Voltar ao login</button>
-    <div class="confirm-tip">💡 Não encontrou? Verifique a pasta de spam ou promoções.</div>
+    <div class="confirm-tip">💡 Não encontrou? Verifique spam ou promoções.</div>
   </div>
 </div>
 
-<!-- WORKSPACE SELECTOR -->
+<!-- WORKSPACE -->
 <div id="ws-page" class="ws-page" style="display:none">
   <div class="ws-card panel">
     <div class="eyebrow" style="margin-bottom:8px">Seus workspaces</div>
@@ -308,19 +281,14 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
             <div class="tab" onclick="openTab(event,'t-design')">Estilo</div>
             <div class="tab" onclick="openTab(event,'t-presets')">Presets</div>
           </div>
-
           <div id="t-gc" class="tab-content active">
             <div class="inline-card">
-              <label>Tag</label>
-              <input type="text" id="in-tag" value="URGENTE">
-              <label>Manchete</label>
-              <textarea id="in-headline" rows="2">PONTOVIEW BROADCAST v2.0</textarea>
-              <label>Detalhe</label>
-              <input type="text" id="in-detail" value="">
+              <label>Tag</label><input type="text" id="in-tag" value="URGENTE">
+              <label>Manchete</label><textarea id="in-headline" rows="2">PONTOVIEW BROADCAST v2.0</textarea>
+              <label>Detalhe</label><input type="text" id="in-detail" value="">
             </div>
             <button class="btn-main" style="width:100%;background:linear-gradient(135deg,#19c37d,#0ea76d)" onclick="savePreset()">Salvar preset completo 💾</button>
           </div>
-
           <div id="t-ticker" class="tab-content">
             <div class="inline-card">
               <div class="speed-row"><label style="margin:0">Velocidade</label><span class="speed-val" id="speed-display">100</span></div>
@@ -329,7 +297,6 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
               <textarea id="in-ticker" rows="3">+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++ COLATINA - ES +++</textarea>
             </div>
           </div>
-
           <div id="t-design" class="tab-content">
             <div class="inline-card">
               <p class="inline-card-title">🎨 Cores das barras</p>
@@ -342,24 +309,19 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
               <p class="inline-card-title">🔤 Tipografia</p>
               <label>Família</label>
               <select id="in-font-family" onchange="pushUpdate()">
-                <option value="Inter">Inter (padrão)</option>
-                <option value="Roboto">Roboto</option>
-                <option value="Oswald">Oswald</option>
-                <option value="Montserrat">Montserrat</option>
-                <option value="Lato">Lato</option>
+                <option value="Inter">Inter (padrão)</option><option value="Roboto">Roboto</option>
+                <option value="Oswald">Oswald</option><option value="Montserrat">Montserrat</option><option value="Lato">Lato</option>
               </select>
               <label>Peso</label>
               <select id="in-font-weight" onchange="pushUpdate()">
-                <option value="900">Black (900)</option>
-                <option value="800">ExtraBold (800)</option>
-                <option value="700">Bold (700)</option>
-                <option value="400">Regular (400)</option>
+                <option value="900">Black (900)</option><option value="800">ExtraBold (800)</option>
+                <option value="700">Bold (700)</option><option value="400">Regular (400)</option>
               </select>
               <div class="speed-row"><label style="margin:0">Tamanho</label><span class="speed-val" id="font-size-display">2.8vw</span></div>
               <input type="range" id="in-font-size" min="1.2" max="5" step="0.1" value="2.8" oninput="document.getElementById('font-size-display').innerText=this.value+'vw';pushUpdate()">
             </div>
             <div class="inline-card">
-              <p class="inline-card-title">💧 Opacidade das barras</p>
+              <p class="inline-card-title">💧 Opacidade</p>
               <div class="speed-row"><label style="margin:0">Opacidade</label><span class="speed-val" id="opacity-display">100%</span></div>
               <input type="range" id="in-opacity" min="0.1" max="1" step="0.05" value="1" oninput="document.getElementById('opacity-display').innerText=Math.round(this.value*100)+'%';pushUpdate()">
             </div>
@@ -368,9 +330,7 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
               <label class="toggle-row" for="in-show-time"><input type="checkbox" id="in-show-time" checked><span>Exibir relógio junto da marca</span></label>
               <label>Modo da logo</label>
               <select id="logo-mode" onchange="toggleLogoFields()">
-                <option value="text">Texto</option>
-                <option value="url">Link (URL)</option>
-                <option value="file">Arquivo local</option>
+                <option value="text">Texto</option><option value="url">Link (URL)</option><option value="file">Arquivo local</option>
               </select>
               <input type="text" id="in-logo-text" value="PONTO VIEW" placeholder="Texto da logo">
               <input type="text" id="in-logo-url" style="display:none" placeholder="https://...">
@@ -378,7 +338,6 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
             </div>
             <button class="btn-main btn-reset" style="width:100%" onclick="resetConfig()">Resetar configurações</button>
           </div>
-
           <div id="t-presets" class="tab-content">
             <p style="font-size:12px;color:var(--muted);margin:0 0 12px">Selecione um preset e clique em <strong style="color:var(--text)">Aplicar</strong> para transmitir.</p>
             <div class="preset-actions-row">
@@ -411,6 +370,9 @@ function hideAll(){
   document.getElementById('ws-page').style.display='none';
   document.getElementById('main-panel').style.display='none';
 }
+function setLoggedIn(yes){
+  document.getElementById('btn-logout').style.display=yes?'block':'none';
+}
 function setConnected(ok){
   document.getElementById('conn-dot').classList.toggle('connected',ok);
   document.getElementById('conn-label').textContent=ok?'Overlay conectado':'Aguardando overlay';
@@ -430,10 +392,7 @@ function switchAuthTab(mode){
   }
   document.getElementById('login-error').style.display='none';
 }
-async function doAuth(){
-  if(authMode==='login')await doLogin();
-  else await doSignup();
-}
+async function doAuth(){if(authMode==='login')await doLogin();else await doSignup();}
 async function doLogin(){
   const email=document.getElementById('login-email').value.trim();
   const pass=document.getElementById('login-pass').value;
@@ -461,7 +420,7 @@ function showLoginError(msg){
   el.textContent=msgs[msg]||msg;el.style.display='block';
 }
 function showConfirmScreen(email){hideAll();document.getElementById('confirm-email-display').textContent=email;document.getElementById('confirm-page').style.display='flex';}
-function backToLogin(){hideAll();document.getElementById('login-page').style.display='flex';}
+function backToLogin(){hideAll();document.getElementById('login-page').style.display='flex';setLoggedIn(false);}
 async function resendEmail(){
   const email=pendingEmail||document.getElementById('confirm-email-display').textContent;
   await sb.auth.resend({type:'signup',email});
@@ -471,7 +430,22 @@ async function resendEmail(){
 async function afterLogin(){
   const {data:{user}}=await sb.auth.getUser();
   if(!user)return;
-  currentUser=user;hideAll();showWsScreen();
+  currentUser=user;setLoggedIn(true);hideAll();showWsScreen();
+}
+async function doLogout(){
+  if(!confirm('Sair do PontoView Studio?'))return;
+  if(connChannel){sb.removeChannel(connChannel);connChannel=null;}
+  await sb.auth.signOut();
+  currentUser=null;workspaceId=null;workspaceSlug=null;workspaceName=null;
+  selectedPresetId=null;presetsCache=[];
+  states={live:false,side:false,tag:false,headline:false,ticker:false};
+  setLoggedIn(false);setConnected(false);
+  hideAll();
+  document.getElementById('login-page').style.display='flex';
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-error').style.display='none';
+  switchAuthTab('login');
 }
 sb.auth.onAuthStateChange((event,session)=>{
   if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED')&&session?.user){
@@ -645,20 +619,25 @@ function renderPresetGrid(){
     grid.innerHTML='<div class="preset-empty" style="grid-column:1/-1">Nenhum preset salvo ainda.<br><small>Use a aba GC para salvar o primeiro.</small></div>';
     return;
   }
+  // Renderiza cards com clip-path fechado; GSAP anima a abertura (wipe da esquerda p/ direita)
   grid.innerHTML=presetsCache.map(p=>{
     const sel=p.id===selectedPresetId;
-    return `<div class="p-card${sel?' selected':''}" onclick="selectPreset('${p.id}')">
+    return `<div class="p-card${sel?' selected':''}" id="pcard-${p.id}" onclick="selectPreset('${p.id}')">
       <div class="p-card-title">${(p.headline||'Sem título').substring(0,60)}</div>
       <div class="p-card-tag">${p.tag||'Sem tag'}${p.colors?'<span class="p-badge">🎨</span>':''}</div>
       <span class="p-card-del" onclick="event.stopPropagation();deletePreset('${p.id}')">✕</span>
     </div>`;
   }).join('');
+  // Wipe de entrada: cada card abre com clip-path igual ao overlay
+  const cards=grid.querySelectorAll('.p-card');
+  gsap.to(cards,{
+    clipPath:'inset(0 0% 0 0)',
+    duration:0.55,
+    ease:'power3.inOut',
+    stagger:0.06
+  });
 }
-function selectPreset(id){
-  selectedPresetId=id;
-  renderPresetGrid();
-  renderPresetBtn();
-}
+function selectPreset(id){selectedPresetId=id;renderPresetGrid();renderPresetBtn();}
 function renderPresetBtn(){
   const btn=document.getElementById('btn-apply-preset');
   btn.classList.toggle('ready',!!selectedPresetId);
@@ -667,22 +646,38 @@ function applySelectedPreset(){
   if(!selectedPresetId)return;
   const p=presetsCache.find(x=>x.id===selectedPresetId);
   if(!p)return;
-  document.getElementById('in-tag').value=p.tag||'';
-  document.getElementById('in-headline').value=p.headline||'';
-  document.getElementById('in-detail').value=p.detail||'';
-  if(p.colors){document.getElementById('c-bg').value=p.colors.bg||'#003366';document.getElementById('c-txt').value=p.colors.txt||'#ffffff';}
-  if(p.font_family)document.getElementById('in-font-family').value=p.font_family;
-  if(p.font_weight)document.getElementById('in-font-weight').value=p.font_weight;
-  if(p.font_size!=null){document.getElementById('in-font-size').value=p.font_size;document.getElementById('font-size-display').innerText=p.font_size+'vw';}
-  if(p.bar_opacity!=null){document.getElementById('in-opacity').value=p.bar_opacity;document.getElementById('opacity-display').innerText=Math.round(p.bar_opacity*100)+'%';}
-  if(p.logo){
-    if(p.logo.type==='img'){document.getElementById('logo-mode').value='url';document.getElementById('in-logo-url').value=p.logo.val||'';}
-    else{document.getElementById('logo-mode').value='text';document.getElementById('in-logo-text').value=p.logo.val||'';}
-    toggleLogoFields();
-  }
-  pushUpdate();
+  // Wipe de saída nos cards antes de aplicar e recarregar
+  const cards=document.querySelectorAll('#preset-list .p-card');
+  gsap.to(cards,{
+    clipPath:'inset(0 100% 0 0)',
+    duration:0.4,
+    ease:'power3.in',
+    stagger:0.04,
+    onComplete:()=>{
+      document.getElementById('in-tag').value=p.tag||'';
+      document.getElementById('in-headline').value=p.headline||'';
+      document.getElementById('in-detail').value=p.detail||'';
+      if(p.colors){document.getElementById('c-bg').value=p.colors.bg||'#003366';document.getElementById('c-txt').value=p.colors.txt||'#ffffff';}
+      if(p.font_family)document.getElementById('in-font-family').value=p.font_family;
+      if(p.font_weight)document.getElementById('in-font-weight').value=p.font_weight;
+      if(p.font_size!=null){document.getElementById('in-font-size').value=p.font_size;document.getElementById('font-size-display').innerText=p.font_size+'vw';}
+      if(p.bar_opacity!=null){document.getElementById('in-opacity').value=p.bar_opacity;document.getElementById('opacity-display').innerText=Math.round(p.bar_opacity*100)+'%';}
+      if(p.logo){
+        if(p.logo.type==='img'){document.getElementById('logo-mode').value='url';document.getElementById('in-logo-url').value=p.logo.val||'';}
+        else{document.getElementById('logo-mode').value='text';document.getElementById('in-logo-text').value=p.logo.val||'';}
+        toggleLogoFields();
+      }
+      pushUpdate();
+      // Re-renderiza com wipe de entrada
+      renderPresetGrid();
+    }
+  });
 }
 async function deletePreset(id){
+  const card=document.getElementById('pcard-'+id);
+  if(card){
+    await new Promise(resolve=>gsap.to(card,{clipPath:'inset(0 100% 0 0)',duration:0.35,ease:'power3.in',onComplete:resolve}));
+  }
   await sb.from('presets').delete().eq('id',id);
   if(selectedPresetId===id){selectedPresetId=null;renderPresetBtn();}
   presetsCache=presetsCache.filter(p=>p.id!==id);
@@ -706,7 +701,7 @@ function importPresets(event){
 }
 
 sb.auth.getSession().then(({data:{session}})=>{
-  if(session){currentUser=session.user;afterLogin();}
+  if(session){currentUser=session.user;setLoggedIn(true);afterLogin();}
 });
 </script>
 </body>
