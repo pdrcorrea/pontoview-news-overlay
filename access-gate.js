@@ -9,11 +9,11 @@
  * 3. Se NÃO existir → exibe tela de pagamento com botão para o link do Mercado Pago.
  * 4. Se existir → libera o painel normalmente.
  * 5. Ao retornar do pagamento, o usuário clica em "Já paguei" → o sistema verifica novamente.
- *    (A confirmação automática pode ser feita via webhook do Mercado Pago no futuro.)
+ *    (A confirmação automática é feita via webhook do Mercado Pago.)
  */
 
 /* ── CONFIG — SUBSTITUA PELA SUA URL DO MERCADO PAGO ──────────────────── */
-const MP_PAYMENT_LINK = 'COLE_AQUI_O_LINK_DO_MERCADO_PAGO';
+const MP_PAYMENT_LINK = 'https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=d1ac77091a4a4c45bbc6fbe853e16c59';
 const PRODUCT_NAME    = 'PontoView Studio PRO';
 const PRODUCT_PRICE   = 'R$49/mês';
 const SUPPORT_WA      = 'https://wa.me/5527999011689?text=Preciso+de+ajuda+com+o+PontoView+Studio';
