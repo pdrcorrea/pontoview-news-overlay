@@ -43,6 +43,22 @@ body{
 .btn-logout{font-size:11px;font-weight:800;color:#ff93a1;background:rgba(255,93,115,.08);border:1px solid rgba(255,93,115,.2);padding:6px 12px;border-radius:999px;cursor:pointer;display:none;transition:.15s;display:flex;align-items:center;gap:5px}
 .btn-logout:hover{background:rgba(255,93,115,.18)}
 
+/* BADGE DE PLANO */
+.plan-badge-nav{
+  display:none;align-items:center;gap:5px;
+  font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;
+  cursor:pointer;transition:.15s;
+}
+.plan-badge-nav.free{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--muted);
+}
+.plan-badge-nav.pro{
+  background:linear-gradient(135deg,rgba(40,192,255,.15),rgba(90,124,255,.2));
+  border:1px solid rgba(40,192,255,.3);color:var(--accent);
+}
+.plan-badge-nav:hover{opacity:.8}
+
 /* BANNER */
 #session-banner{
   display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
@@ -54,6 +70,54 @@ body{
 #session-banner p strong{color:var(--text)}
 #session-banner a{color:var(--accent)}
 #session-banner button{white-space:nowrap;padding:9px 18px;border-radius:12px;font-size:12px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:white;border:none;cursor:pointer;font-family:inherit}
+
+/* MODAL DE UPGRADE */
+#upgrade-modal{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(5,10,20,.85);backdrop-filter:blur(16px);
+  align-items:center;justify-content:center;padding:20px;
+}
+#upgrade-modal.open{display:flex}
+.upgrade-card{
+  background:var(--card);border:1px solid rgba(40,192,255,.35);
+  border-radius:24px;padding:36px 32px;max-width:440px;width:100%;
+  box-shadow:0 0 0 1px rgba(40,192,255,.1),0 40px 100px rgba(0,0,0,.6);
+  text-align:center;position:relative;
+}
+.upgrade-close{
+  position:absolute;top:14px;right:14px;
+  width:32px;height:32px;border-radius:10px;
+  background:rgba(255,255,255,.06);border:1px solid var(--line-strong);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);
+}
+.upgrade-close:hover{background:rgba(255,255,255,.12)}
+.upgrade-icon{
+  width:72px;height:72px;border-radius:20px;margin:0 auto 20px;
+  background:linear-gradient(135deg,rgba(40,192,255,.15),rgba(90,124,255,.2));
+  border:1px solid rgba(40,192,255,.25);
+  display:flex;align-items:center;justify-content:center;
+}
+.upgrade-icon .material-symbols-rounded{font-size:32px;color:var(--accent)}
+.upgrade-card h3{font-size:22px;font-weight:900;margin:0 0 8px}
+.upgrade-card p{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 24px}
+.upgrade-features{
+  text-align:left;list-style:none;display:flex;flex-direction:column;
+  gap:10px;margin:0 0 28px;padding:16px;background:rgba(255,255,255,.03);
+  border:1px solid var(--line);border-radius:14px;
+}
+.upgrade-features li{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600}
+.upgrade-features li .material-symbols-rounded{font-size:16px;color:var(--success)}
+.btn-upgrade-cta{
+  width:100%;padding:15px;border-radius:14px;font-size:14px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:white;border:none;cursor:pointer;font-family:inherit;
+  box-shadow:0 8px 28px rgba(40,192,255,.28);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  text-decoration:none;transition:.15s transform;
+}
+.btn-upgrade-cta:hover{transform:translateY(-1px)}
+.upgrade-price{font-size:12px;color:var(--muted);margin-top:12px}
 
 /* LOGIN */
 .auth-page{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:32px 18px}
@@ -195,11 +259,47 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
 .section-title{margin:0 0 6px;font-size:15px;font-weight:800}
 .section-sub{margin:0 0 14px;color:var(--muted);font-size:12px;line-height:1.5}
 
+/* Card de plano na aba Config */
+.plan-info-card{
+  background:rgba(255,255,255,.03);border:1px solid var(--line);
+  border-radius:18px;padding:20px;margin-bottom:20px;
+}
+.plan-info-card h4{margin:0 0 6px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.plan-info-card p{margin:0 0 14px;color:var(--muted);font-size:12px;line-height:1.6}
+.btn-upgrade-settings{
+  width:100%;padding:13px;border-radius:14px;font-size:13px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:white;border:none;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  text-decoration:none;transition:.15s transform;
+}
+.btn-upgrade-settings:hover{transform:translateY(-1px)}
+
 @media(max-width:940px){.auth-split{grid-template-columns:1fr}.auth-left{display:none}}
 @media(max-width:640px){.shell{padding:0 12px}.quick-controls-grid{grid-template-columns:1fr}.main-tabs{gap:2px;padding:5px}.main-tab{font-size:11px;padding:10px 4px}.main-tab span.tab-label{display:none}.color-grid,.preset-actions-row{grid-template-columns:1fr}.topbar-nav{padding:0 14px}.preset-select-grid{grid-template-columns:1fr}.tabs{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
+
+<!-- MODAL DE UPGRADE -->
+<div id="upgrade-modal">
+  <div class="upgrade-card">
+    <div class="upgrade-close" onclick="closeUpgradeModal()"><span class="material-symbols-rounded" style="font-size:16px">close</span></div>
+    <div class="upgrade-icon"><span class="material-symbols-rounded">workspace_premium</span></div>
+    <h3 id="upgrade-modal-title">Limite do plano Free atingido</h3>
+    <p id="upgrade-modal-desc">Faça upgrade para o plano Pro e remova todos os limites.</p>
+    <ul class="upgrade-features">
+      <li><span class="material-symbols-rounded">check_circle</span> Workspaces ilimitados</li>
+      <li><span class="material-symbols-rounded">check_circle</span> Presets ilimitados</li>
+      <li><span class="material-symbols-rounded">check_circle</span> Multi-workspace</li>
+      <li><span class="material-symbols-rounded">check_circle</span> Suporte prioritário via WhatsApp</li>
+    </ul>
+    <a href="https://wa.me/5527999011689?text=Tenho+interesse+no+plano+Pro+do+PontoView+News+Overlay" target="_blank" class="btn-upgrade-cta">
+      <span class="material-symbols-rounded">bolt</span> Quero o plano Pro — R$49/mês
+    </a>
+    <p class="upgrade-price">Cobrado mensalmente · Cancele quando quiser</p>
+  </div>
+</div>
 
 <div id="session-banner">
   <p><strong>Uso de armazenamento local</strong> — Este sistema utiliza <em>localStorage</em> exclusivamente para manter sua sessão autenticada ativa. Nenhum dado de rastreamento ou publicidade é coletado. <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a></p>
@@ -213,6 +313,10 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
   <div class="nav-right">
     <div id="conn-dot"></div>
     <span id="conn-label">Desconectado</span>
+    <button class="plan-badge-nav free" id="plan-badge-nav" onclick="openUpgradeModal('Conheça o plano Pro','Remova todos os limites e gerencie múltiplos canais.')" style="display:none">
+      <span class="material-symbols-rounded" style="font-size:12px">workspace_premium</span>
+      <span id="plan-badge-label">Free</span>
+    </button>
     <button class="btn-logout" id="btn-logout" onclick="doLogout()" style="display:none">
       <span class="material-symbols-rounded">logout</span> Sair
     </button>
@@ -449,7 +553,17 @@ input[type=color]{width:100%;height:48px;padding:4px;border-radius:14px;border:1
       <!-- ABA: Config -->
       <div id="mpanel-settings" class="main-tab-panel panel settings-panel" style="display:none">
         <h3 class="section-title">Configurações</h3>
-        <p class="section-sub">Gerenciamento de conta e dados.</p>
+        <p class="section-sub">Gerenciamento de conta e plano.</p>
+
+        <!-- CARD DE PLANO -->
+        <div class="plan-info-card" id="plan-info-card">
+          <h4><span class="material-symbols-rounded" style="color:var(--accent)">workspace_premium</span> <span id="plan-info-title">Plano Free</span></h4>
+          <p id="plan-info-desc">Você está no plano gratuito. Faça upgrade para workspaces e presets ilimitados.</p>
+          <a href="https://wa.me/5527999011689?text=Tenho+interesse+no+plano+Pro+do+PontoView+News+Overlay" target="_blank" id="btn-upgrade-settings" class="btn-upgrade-settings">
+            <span class="material-symbols-rounded">bolt</span> Fazer upgrade para o Pro — R$49/mês
+          </a>
+        </div>
+
         <div class="danger-zone">
           <h4><span class="material-symbols-rounded">warning</span> Zona de perigo</h4>
           <p>A exclusão da conta remove permanentemente todos os seus dados, workspaces, presets e registros de acesso. Esta ação não pode ser desfeita.</p>
@@ -472,8 +586,60 @@ let states={live:false,side:false,tag:false,headline:false,ticker:false};
 let pendingEmail=null,connChannel=null;
 let selectedPresetId=null,presetsCache=[];
 let authMode='login';
-// Cache do logo resolvido — evita re-leitura de FileReader a cada pushUpdate
 let logoCache={type:'text',val:'PONTO VIEW'};
+let userPlan='free'; // cache do plano atual
+
+/* ── UPGRADE MODAL ────────────────────────────────── */
+function openUpgradeModal(title,desc){
+  if(title)document.getElementById('upgrade-modal-title').textContent=title;
+  if(desc)document.getElementById('upgrade-modal-desc').textContent=desc;
+  document.getElementById('upgrade-modal').classList.add('open');
+}
+function closeUpgradeModal(){
+  document.getElementById('upgrade-modal').classList.remove('open');
+}
+document.getElementById('upgrade-modal').addEventListener('click',function(e){
+  if(e.target===this)closeUpgradeModal();
+});
+
+/* ── PLANO ────────────────────────────────────────── */
+async function loadUserPlan(){
+  try{
+    const {data}=await sb.from('subscriptions')
+      .select('plan,status,expires_at')
+      .eq('user_id',currentUser.id)
+      .eq('status','active')
+      .single();
+    userPlan=(data&&(data.expires_at===null||new Date(data.expires_at)>new Date()))?data.plan:'free';
+  }catch(e){userPlan='free';}
+  updatePlanUI();
+}
+function updatePlanUI(){
+  const badge=document.getElementById('plan-badge-nav');
+  const label=document.getElementById('plan-badge-label');
+  const title=document.getElementById('plan-info-title');
+  const desc=document.getElementById('plan-info-desc');
+  const btnUpgrade=document.getElementById('btn-upgrade-settings');
+  badge.style.display='flex';
+  if(userPlan==='pro'){
+    badge.className='plan-badge-nav pro';
+    label.textContent='Pro';
+    title.textContent='Plano Pro ✦';
+    desc.textContent='Você tem workspaces e presets ilimitados. Obrigado por apoiar o PontoView!';
+    if(btnUpgrade)btnUpgrade.style.display='none';
+  } else {
+    badge.className='plan-badge-nav free';
+    label.textContent='Free';
+    title.textContent='Plano Free';
+    desc.textContent='Você está no plano gratuito (1 workspace, 20 presets). Faça upgrade para remover todos os limites.';
+    if(btnUpgrade)btnUpgrade.style.display='flex';
+  }
+}
+
+/* ── HELPERS ──────────────────────────────────────── */
+function isPlanLimitError(msg){
+  return msg&&(msg.includes('PLAN_LIMIT')||msg.includes('plano Free'));
+}
 
 function dismissSessionBanner(){
   localStorage.setItem('pv_session_notice','1');
@@ -558,6 +724,7 @@ async function afterLogin(){
   if(!user)return;
   currentUser=user;setLoggedIn(true);hideAll();
   await auditLog('login',{email:user.email});
+  await loadUserPlan();
   showWsScreen();
 }
 async function doLogout(){
@@ -567,8 +734,11 @@ async function doLogout(){
   await sb.auth.signOut();
   currentUser=null;workspaceId=null;workspaceSlug=null;workspaceName=null;
   selectedPresetId=null;presetsCache=[];logoCache={type:'text',val:'PONTO VIEW'};
+  userPlan='free';
   states={live:false,side:false,tag:false,headline:false,ticker:false};
-  setLoggedIn(false);setConnected(false);hideAll();
+  setLoggedIn(false);setConnected(false);
+  document.getElementById('plan-badge-nav').style.display='none';
+  hideAll();
   document.getElementById('login-page').style.display='flex';
   document.getElementById('login-email').value='';
   document.getElementById('login-pass').value='';
@@ -591,6 +761,7 @@ async function requestAccountDeletion(){
       await sb.from('audit_logs').delete().in('workspace_id',ids);
       await sb.from('workspaces').delete().eq('user_id',currentUser.id);
     }
+    await sb.from('subscriptions').delete().eq('user_id',currentUser.id);
     await sb.from('audit_logs').delete().eq('user_id',currentUser.id);
     await sb.auth.signOut();
     alert('Sua conta e todos os dados foram removidos.');
@@ -635,7 +806,17 @@ async function createWorkspace(){
   const slug=document.getElementById('ws-slug').value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
   if(!name||!slug){showSetupError('Preencha nome e slug.');return;}
   const {data:ws,error}=await sb.from('workspaces').insert({user_id:currentUser.id,name,slug,plan:'free'}).select().single();
-  if(error){showSetupError(error.message.includes('duplicate')?'Esse slug já existe.':error.message);return;}
+  if(error){
+    if(isPlanLimitError(error.message)){
+      openUpgradeModal(
+        'Limite de workspaces atingido',
+        'O plano Free permite apenas 1 workspace. Faça upgrade para o plano Pro e crie workspaces ilimitados.'
+      );
+      return;
+    }
+    showSetupError(error.message.includes('duplicate')?'Esse slug já existe.':error.message);
+    return;
+  }
   await sb.from('overlay_state').insert({workspace_id:ws.id});
   await auditLog('workspace_created',{workspace_id:ws.id,name,slug});
   document.getElementById('ws-name').value='';document.getElementById('ws-slug').value='';
@@ -711,26 +892,18 @@ function toggleLogoFields(){
   document.getElementById('in-logo-url').style.display=m==='url'?'block':'none';
   document.getElementById('in-logo-file').style.display=m==='file'?'block':'none';
 }
-
-// Lê arquivo local e atualiza logoCache — chamado apenas no onchange do input file
 function onLogoFileChange(event){
-  const f=event.target.files[0];
-  if(!f)return;
+  const f=event.target.files[0];if(!f)return;
   const rd=new FileReader();
   rd.onload=e=>{logoCache={type:'img',val:e.target.result};};
   rd.readAsDataURL(f);
 }
-
-// Botão explícito de aplicar logo — lê URL ou texto e envia
 async function applyLogo(){
   const m=document.getElementById('logo-mode').value;
   if(m==='text') logoCache={type:'text',val:document.getElementById('in-logo-text').value};
   else if(m==='url') logoCache={type:'img',val:document.getElementById('in-logo-url').value};
-  // se file, logoCache já foi preenchido pelo onLogoFileChange
   await pushUpdate();
 }
-
-// pushUpdate usa logoCache (já resolvido) — nunca trava esperando FileReader
 async function pushUpdate(){
   if(!workspaceId)return;
   const {error}=await sb.from('overlay_state').upsert({
@@ -755,9 +928,6 @@ async function pushUpdate(){
   },{onConflict:'workspace_id'});
   if(error)console.error('pushUpdate:',error.message);
 }
-
-// Atualiza apenas estilo (cores, fonte, opacidade) sem tocar em data.tag/headline
-// → overlay recebe a mudança mas não dispara animação de texto
 async function pushStyleOnly(){
   if(!workspaceId)return;
   await sb.from('overlay_state').update({
@@ -769,7 +939,6 @@ async function pushStyleOnly(){
     updated_at:new Date().toISOString()
   }).eq('workspace_id',workspaceId);
 }
-
 async function pushUpdateWithWipe(presetLogo){
   if(!workspaceId)return;
   await sb.from('overlay_state').upsert({
@@ -792,148 +961,11 @@ async function pushUpdateWithWipe(presetLogo){
     preset_wipe:true,
     updated_at:new Date().toISOString()
   },{onConflict:'workspace_id'});
-  // Limpa a flag wipe após 1.5s para não re-triggar em futuras leituras
   setTimeout(()=>sb.from('overlay_state').update({preset_wipe:false}).eq('workspace_id',workspaceId),1500);
 }
-
 function resetConfig(){
   if(!confirm('Resetar para o padrão?'))return;
   document.getElementById('c-bg').value='#003366';document.getElementById('c-txt').value='#ffffff';
   document.getElementById('in-tag').value='URGENTE';document.getElementById('in-headline').value='PONTOVIEW BROADCAST v2.0';
   document.getElementById('in-detail').value='';document.getElementById('in-ticker').value='+++ PONTOVIEW +++ TECNOLOGIA EM MÍDIA INDOOR +++';
-  document.getElementById('in-speed').value='100';document.getElementById('speed-display').innerText='100';
-  document.getElementById('in-show-time').checked=true;document.getElementById('logo-mode').value='text';
-  document.getElementById('in-logo-text').value='PONTO VIEW';toggleLogoFields();
-  document.getElementById('in-font-family').value='Inter';document.getElementById('in-font-weight').value='900';
-  document.getElementById('in-font-size').value='2.8';document.getElementById('font-size-display').innerText='2.8vw';
-  document.getElementById('in-opacity').value='1';document.getElementById('opacity-display').innerText='100%';
-  logoCache={type:'text',val:'PONTO VIEW'};
-  clearAll();
-}
-function openTab(e,id){
-  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');e.currentTarget.classList.add('active');
-}
-async function savePreset(){
-  const {data:list}=await sb.from('presets').select('id').eq('workspace_id',workspaceId).order('created_at',{ascending:true});
-  if(list&&list.length>=100)await sb.from('presets').delete().eq('id',list[0].id);
-  await sb.from('presets').insert({
-    workspace_id:workspaceId,
-    tag:document.getElementById('in-tag').value,
-    headline:document.getElementById('in-headline').value,
-    detail:document.getElementById('in-detail').value,
-    colors:{bg:document.getElementById('c-bg').value,txt:document.getElementById('c-txt').value},
-    logo:logoCache,
-    font_family:document.getElementById('in-font-family').value,
-    font_weight:document.getElementById('in-font-weight').value,
-    font_size:parseFloat(document.getElementById('in-font-size').value),
-    bar_opacity:parseFloat(document.getElementById('in-opacity').value)
-  });
-  await auditLog('preset_saved',{headline:document.getElementById('in-headline').value});
-  selectedPresetId=null;renderPresetBtn();
-  await loadPresetsFromDB();
-}
-async function loadPresetsFromDB(){
-  const {data}=await sb.from('presets').select('*').eq('workspace_id',workspaceId).order('created_at',{ascending:true});
-  presetsCache=data||[];
-  renderPresetGrid();
-}
-function renderPresetGrid(){
-  const grid=document.getElementById('preset-list');
-  if(!presetsCache.length){
-    grid.innerHTML='<div class="preset-empty" style="grid-column:1/-1">Nenhum preset salvo ainda.<br><small>Use a aba Editor → GC para salvar o primeiro.</small></div>';
-    return;
-  }
-  grid.innerHTML=presetsCache.map(p=>{
-    const sel=p.id===selectedPresetId;
-    return `<div class="p-card${sel?' selected':''}" onclick="selectPreset('${p.id}')">
-      <div class="p-card-title">${(p.headline||'Sem título').substring(0,60)}</div>
-      <div class="p-card-tag">${p.tag||'Sem tag'}${p.colors?'<span class="p-badge">cor</span>':''}</div>
-      <span class="p-card-del" onclick="event.stopPropagation();deletePreset('${p.id}')">✕</span>
-    </div>`;
-  }).join('');
-}
-function selectPreset(id){selectedPresetId=id;renderPresetGrid();renderPresetBtn();}
-function renderPresetBtn(){
-  document.getElementById('btn-apply-preset').classList.toggle('ready',!!selectedPresetId);
-}
-
-// Aplica preset: preenche campos, atualiza logoCache com o logo do preset
-// e chama pushUpdateWithWipe passando o logo já resolvido — sem FileReader pendente
-function applySelectedPreset(){
-  if(!selectedPresetId)return;
-  const p=presetsCache.find(x=>x.id===selectedPresetId);
-  if(!p){console.warn('Preset não encontrado no cache');return;}
-
-  document.getElementById('in-tag').value=p.tag||'';
-  document.getElementById('in-headline').value=p.headline||'';
-  document.getElementById('in-detail').value=p.detail||'';
-
-  if(p.colors){
-    document.getElementById('c-bg').value=p.colors.bg||'#003366';
-    document.getElementById('c-txt').value=p.colors.txt||'#ffffff';
-  }
-  if(p.font_family)document.getElementById('in-font-family').value=p.font_family;
-  if(p.font_weight)document.getElementById('in-font-weight').value=p.font_weight;
-  if(p.font_size!=null){
-    document.getElementById('in-font-size').value=p.font_size;
-    document.getElementById('font-size-display').innerText=p.font_size+'vw';
-  }
-  if(p.bar_opacity!=null){
-    document.getElementById('in-opacity').value=p.bar_opacity;
-    document.getElementById('opacity-display').innerText=Math.round(p.bar_opacity*100)+'%';
-  }
-
-  // Resolve logo do preset e atualiza logoCache
-  let presetLogo=logoCache;
-  if(p.logo){
-    presetLogo=p.logo;
-    logoCache=p.logo;
-    if(p.logo.type==='img'){
-      document.getElementById('logo-mode').value='url';
-      document.getElementById('in-logo-url').value=p.logo.val||'';
-    } else {
-      document.getElementById('logo-mode').value='text';
-      document.getElementById('in-logo-text').value=p.logo.val||'';
-    }
-    toggleLogoFields();
-  }
-
-  auditLog('preset_applied',{preset_id:selectedPresetId,headline:p.headline});
-  // Passa o logo já resolvido — nenhuma Promise pendente de FileReader
-  pushUpdateWithWipe(presetLogo);
-}
-
-async function deletePreset(id){
-  await sb.from('presets').delete().eq('id',id);
-  await auditLog('preset_deleted',{preset_id:id});
-  if(selectedPresetId===id){selectedPresetId=null;renderPresetBtn();}
-  presetsCache=presetsCache.filter(p=>p.id!==id);
-  renderPresetGrid();
-}
-function exportPresets(){
-  const blob=new Blob([JSON.stringify(presetsCache,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`pv-presets-${workspaceSlug}.json`;a.click();
-}
-function importPresets(event){
-  const file=event.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=async e=>{
-    try{
-      const data=JSON.parse(e.target.result);if(!Array.isArray(data))throw new Error();
-      const rows=data.slice(-100).map(p=>({workspace_id:workspaceId,tag:p.tag||'',headline:p.headline||'',detail:p.detail||'',colors:p.colors||null,logo:p.logo||null,font_family:p.font_family||null,font_weight:p.font_weight||null,font_size:p.font_size||null,bar_opacity:p.bar_opacity||null}));
-      await sb.from('presets').insert(rows);
-      await auditLog('presets_imported',{count:rows.length});
-      loadPresetsFromDB();alert(`${rows.length} presets importados.`);
-    }catch{alert('Arquivo JSON inválido.');}
-  };
-  reader.readAsText(file);event.target.value='';
-}
-
-sb.auth.getSession().then(({data:{session}})=>{
-  if(session){currentUser=session.user;setLoggedIn(true);afterLogin();}
-});
-</script>
-</body>
-</html>
+  document.getElementById('in-speed').value='100';document.getElementById('speed-display').inn
