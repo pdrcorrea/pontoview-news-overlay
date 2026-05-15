@@ -16,7 +16,7 @@
 const MP_PAYMENT_LINK = 'https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=d1ac77091a4a4c45bbc6fbe853e16c59';
 const PRODUCT_NAME    = 'PontoView Studio PRO';
 const PRODUCT_PRICE   = 'R$49/mês';
-const SUPPORT_WA      = 'https://wa.me/5527999011689?text=Preciso+de+ajuda+com+o+PontoView+Studio';
+const SUPPORT_EMAIL   = 'mailto:pontoviewmidia@gmail.com';
 /* ───────────────────────────────────────────────────────────────────────── */
 
 let _accessGranted = false;
@@ -109,7 +109,7 @@ function showPaywallScreen() {
         </li>
         <li style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#ecf3ff">
           <span class="material-symbols-rounded" style="font-size:16px;color:#19c37d">check_circle</span>
-          Suporte prioritário via WhatsApp
+          Suporte prioritário via e-mail
         </li>
       </ul>
 
@@ -164,7 +164,7 @@ function showPaywallScreen() {
 
       <!-- Suporte -->
       <div style="font-size:11px;color:#97a7c3">
-        Dúvidas? <a href="${SUPPORT_WA}" target="_blank" style="color:#28c0ff;font-weight:700">Fale via WhatsApp</a>
+        Dúvidas? <a href="${SUPPORT_EMAIL}" target="_blank" style="color:#28c0ff;font-weight:700">Fale por e-mail</a>
         &nbsp;·&nbsp;
         <a href="#" onclick="doLogout&&doLogout();return false" style="color:#97a7c3">Sair</a>
       </div>
@@ -195,7 +195,7 @@ async function paywallCheckAfterPayment() {
     if (typeof showWsScreen === 'function') showWsScreen();
   } else {
     paywallSetMsg(
-      'Pagamento ainda não identificado. Aguarde alguns instantes e tente novamente. Se o problema persistir, fale via WhatsApp.',
+      'Pagamento ainda não identificado. Aguarde alguns instantes e tente novamente. Se o problema persistir, entre em contato por e-mail.',
       true
     );
   }
