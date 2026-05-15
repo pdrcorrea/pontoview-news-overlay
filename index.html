@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PontoView News Overlay — Overlay de Notícias para Transmissões ao Vivo</title>
+<meta name="description" content="Sistema SaaS de overlay de notícias para transmissões ao vivo e mídia indoor. Controle pelo celular em tempo real. Integra com OBS via Browser Source.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+  --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);
+  --text-hero: clamp(3rem,     0.5rem  + 7vw,    8rem);
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem;
+  --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem;
+  --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem;
+  --space-16: 4rem; --space-20: 5rem; --space-24: 6rem; --space-32: 8rem;
+  --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem;
+  --radius-xl: 1rem; --radius-2xl: 1.5rem; --radius-full: 9999px;
+  --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --content-narrow: 640px; --content-default: 960px; --content-wide: 1200px;
+}
+:root, [data-theme="dark"] {
+  --color-bg: #0e0e0e; --color-surface: #141414; --color-surface-2: #1a1a1a;
+  --color-surface-offset: #1f1f1f; --color-surface-dynamic: #2a2a2a;
+  --color-divider: #262626; --color-border: #303030;
+  --color-text: #e8e8e6; --color-text-muted: #8a8a88;
+  --color-text-faint: #545452; --color-text-inverse: #0e0e0e;
+  --color-primary: #e03030; --color-primary-hover: #f04040;
+  --color-primary-active: #c02020; --color-primary-highlight: #3a1a1a;
+  --color-success: #4caf7d; --color-success-highlight: #1a3028;
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.5);
+}
+[data-theme="light"] {
+  --color-bg: #f8f7f4; --color-surface: #ffffff; --color-surface-2: #f3f2ef;
+  --color-surface-offset: #edecea; --color-surface-dynamic: #e4e3e0;
+  --color-divider: #dcdbd8; --color-border: #d0cfcc;
+  --color-text: #1a1a18; --color-text-muted: #6a6a68;
+  --color-text-faint: #aaa9a6; --color-text-inverse: #f8f7f4;
+  --color-primary: #c82020; --color-primary-hover: #e03030;
+  --color-primary-active: #a01818; --color-primary-highlight: #fce8e8;
+  --color-success: #2e7d52; --color-success-highlight: #d4edd9;
+  --shadow-sm: 0 1px 2px oklch(0.2 0.01 60 / 0.08);
+  --shadow-md: 0 4px 12px oklch(0.2 0.01 60 / 0.1);
+  --shadow-lg: 0 12px 32px oklch(0.2 0.01 60 / 0.14);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --color-bg: #f8f7f4; --color-surface: #ffffff; --color-surface-2: #f3f2ef;
+    --color-surface-offset: #edecea; --color-surface-dynamic: #e4e3e0;
+    --color-divider: #dcdbd8; --color-border: #d0cfcc;
+    --color-text: #1a1a18; --color-text-muted: #6a6a68;
+    --color-text-faint: #aaa9a6; --color-text-inverse: #f8f7f4;
+    --color-primary: #c82020; --color-primary-hover: #e03030;
+    --color-primary-active: #a01818; --color-primary-highlight: #fce8e8;
+    --color-success: #2e7d52; --color-success-highlight: #d4edd9;
+    --shadow-sm: 0 1px 2px oklch(0.2 0.01 60 / 0.08);
+    --shadow-md: 0 4px 12px oklch(0.2 0.01 60 / 0.1);
+    --shadow-lg: 0 12px 32px oklch(0.2 0.01 60 / 0.14);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--space-16); -webkit-font-smoothing: antialiased; }
+body { min-height: 100dvh; line-height: 1.6; font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text); background-color: var(--color-bg); }
+img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+input, button, textarea, select { font: inherit; color: inherit; }
+h1, h2, h3, h4 { text-wrap: balance; line-height: 1.15; }
+p, li { text-wrap: pretty; max-width: 72ch; }
+button { cursor: pointer; background: none; border: none; }
+a, button, [role="button"] { transition: color var(--transition-interactive), background var(--transition-interactive), border-color var(--transition-interactive), box-shadow var(--transition-interactive), opacity var(--transition-interactive); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+.container { max-width: var(--content-default); margin-inline: auto; padding-inline: var(--space-6); }
+.container--wide { max-width: var(--content-wide); margin-inline: auto; padding-inline: var(--space-6); }
+.container--narrow { max-width: var(--content-narrow); margin-inline: auto; padding-inline: var(--space-6); }
+.skip-link { position: absolute; top: -100%; left: var(--space-4); background: var(--color-primary); color: #fff; padding: var(--space-2) var(--space-4); border-radius: var(--radius-md); z-index: 9999; font-size: var(--text-sm); }
+.skip-link:focus { top: var(--space-2); }
+.nav { position: sticky; top: 0; z-index: 100; background: color-mix(in oklch, var(--color-bg) 85%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid oklch(from var(--color-text) l c h / 0.08); }
+.nav__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); height: 60px; max-width: var(--content-wide); margin-inline: auto; padding-inline: var(--space-6); }
+.nav__logo { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; color: var(--color-text); font-weight: 600; font-size: var(--text-sm); letter-spacing: -0.01em; }
+.nav__links { display: flex; align-items: center; gap: var(--space-6); list-style: none; }
+.nav__links a { text-decoration: none; color: var(--color-text-muted); font-size: var(--text-sm); font-weight: 500; }
+.nav__links a:hover { color: var(--color-text); }
+.nav__actions { display: flex; align-items: center; gap: var(--space-3); }
+.nav__toggle-theme { width: 36px; height: 36px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); border: 1px solid var(--color-border); }
+.nav__toggle-theme:hover { color: var(--color-text); border-color: var(--color-text-muted); }
+.nav__hamburger { display: none; width: 36px; height: 36px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border-radius: var(--radius-md); }
+.nav__hamburger span { display: block; width: 20px; height: 2px; background: var(--color-text-muted); border-radius: 2px; transition: transform 0.2s, opacity 0.2s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); font-size: var(--text-sm); font-weight: 600; padding: 0.65em 1.4em; border-radius: var(--radius-full); text-decoration: none; white-space: nowrap; min-height: 44px; }
+.btn--primary { background: var(--color-primary); color: #fff; }
+.btn--primary:hover { background: var(--color-primary-hover); box-shadow: 0 4px 20px oklch(from var(--color-primary) l c h / 0.35); }
+.btn--primary:active { background: var(--color-primary-active); }
+.btn--ghost { background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); }
+.btn--ghost:hover { color: var(--color-text); border-color: var(--color-text-muted); background: var(--color-surface-offset); }
+.btn--lg { font-size: var(--text-base); padding: 0.75em 2em; min-height: 52px; }
+.live-badge { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary); background: var(--color-primary-highlight); padding: 0.3em 0.9em; border-radius: var(--radius-full); }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-primary); animation: pulse-dot 1.4s ease-in-out infinite; }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+.hero { position: relative; overflow: hidden; padding-block: clamp(var(--space-16), 10vw, var(--space-32)); border-bottom: 1px solid var(--color-divider); }
+.hero__grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items: center; }
+.hero__content { display: flex; flex-direction: column; gap: var(--space-6); }
+.hero__eyebrow { display: flex; align-items: center; gap: var(--space-3); }
+.hero__title { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; color: var(--color-text); }
+.hero__title em { font-style: italic; color: var(--color-primary); }
+.hero__desc { font-size: var(--text-lg); color: var(--color-text-muted); max-width: 52ch; line-height: 1.5; }
+.hero__actions { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+.hero__trust { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-xs); color: var(--color-text-faint); flex-wrap: wrap; }
+.hero__trust-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--color-text-faint); }
+.overlay-preview { position: relative; border-radius: var(--radius-2xl); overflow: hidden; border: 1px solid oklch(from var(--color-text) l c h / 0.1); box-shadow: var(--shadow-lg), 0 0 60px oklch(from var(--color-primary) l c h / 0.08); background: #000; aspect-ratio: 16/9; }
+.overlay-preview__screen { width: 100%; height: 100%; background: linear-gradient(135deg, #111 0%, #1a1a1a 100%); position: relative; display: flex; flex-direction: column; justify-content: flex-end; }
+.overlay-preview__bg-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: clamp(1rem, 4vw, 3rem); color: oklch(1 0 0 / 0.04); font-weight: 400; letter-spacing: -0.02em; text-align: center; padding: var(--space-4); pointer-events: none; }
+.overlay-preview__ticker { background: linear-gradient(90deg, #c00 0%, #e00 100%); color: #fff; padding: var(--space-2) var(--space-4); display: flex; align-items: center; gap: var(--space-3); font-size: clamp(0.5rem, 1.5vw, 0.75rem); font-weight: 600; }
+.overlay-ticker-label { background: rgba(0,0,0,0.3); padding: 0.15em 0.5em; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+.overlay-ticker-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.overlay-preview__logo { position: absolute; top: var(--space-3); left: var(--space-3); background: rgba(0,0,0,0.6); padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); font-size: clamp(0.4rem, 1.2vw, 0.65rem); font-weight: 700; color: #fff; letter-spacing: 0.05em; }
+.overlay-preview__live { position: absolute; top: var(--space-3); right: var(--space-3); background: #c00; color: #fff; padding: 0.15em 0.5em; border-radius: 3px; font-size: clamp(0.4rem, 1vw, 0.6rem); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; animation: blink-live 2s step-end infinite; }
+@keyframes blink-live { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.overlay-preview__caption { position: absolute; bottom: 2.5em; left: var(--space-3); right: var(--space-3); }
+.overlay-caption-bar { background: rgba(0,0,0,0.85); border-left: 3px solid #c00; padding: var(--space-2) var(--space-3); }
+.overlay-caption-label { font-size: clamp(0.35rem, 1vw, 0.55rem); color: #c00; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+.overlay-caption-text { font-size: clamp(0.45rem, 1.3vw, 0.7rem); color: #fff; font-weight: 500; line-height: 1.3; }
+.section { padding-block: clamp(var(--space-12), 8vw, var(--space-24)); }
+.section--alt { background: var(--color-surface); }
+.section__header { margin-bottom: var(--space-12); }
+.section__eyebrow { font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-primary); margin-bottom: var(--space-3); }
+.section__title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: var(--color-text); }
+.section__desc { color: var(--color-text-muted); font-size: var(--text-base); max-width: 56ch; margin-top: var(--space-3); }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: var(--space-4); }
+.feature-card { background: var(--color-surface); border: 1px solid oklch(from var(--color-text) l c h / 0.07); border-radius: var(--radius-xl); padding: var(--space-6); transition: border-color var(--transition-interactive), box-shadow var(--transition-interactive); }
+.feature-card:hover { border-color: oklch(from var(--color-primary) l c h / 0.3); box-shadow: 0 0 24px oklch(from var(--color-primary) l c h / 0.07); }
+.feature-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4); color: var(--color-primary); }
+.feature-icon svg { width: 28px; height: 28px; }
+.feature-title { font-weight: 600; font-size: var(--text-base); color: var(--color-text); margin-bottom: var(--space-2); }
+.feature-desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.55; }
+.steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: var(--space-8); }
+.step__num { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 400; color: oklch(from var(--color-primary) l c h / 0.18); line-height: 1; margin-bottom: var(--space-3); }
+.step__title { font-weight: 600; font-size: var(--text-base); color: var(--color-text); margin-bottom: var(--space-2); }
+.step__desc { font-size: var(--text-sm); color: var(--color-text-muted); }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+.plan { background: var(--color-surface); border: 1px solid oklch(from var(--color-text) l c h / 0.08); border-radius: var(--radius-2xl); padding: var(--space-8); display: flex; flex-direction: column; gap: var(--space-4); }
+.plan--featured { border-color: var(--color-primary); box-shadow: 0 0 40px oklch(from var(--color-primary) l c h / 0.12); position: relative; }
+.plan--featured::before { content: "Mais popular"; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); background: var(--color-primary); color: #fff; font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.25em 1em; border-radius: 0 0 var(--radius-md) var(--radius-md); white-space: nowrap; }
+.plan__name { font-weight: 700; font-size: var(--text-sm); letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-muted); }
+.plan__price { display: flex; align-items: baseline; gap: var(--space-1); }
+.plan__amount { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 400; color: var(--color-text); line-height: 1; }
+.plan__currency { font-size: var(--text-base); color: var(--color-text-muted); }
+.plan__period { font-size: var(--text-sm); color: var(--color-text-faint); }
+.plan__desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.55; min-height: 3em; }
+.plan__divider { height: 1px; background: var(--color-divider); }
+.plan__features { list-style: none; display: flex; flex-direction: column; gap: var(--space-3); flex: 1; }
+.plan__features li { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); }
+.plan__features li::before { content: ""; display: block; width: 16px; height: 16px; min-width: 16px; margin-top: 2px; background: var(--color-success); border-radius: var(--radius-full); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8l3.5 3.5L13 5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-size: contain; }
+.plan__cta { margin-top: auto; }
+.testimonials { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: var(--space-5); }
+.testimonial { background: var(--color-surface); border: 1px solid oklch(from var(--color-text) l c h / 0.07); border-radius: var(--radius-xl); padding: var(--space-6); }
+.testimonial__stars { color: #f5a623; font-size: var(--text-sm); letter-spacing: 0.05em; margin-bottom: var(--space-3); }
+.testimonial__text { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; margin-bottom: var(--space-5); font-style: italic; }
+.testimonial__author { display: flex; align-items: center; gap: var(--space-3); }
+.testimonial__avatar { width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--color-primary-highlight); display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); font-weight: 700; color: var(--color-primary); flex-shrink: 0; }
+.testimonial__name { font-size: var(--text-sm); font-weight: 600; color: var(--color-text); }
+.testimonial__role { font-size: var(--text-xs); color: var(--color-text-faint); }
+.cta-section { padding-block: clamp(var(--space-16), 10vw, var(--space-32)); text-align: center; border-top: 1px solid var(--color-divider); }
+.cta-actions { display: flex; align-items: center; justify-content: center; gap: var(--space-4); flex-wrap: wrap; margin-top: var(--space-8); }
+.faq { display: flex; flex-direction: column; gap: var(--space-1); max-width: var(--content-narrow); margin-inline: auto; }
+.faq-item { border: 1px solid oklch(from var(--color-text) l c h / 0.07); border-radius: var(--radius-lg); overflow: hidden; }
+.faq-question { width: 100%; text-align: left; padding: var(--space-5) var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); font-size: var(--text-base); font-weight: 500; color: var(--color-text); background: var(--color-surface); }
+.faq-question:hover { background: var(--color-surface-offset); }
+.faq-question svg { flex-shrink: 0; transition: transform 0.25s; color: var(--color-text-muted); }
+.faq-item.open .faq-question svg { transform: rotate(45deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; background: var(--color-surface); font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.65; padding-inline: var(--space-6); }
+.faq-item.open .faq-answer { max-height: 300px; padding-block: var(--space-4) var(--space-5); }
+.footer { border-top: 1px solid var(--color-divider); padding-block: var(--space-8); }
+.footer__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; }
+.footer__copy { font-size: var(--text-xs); color: var(--color-text-faint); }
+.footer__links { display: flex; gap: var(--space-6); list-style: none; }
+.footer__links a { font-size: var(--text-xs); color: var(--color-text-faint); text-decoration: none; }
+.footer__links a:hover { color: var(--color-text-muted); }
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1), transform 0.55s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+@media (max-width: 768px) {
+  .hero__grid { grid-template-columns: 1fr; }
+  .overlay-preview { order: -1; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .nav__links { display: none; }
+  .nav__hamburger { display: flex; }
+  .mobile-menu { display: none; position: fixed; inset: 0; top: 60px; background: var(--color-bg); z-index: 90; flex-direction: column; padding: var(--space-6); gap: var(--space-4); }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-size: var(--text-lg); color: var(--color-text); text-decoration: none; font-weight: 500; padding-block: var(--space-3); border-bottom: 1px solid var(--color-divider); }
+}
+@media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Ir para o conteúdo</a>
+<header>
+<nav class="nav" role="navigation" aria-label="Navegação principal">
+  <div class="nav__inner">
+    <a href="#" class="nav__logo" aria-label="PontoView Home">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect width="28" height="28" rx="6" fill="var(--color-primary)"/>
+        <rect x="4" y="19" width="20" height="3" rx="1.5" fill="white"/>
+        <rect x="4" y="13" width="14" height="3" rx="1.5" fill="white" opacity="0.7"/>
+        <circle cx="21" cy="9" r="4" fill="white"/>
+        <circle cx="21" cy="9" r="2" fill="var(--color-primary)"/>
+      </svg>
+      PontoView
+    </a>
+    <ul class="nav__links">
+      <li><a href="#features">Funcionalidades</a></li>
+      <li><a href="#como-funciona">Como funciona</a></li>
+      <li><a href="#planos">Planos</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="nav__toggle-theme" data-theme-toggle aria-label="Alternar tema">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="control.html" class="btn btn--ghost" target="_blank" rel="noopener">Acessar painel</a>
+      <a href="#planos" class="btn btn--primary">Começar grátis</a>
+    </div>
+    <button class="nav__hamburger" id="hamburguerBtn" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu mobile">
+  <a href="#features">Funcionalidades</a>
+  <a href="#como-funciona">Como funciona</a>
+  <a href="#planos">Planos</a>
+  <a href="#faq">FAQ</a>
+  <a href="control.html" target="_blank" rel="noopener">Acessar painel</a>
+</nav>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="container--wide">
+    <div class="hero__grid">
+      <div class="hero__content reveal">
+        <div class="hero__eyebrow">
+          <span class="live-badge"><span class="live-dot"></span>Ao vivo</span>
+          <span style="font-size:var(--text-xs); color:var(--color-text-faint);">SaaS v2.0 &mdash; 2026</span>
+        </div>
+        <h1 class="hero__title">
+          Overlay de not&iacute;cias<br>
+          para suas transmiss&otilde;es<br>
+          <em>ao vivo</em>
+        </h1>
+        <p class="hero__desc">
+          Controle manchetes, tickers e legendas do seu celular, em tempo real. Integra com OBS em segundos via Browser Source.
+        </p>
+        <div class="hero__actions">
+          <a href="#planos" class="btn btn--primary btn--lg">Come&ccedil;ar gr&aacute;tis</a>
+          <a href="overlay.html" class="btn btn--ghost btn--lg" target="_blank" rel="noopener">Ver demo ao vivo</a>
+        </div>
+        <div class="hero__trust">
+          <span>&#10003; Sem cart&atilde;o de cr&eacute;dito</span>
+          <span class="hero__trust-dot"></span>
+          <span>&#10003; Pronto em 5 minutos</span>
+          <span class="hero__trust-dot"></span>
+          <span>&#10003; Cancelamento livre</span>
+        </div>
+      </div>
+      <div class="overlay-preview reveal" style="transition-delay:0.1s">
+        <div class="overlay-preview__screen">
+          <div class="overlay-preview__bg-text">Transmiss&atilde;o ao vivo</div>
+          <div class="overlay-preview__logo">&#128250; CANAL LOCAL</div>
+          <div class="overlay-preview__live">&#9679; AO VIVO</div>
+          <div class="overlay-preview__caption">
+            <div class="overlay-caption-bar">
+              <div class="overlay-caption-label">Urgente</div>
+              <div class="overlay-caption-text">Prefeitura anuncia novo pacote de obras vi&aacute;rias para o munic&iacute;pio</div>
+            </div>
+          </div>
+          <div class="overlay-preview__ticker">
+            <span class="overlay-ticker-label">&Uacute;ltimas</span>
+            <span class="overlay-ticker-text">Temperatura atinge 34&deg;C em Vila Velha &middot; Evento cultural no fim de semana &middot; Vereadores aprovam projeto de lei &middot;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section__header reveal">
+      <p class="section__eyebrow">Funcionalidades</p>
+      <h2 class="section__title">Tudo que voc&ecirc; precisa<br>para transmitir com profissionalismo</h2>
+      <p class="section__desc">Do celular ao OBS sem complica&ccedil;&otilde;es. Sem software para instalar, sem conhecimento t&eacute;cnico avan&ccedil;ado.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <h3 class="feature-title">Controle remoto via celular</h3>
+        <p class="feature-desc">Acesse o painel de qualquer dispositivo com internet. Troque manchetes, ative tickers e edite ao vivo sem encostar no computador da transmiss&atilde;o.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.05s">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
+        <h3 class="feature-title">Sincroniza&ccedil;&atilde;o em tempo real</h3>
+        <p class="feature-desc">Powered by Supabase Realtime. Atualiza&ccedil;&otilde;es instant&acirc;neas sem reload, sem delay. O overlay reflete cada mudan&ccedil;a em milissegundos.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.1s">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3 class="feature-title">Integra&ccedil;&atilde;o nativa com OBS</h3>
+        <p class="feature-desc">Uma URL, uma Browser Source. Cole no OBS Studio, Streamlabs ou qualquer software compat&iacute;vel e seu overlay est&aacute; pronto para transmitir.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.15s">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <h3 class="feature-title">Presets de manchetes</h3>
+        <p class="feature-desc">Salve manchetes recorrentes e acione com um clique. Ideal para programas com blocos fixos ou canais de not&iacute;cias com pautas repetidas.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.2s">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg></div>
+        <h3 class="feature-title">Multi-workspace (Agency)</h3>
+        <p class="feature-desc">Gerencie m&uacute;ltiplos clientes em um s&oacute; lugar. Cada workspace tem seu pr&oacute;prio overlay, slug e configura&ccedil;&otilde;es independentes.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.25s">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3 class="feature-title">Logo customizada (Pro+)</h3>
+        <p class="feature-desc">Suba o logotipo do seu canal ou cliente e exiba no overlay. Nos planos Pro e Agency, o visual &eacute; 100% da sua marca.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="como-funciona">
+  <div class="container">
+    <div class="section__header reveal" style="text-align:center; max-width:var(--content-narrow); margin-inline:auto;">
+      <p class="section__eyebrow">Como funciona</p>
+      <h2 class="section__title">Do cadastro ao ar em menos de 5 minutos</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step__num">01</div>
+        <h3 class="step__title">Crie sua conta</h3>
+        <p class="step__desc">Acesse o painel de controle, registre-se com e-mail e crie seu workspace com um slug &uacute;nico que identifica seu canal.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:0.07s">
+        <div class="step__num">02</div>
+        <h3 class="step__title">Copie a URL do overlay</h3>
+        <p class="step__desc">O sistema gera automaticamente a URL do seu overlay. Exemplo: <code style="font-size:0.85em;color:var(--color-primary)">/overlay.html?w=seu-slug</code>.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:0.14s">
+        <div class="step__num">03</div>
+        <h3 class="step__title">Cole no OBS</h3>
+        <p class="step__desc">Adicione como Browser Source no OBS Studio ou Streamlabs. Defina a resolu&ccedil;&atilde;o e pronto &mdash; o overlay aparece na cena.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:0.21s">
+        <div class="step__num">04</div>
+        <h3 class="step__title">Controle pelo celular</h3>
+        <p class="step__desc">Abra o painel de controle no celular ou em outro PC. Escreva a manchete, ative o ticker &mdash; o overlay atualiza instantaneamente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="planos">
+  <div class="container">
+    <div class="section__header reveal" style="text-align:center; max-width:var(--content-narrow); margin-inline:auto;">
+      <p class="section__eyebrow">Planos e pre&ccedil;os</p>
+      <h2 class="section__title">Simples, transparente,<br>sem surpresas</h2>
+      <p class="section__desc" style="margin-inline:auto;">Comece gr&aacute;tis e fa&ccedil;a upgrade quando precisar. Sem taxas ocultas, sem contrato de fidelidade.</p>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="plan">
+        <p class="plan__name">Free</p>
+        <div class="plan__price"><span class="plan__currency">R$</span><span class="plan__amount">0</span><span class="plan__period">/m&ecirc;s</span></div>
+        <p class="plan__desc">Para experimentar e transmiss&otilde;es pessoais.</p>
+        <div class="plan__divider"></div>
+        <ul class="plan__features">
+          <li>1 workspace</li>
+          <li>Ticker e manchetes ilimitadas</li>
+          <li>Controle remoto via celular</li>
+          <li>Integra&ccedil;&atilde;o com OBS</li>
+          <li>Logo PontoView no overlay</li>
+        </ul>
+        <div class="plan__cta"><a href="control.html" class="btn btn--ghost" style="width:100%;" target="_blank" rel="noopener">Come&ccedil;ar gr&aacute;tis</a></div>
+      </div>
+      <div class="plan plan--featured">
+        <p class="plan__name">Pro</p>
+        <div class="plan__price"><span class="plan__currency">R$</span><span class="plan__amount">49</span><span class="plan__period">/m&ecirc;s</span></div>
+        <p class="plan__desc">Para criadores de conte&uacute;do e canais profissionais.</p>
+        <div class="plan__divider"></div>
+        <ul class="plan__features">
+          <li>1 workspace</li>
+          <li>Logo customizada (sua marca)</li>
+          <li>100 presets de manchetes</li>
+          <li>Suporte priorit&aacute;rio</li>
+          <li>Anima&ccedil;&otilde;es exclusivas</li>
+          <li>Personaliza&ccedil;&atilde;o de cores</li>
+        </ul>
+        <div class="plan__cta"><a href="control.html" class="btn btn--primary" style="width:100%;" target="_blank" rel="noopener">Assinar Pro</a></div>
+      </div>
+      <div class="plan">
+        <p class="plan__name">Agency</p>
+        <div class="plan__price"><span class="plan__currency">R$</span><span class="plan__amount">149</span><span class="plan__period">/m&ecirc;s</span></div>
+        <p class="plan__desc">Para ag&ecirc;ncias e produtoras com m&uacute;ltiplos clientes.</p>
+        <div class="plan__divider"></div>
+        <ul class="plan__features">
+          <li>5 workspaces independentes</li>
+          <li>White-label completo</li>
+          <li>Presets ilimitados</li>
+          <li>Suporte dedicado via WhatsApp</li>
+          <li>Acesso antecipado a novas features</li>
+          <li>NF-e inclusa</li>
+        </ul>
+        <div class="plan__cta"><a href="control.html" class="btn btn--ghost" style="width:100%;" target="_blank" rel="noopener">Falar com vendas</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <div class="section__header reveal" style="text-align:center; max-width:var(--content-narrow); margin-inline:auto;">
+      <p class="section__eyebrow">Quem usa PontoView</p>
+      <h2 class="section__title">Confiado por criadores<br>e emissoras regionais</h2>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial reveal">
+        <div class="testimonial__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial__text">"Antes eu precisava de um t&eacute;cnico para trocar uma manchete ao vivo. Agora fa&ccedil;o do celular em segundos. Mudou completamente nossa produ&ccedil;&atilde;o."</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">MR</div>
+          <div><p class="testimonial__name">Marcos Rodrigues</p><p class="testimonial__role">Diretor de TV &mdash; Canal Local ES</p></div>
+        </div>
+      </div>
+      <div class="testimonial reveal" style="transition-delay:0.07s">
+        <div class="testimonial__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial__text">"Uso no meu canal do YouTube para transmiss&otilde;es de c&acirc;mara municipal. O overlay d&aacute; um ar profissional que ningu&eacute;m esperava de uma produ&ccedil;&atilde;o pequena."</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">JS</div>
+          <div><p class="testimonial__name">Jo&atilde;o Silva</p><p class="testimonial__role">Youtuber &mdash; Jornalismo Hiperlocal</p></div>
+        </div>
+      </div>
+      <div class="testimonial reveal" style="transition-delay:0.14s">
+        <div class="testimonial__stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial__text">"Atendo 3 clientes com o plano Agency. Cada um tem sua identidade visual e eu controlo tudo de um &uacute;nico painel. Vale cada centavo."</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">AC</div>
+          <div><p class="testimonial__name">Ana Caldas</p><p class="testimonial__role">Produtora &mdash; Studio AC Broadcast</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section__header reveal" style="text-align:center; max-width:var(--content-narrow); margin-inline:auto;">
+      <p class="section__eyebrow">Perguntas frequentes</p>
+      <h2 class="section__title">Tire suas d&uacute;vidas</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item reveal">
+        <button class="faq-question">Funciona com qualquer software de transmiss&atilde;o?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-answer">Sim. O PontoView funciona como uma Browser Source &mdash; qualquer software que suporte isso pode utiliz&aacute;-lo. OBS Studio, Streamlabs OBS, vMix e outros s&atilde;o todos compat&iacute;veis.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Preciso instalar algum programa?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-answer">N&atilde;o. Tudo roda no navegador. O painel de controle &eacute; uma p&aacute;gina web e o overlay &eacute; uma URL. Voc&ecirc; s&oacute; precisa do OBS (ou similar) na m&aacute;quina que transmite.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Qual &eacute; o delay da atualiza&ccedil;&atilde;o em tempo real?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-answer">As atualiza&ccedil;&otilde;es via Supabase Realtime chegam em menos de 200ms em condi&ccedil;&otilde;es normais de internet. Para o espectador, a troca parece instant&acirc;nea.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Posso cancelar a qualquer momento?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-answer">Sim. N&atilde;o h&aacute; fidelidade nem multa de cancelamento. Se cancelar, voc&ecirc; permanece no plano at&eacute; o fim do per&iacute;odo j&aacute; pago e depois migra automaticamente para o Free.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Funciona para m&iacute;dia indoor (totem, TV corporativa)?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-answer">Sim. Voc&ecirc; pode abrir a URL do overlay diretamente em qualquer navegador, inclusive num player de m&iacute;dia indoor. &Eacute; muito usado em totens de terminais de transporte e TV corporativa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container--narrow">
+    <div class="reveal">
+      <p class="section__eyebrow" style="text-align:center;">Pronto para transmitir?</p>
+      <h2 style="font-family:var(--font-display); font-size:var(--text-3xl); font-weight:400; line-height:1.1; letter-spacing:-0.02em; text-align:center; color:var(--color-text);">
+        Comece <em style="font-style:italic; color:var(--color-primary);">gr&aacute;tis</em> hoje.<br>Fa&ccedil;a upgrade quando precisar.
+      </h2>
+      <p class="section__desc" style="text-align:center; margin-inline:auto; margin-top:var(--space-4);">Sem cart&atilde;o de cr&eacute;dito para o plano Free. Em menos de 5 minutos voc&ecirc; tem um overlay profissional ao vivo.</p>
+      <div class="cta-actions">
+        <a href="control.html" class="btn btn--primary btn--lg" target="_blank" rel="noopener">Criar conta gratuita</a>
+        <a href="#planos" class="btn btn--ghost btn--lg">Ver todos os planos</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container--wide">
+    <div class="footer__inner">
+      <p class="footer__copy">&copy; 2026 PontoView &middot; Esp&iacute;rito Santo &middot; v2.0</p>
+      <ul class="footer__links">
+        <li><a href="#">Termos de uso</a></li>
+        <li><a href="#">Privacidade</a></li>
+        <li><a href="control.html" target="_blank" rel="noopener">Painel de controle</a></li>
+        <li><a href="overlay.html" target="_blank" rel="noopener">Overlay demo</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  r.setAttribute('data-theme',d);
+  function setIcon(){if(!t)return;t.innerHTML=d==='dark'?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';t.setAttribute('aria-label','Alternar para modo '+(d==='dark'?'claro':'escuro'));}
+  setIcon();
+  t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);setIcon();});
+})();
+const hb=document.getElementById('hamburguerBtn'),mm=document.getElementById('mobileMenu');
+hb&&hb.addEventListener('click',()=>{const o=mm.classList.toggle('open');hb.setAttribute('aria-expanded',o);});
+mm&&mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mm.classList.remove('open');hb.setAttribute('aria-expanded',false);}));
+document.querySelectorAll('.faq-question').forEach(btn=>{
+  btn.addEventListener('click',()=>{const i=btn.closest('.faq-item'),w=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));if(!w)i.classList.add('open');});
+});
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
