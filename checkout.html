@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | PontoView News Overlay</title>
+  <meta name="description" content="Assine o PontoView News Overlay Pro e tenha um overlay profissional para OBS Studio." />
+  <link rel="icon" href="./assets/favicon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #050816;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --primary: #00d4ff;
+      --primary-2: #0084ff;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(0,212,255,0.07), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(0,132,255,0.07), transparent 40%),
+        var(--bg);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .glass {
+      background: var(--card);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      color: #000;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,132,255,0.25);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(0,132,255,0.35);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      width: 100%;
+      font-size: 15px;
+      font-family: "Inter", sans-serif;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.3); }
+    .form-input:focus {
+      border-color: rgba(0,212,255,0.5);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+    }
+    .form-input.error {
+      border-color: rgba(255,80,80,0.6);
+      box-shadow: 0 0 0 3px rgba(255,80,80,0.08);
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+
+    .error-msg {
+      font-size: 12px;
+      color: #f87171;
+      margin-top: 4px;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 24px 0;
+    }
+
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #000;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.12);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* Toggle anual/mensal */
+    .plan-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .plan-toggle button {
+      flex: 1;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: "Inter", sans-serif;
+    }
+    .plan-toggle button.active {
+      background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* Sucesso */
+    #success-screen {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+    #success-screen.visible { display: block; }
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d4ff22, #0084ff22);
+      border: 2px solid rgba(0,212,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+    }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .checkout-grid { grid-template-columns: 1fr !important; }
+      .order-first { order: -1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="./index.html" class="flex items-center gap-2 text-gray-300 hover:text-white transition text-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+        </svg>
+        Voltar
+      </a>
+      <a href="./index.html" class="flex items-center gap-3">
+        <img src="./assets/logo-pontoview.png" alt="PontoView" class="h-9 w-auto" />
+      </a>
+      <div class="flex items-center gap-2 text-xs text-gray-500">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Checkout seguro
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="pt-28 pb-20 px-4">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Título -->
+      <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold mb-2">Finalizar <span class="gradient-text">assinatura</span></h1>
+        <p class="text-gray-400 text-sm">Preencha os dados abaixo para ativar seu acesso ao PontoView Pro</p>
+      </div>
+
+      <!-- Grid principal -->
+      <div class="grid gap-8 checkout-grid" style="grid-template-columns: 1fr 400px;">
+
+        <!-- COLUNA ESQUERDA: Formulário -->
+        <div id="form-section">
+
+          <!-- Step 1: Conta -->
+          <div class="glass rounded-3xl p-8 mb-6">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="step-badge">1</div>
+              <h2 class="font-bold text-lg">Criar conta</h2>
+            </div>
+            <div class="grid gap-4">
+              <div>
+                <label class="form-label" for="name">Nome completo</label>
+                <input class="form-input" type="text" id="name" placeholder="João Silva" autocomplete="name" />
+                <span class="error-msg" id="name-err">Informe seu nome completo.</span>
+              </div>
+              <div>
+                <label class="form-label" for="email">E-mail</label>
+                <input class="form-input" type="email" id="email" placeholder="joao@email.com" autocomplete="email" />
+                <span class="error-msg" id="email-err">Informe um e-mail válido.</span>
+              </div>
+              <div>
+                <label class="form-label" for="password">Senha de acesso</label>
+                <input class="form-input" type="password" id="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+                <span class="error-msg" id="password-err">A senha deve ter ao menos 8 caracteres.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Pagamento -->
+          <div class="glass rounded-3xl p-8 mb-6">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="step-badge">2</div>
+              <h2 class="font-bold text-lg">Forma de pagamento</h2>
+            </div>
+
+            <!-- Tabs método -->
+            <div class="flex gap-3 mb-6" id="payment-tabs">
+              <button
+                onclick="setPaymentMethod('card')"
+                id="tab-card"
+                class="flex-1 py-3 rounded-xl text-sm font-semibold border border-cyan-500/50 bg-cyan-500/10 text-cyan-400 transition"
+              >
+                💳 Cartão
+              </button>
+              <button
+                onclick="setPaymentMethod('pix')"
+                id="tab-pix"
+                class="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:border-white/20 hover:text-white transition"
+              >
+                ⚡ Pix
+              </button>
+              <button
+                onclick="setPaymentMethod('boleto')"
+                id="tab-boleto"
+                class="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:border-white/20 hover:text-white transition"
+              >
+                📄 Boleto
+              </button>
+            </div>
+
+            <!-- Cartão -->
+            <div id="method-card">
+              <div class="grid gap-4">
+                <div>
+                  <label class="form-label" for="card-number">Número do cartão</label>
+                  <input class="form-input" type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" />
+                  <span class="error-msg" id="card-number-err">Informe um número de cartão válido.</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="form-label" for="card-expiry">Validade</label>
+                    <input class="form-input" type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" />
+                    <span class="error-msg" id="card-expiry-err">Validade inválida.</span>
+                  </div>
+                  <div>
+                    <label class="form-label" for="card-cvv">CVV</label>
+                    <input class="form-input" type="text" id="card-cvv" placeholder="123" maxlength="4" autocomplete="cc-csc" />
+                    <span class="error-msg" id="card-cvv-err">CVV inválido.</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label" for="card-name">Nome no cartão</label>
+                  <input class="form-input" type="text" id="card-name" placeholder="JOÃO SILVA" autocomplete="cc-name" />
+                  <span class="error-msg" id="card-name-err">Informe o nome como está no cartão.</span>
+                </div>
+
+                <!-- Parcelas -->
+                <div>
+                  <label class="form-label" for="installments">Parcelas</label>
+                  <select class="form-input" id="installments" style="cursor:pointer;">
+                    <option value="1">1x de R$ 49,00 (sem juros)</option>
+                    <option value="2">2x de R$ 24,50 (sem juros)</option>
+                    <option value="3">3x de R$ 16,33 (sem juros)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pix -->
+            <div id="method-pix" style="display:none;" class="text-center py-8">
+              <div class="inline-block p-6 glass rounded-2xl mb-4">
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="120" height="120" rx="12" fill="rgba(0,212,255,0.05)"/>
+                  <!-- QR Code simulado -->
+                  <rect x="20" y="20" width="30" height="30" rx="2" fill="rgba(0,212,255,0.3)"/>
+                  <rect x="25" y="25" width="20" height="20" rx="1" fill="rgba(0,212,255,0.15)"/>
+                  <rect x="70" y="20" width="30" height="30" rx="2" fill="rgba(0,212,255,0.3)"/>
+                  <rect x="75" y="25" width="20" height="20" rx="1" fill="rgba(0,212,255,0.15)"/>
+                  <rect x="20" y="70" width="30" height="30" rx="2" fill="rgba(0,212,255,0.3)"/>
+                  <rect x="25" y="75" width="20" height="20" rx="1" fill="rgba(0,212,255,0.15)"/>
+                  <rect x="55" y="55" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
+                  <rect x="70" y="55" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
+                  <rect x="85" y="55" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
+                  <rect x="55" y="70" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
+                  <rect x="70" y="85" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
+                  <rect x="85" y="70" width="25" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
+                  <rect x="55" y="85" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
+                  <rect x="40" y="55" width="10" height="40" rx="1" fill="rgba(0,212,255,0.25)"/>
+                </svg>
+              </div>
+              <p class="text-gray-400 text-sm mb-2">Escaneie o QR Code com o app do seu banco</p>
+              <p class="text-xs text-gray-500">O acesso é liberado automaticamente após o pagamento</p>
+              <div class="mt-4 flex items-center justify-center gap-2">
+                <span class="text-xs text-gray-500">Chave Pix:</span>
+                <code class="text-xs text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full">pagamentos@pontoview.com.br</code>
+              </div>
+            </div>
+
+            <!-- Boleto -->
+            <div id="method-boleto" style="display:none;" class="py-8">
+              <div class="glass rounded-2xl p-6 text-center">
+                <div class="text-4xl mb-4">📄</div>
+                <p class="font-semibold mb-2">Boleto Bancário</p>
+                <p class="text-gray-400 text-sm mb-4">O boleto será gerado após confirmar o pedido. O prazo de compensação é de <strong class="text-white">1-3 dias úteis</strong>.</p>
+                <p class="text-xs text-gray-500">O acesso será liberado após a confirmação do pagamento.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botão submit -->
+          <button
+            id="submit-btn"
+            onclick="handleSubmit()"
+            class="btn-primary w-full py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-3"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span id="btn-label">Confirmar e Assinar</span>
+          </button>
+
+          <p class="text-center text-xs text-gray-500 mt-4">
+            Ao assinar, você concorda com os
+            <a href="#" class="text-cyan-400 hover:underline">Termos de Uso</a>
+            e a
+            <a href="#" class="text-cyan-400 hover:underline">Política de Privacidade</a>.
+          </p>
+        </div>
+
+        <!-- SUCESSO (oculto por padrão) -->
+        <div id="success-screen" class="glass rounded-3xl">
+          <div class="success-icon">✅</div>
+          <h2 class="text-2xl font-extrabold mb-3">Assinatura <span class="gradient-text">confirmada!</span></h2>
+          <p class="text-gray-400 mb-6">Seu acesso ao PontoView News Overlay Pro foi ativado. Verifique seu e-mail para os dados de acesso.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="./control.html" class="btn-primary px-8 py-3 rounded-full inline-block">Acessar Painel</a>
+            <a href="./index.html" class="border border-white/15 px-8 py-3 rounded-full inline-block text-sm hover:bg-white/5 transition">Voltar ao início</a>
+          </div>
+        </div>
+
+        <!-- COLUNA DIREITA: Resumo do pedido -->
+        <div class="order-first">
+
+          <!-- Toggle anual/mensal -->
+          <div class="glass rounded-3xl p-6 mb-6">
+            <p class="text-xs text-gray-500 uppercase tracking-widest mb-4 font-semibold">Escolha o período</p>
+            <div class="plan-toggle mb-4" id="period-toggle">
+              <button class="active" onclick="setPeriod('monthly', this)">Mensal</button>
+              <button onclick="setPeriod('annual', this)">Anual <span class="text-green-400 font-bold">−33%</span></button>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-extrabold" id="price-display">R$ 49</div>
+              <div class="text-sm text-gray-400 mt-1" id="period-label">/mês · cobrado mensalmente</div>
+              <div id="savings-badge" style="display:none;" class="mt-2 inline-block text-xs bg-green-500/15 text-green-400 border border-green-500/20 px-3 py-1 rounded-full font-semibold">
+                Você economiza R$ 196/ano
+              </div>
+            </div>
+          </div>
+
+          <!-- Resumo -->
+          <div class="glass rounded-3xl p-6 mb-6">
+            <p class="text-xs text-gray-500 uppercase tracking-widest mb-4 font-semibold">Resumo do pedido</p>
+
+            <div class="flex items-start gap-3 mb-4">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-lg flex-shrink-0">📺</div>
+              <div>
+                <p class="font-semibold text-sm">PontoView News Overlay Pro</p>
+                <p class="text-xs text-gray-400">Plano mensal · acesso imediato</p>
+              </div>
+            </div>
+
+            <hr class="divider" />
+
+            <ul class="space-y-2 text-sm text-gray-300 mb-4">
+              <li class="flex justify-between"><span>Overlay profissional</span><span class="text-green-400">✓</span></li>
+              <li class="flex justify-between"><span>Painel de controle</span><span class="text-green-400">✓</span></li>
+              <li class="flex justify-between"><span>Licença comercial</span><span class="text-green-400">✓</span></li>
+              <li class="flex justify-between"><span>Atualizações gratuitas</span><span class="text-green-400">✓</span></li>
+              <li class="flex justify-between"><span>Suporte prioritário</span><span class="text-green-400">✓</span></li>
+            </ul>
+
+            <hr class="divider" />
+
+            <div class="flex justify-between items-center">
+              <span class="text-gray-400 text-sm">Total hoje</span>
+              <span class="font-extrabold text-xl" id="total-display">R$ 49,00</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1 text-right" id="next-charge">Próxima cobrança em 30 dias</p>
+          </div>
+
+          <!-- Selos de segurança -->
+          <div class="flex flex-wrap gap-2 justify-center">
+            <span class="security-badge">🔒 SSL 256-bit</span>
+            <span class="security-badge">✓ Pagamento seguro</span>
+            <span class="security-badge">↩ Cancele a qualquer hora</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/5 py-6 px-6 text-center text-gray-600 text-xs">
+    © 2026 PontoView. Todos os direitos reservados.
+  </footer>
+
+  <script>
+    let currentMethod = 'card';
+    let currentPeriod = 'monthly';
+
+    /* ── Formatação de cartão ── */
+    const cardNumber = document.getElementById('card-number');
+    if (cardNumber) {
+      cardNumber.addEventListener('input', e => {
+        let v = e.target.value.replace(/\D/g, '').substring(0, 16);
+        e.target.value = v.match(/.{1,4}/g)?.join(' ') || v;
+      });
+    }
+
+    const cardExpiry = document.getElementById('card-expiry');
+    if (cardExpiry) {
+      cardExpiry.addEventListener('input', e => {
+        let v = e.target.value.replace(/\D/g, '').substring(0, 4);
+        if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2);
+        e.target.value = v;
+      });
+    }
+
+    const cardCvv = document.getElementById('card-cvv');
+    if (cardCvv) {
+      cardCvv.addEventListener('input', e => {
+        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+      });
+    }
+
+    /* ── Método de pagamento ── */
+    function setPaymentMethod(method) {
+      currentMethod = method;
+      ['card', 'pix', 'boleto'].forEach(m => {
+        const tab = document.getElementById('tab-' + m);
+        const panel = document.getElementById('method-' + m);
+        const isActive = m === method;
+        panel.style.display = isActive ? 'block' : 'none';
+        if (isActive) {
+          tab.className = 'flex-1 py-3 rounded-xl text-sm font-semibold border border-cyan-500/50 bg-cyan-500/10 text-cyan-400 transition';
+        } else {
+          tab.className = 'flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:border-white/20 hover:text-white transition';
+        }
+      });
+    }
+
+    /* ── Período ── */
+    function setPeriod(period, btn) {
+      currentPeriod = period;
+      document.querySelectorAll('#period-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const priceEl = document.getElementById('price-display');
+      const periodLabel = document.getElementById('period-label');
+      const totalEl = document.getElementById('total-display');
+      const nextCharge = document.getElementById('next-charge');
+      const savingsBadge = document.getElementById('savings-badge');
+      const installments = document.getElementById('installments');
+
+      if (period === 'annual') {
+        priceEl.textContent = 'R$ 33';
+        periodLabel.textContent = '/mês · cobrado anualmente (R$ 396/ano)';
+        totalEl.textContent = 'R$ 396,00';
+        nextCharge.textContent = 'Próxima cobrança em 12 meses';
+        savingsBadge.style.display = 'inline-block';
+        if (installments) {
+          installments.innerHTML = `
+            <option value="1">1x de R$ 396,00 (sem juros)</option>
+            <option value="2">2x de R$ 198,00 (sem juros)</option>
+            <option value="3">3x de R$ 132,00 (sem juros)</option>
+            <option value="6">6x de R$ 66,00 (sem juros)</option>
+            <option value="12">12x de R$ 33,00 (sem juros)</option>
+          `;
+        }
+      } else {
+        priceEl.textContent = 'R$ 49';
+        periodLabel.textContent = '/mês · cobrado mensalmente';
+        totalEl.textContent = 'R$ 49,00';
+        nextCharge.textContent = 'Próxima cobrança em 30 dias';
+        savingsBadge.style.display = 'none';
+        if (installments) {
+          installments.innerHTML = `
+            <option value="1">1x de R$ 49,00 (sem juros)</option>
+            <option value="2">2x de R$ 24,50 (sem juros)</option>
+            <option value="3">3x de R$ 16,33 (sem juros)</option>
+          `;
+        }
+      }
+    }
+
+    /* ── Validação e submit ── */
+    function showError(fieldId, errId, show) {
+      const field = document.getElementById(fieldId);
+      const err = document.getElementById(errId);
+      if (!field || !err) return;
+      field.classList.toggle('error', show);
+      err.classList.toggle('visible', show);
+    }
+
+    function clearErrors() {
+      document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
+      document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('visible'));
+    }
+
+    function handleSubmit() {
+      clearErrors();
+      let valid = true;
+
+      const name = document.getElementById('name')?.value.trim();
+      const email = document.getElementById('email')?.value.trim();
+      const password = document.getElementById('password')?.value;
+
+      if (!name || name.split(' ').length < 2) { showError('name', 'name-err', true); valid = false; }
+      if (!email || !email.includes('@')) { showError('email', 'email-err', true); valid = false; }
+      if (!password || password.length < 8) { showError('password', 'password-err', true); valid = false; }
+
+      if (currentMethod === 'card') {
+        const cn = document.getElementById('card-number')?.value.replace(/\s/g, '');
+        const ce = document.getElementById('card-expiry')?.value;
+        const cv = document.getElementById('card-cvv')?.value;
+        const cname = document.getElementById('card-name')?.value.trim();
+
+        if (!cn || cn.length < 16) { showError('card-number', 'card-number-err', true); valid = false; }
+        if (!ce || ce.length < 5) { showError('card-expiry', 'card-expiry-err', true); valid = false; }
+        if (!cv || cv.length < 3) { showError('card-cvv', 'card-cvv-err', true); valid = false; }
+        if (!cname || cname.split(' ').length < 2) { showError('card-name', 'card-name-err', true); valid = false; }
+      }
+
+      if (!valid) return;
+
+      /* Simula processamento */
+      const btn = document.getElementById('submit-btn');
+      const btnLabel = document.getElementById('btn-label');
+      btn.disabled = true;
+      btnLabel.innerHTML = '<span class="spinner"></span> Processando...';
+
+      setTimeout(() => {
+        document.getElementById('form-section').style.display = 'none';
+        const successEl = document.getElementById('success-screen');
+        successEl.classList.add('visible');
+        successEl.style.display = 'block';
+        /* Scroll para o topo do sucesso */
+        successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 2200);
+    }
+  </script>
+
+</body>
+</html>

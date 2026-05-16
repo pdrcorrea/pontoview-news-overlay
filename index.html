@@ -41,13 +41,8 @@
       --primary-2: #0084ff;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -114,32 +109,13 @@
   <header class="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       <a href="#" class="flex items-center gap-3">
-        <img
-          src="./assets/logo-pontoview.png"
-          alt="PontoView"
-          class="h-10 w-auto"
-        />
+        <img src="./assets/logo-pontoview.png" alt="PontoView" class="h-10 w-auto" />
       </a>
 
       <nav class="hidden md:flex items-center gap-4">
-        <a
-          href="#beneficios"
-          class="text-gray-300 hover:text-white transition"
-        >
-          Benefícios
-        </a>
-        <a
-          href="#demo"
-          class="text-gray-300 hover:text-white transition"
-        >
-          Demonstração
-        </a>
-        <a
-          href="#planos"
-          class="text-gray-300 hover:text-white transition"
-        >
-          Planos
-        </a>
+        <a href="#beneficios" class="text-gray-300 hover:text-white transition">Benefícios</a>
+        <a href="#demo" class="text-gray-300 hover:text-white transition">Demonstração</a>
+        <a href="#planos" class="text-gray-300 hover:text-white transition">Planos</a>
       </nav>
 
       <div class="flex items-center gap-3">
@@ -149,11 +125,7 @@
         >
           Painel de Controle
         </a>
-
-        <a
-          href="#planos"
-          class="btn-primary px-6 py-3 rounded-full font-semibold"
-        >
+        <a href="./checkout.html" class="btn-primary px-6 py-3 rounded-full font-semibold">
           Assinar Agora
         </a>
       </div>
@@ -163,7 +135,6 @@
   <!-- HERO -->
   <section class="relative pt-40 pb-24 px-6">
     <div class="hero-glow"></div>
-
     <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
       <div>
         <span class="inline-block px-4 py-2 rounded-full bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-6">
@@ -182,20 +153,15 @@
         </p>
 
         <div class="flex flex-wrap gap-4">
-          <a
-            href="#planos"
-            class="btn-primary px-8 py-4 rounded-full font-semibold text-lg"
-          >
+          <a href="./checkout.html" class="btn-primary px-8 py-4 rounded-full font-semibold text-lg">
             Assinar por R$ 49/mês
           </a>
-
           <a
             href="./overlay.html"
             class="border border-cyan-500/30 px-8 py-4 rounded-full font-semibold hover:bg-cyan-500/10 transition"
           >
             Ver Overlay ao Vivo
           </a>
-
           <a
             href="./control.html"
             class="border border-white/15 px-8 py-4 rounded-full font-semibold hover:bg-white/5 transition"
@@ -227,46 +193,32 @@
   <section id="beneficios" class="py-24 px-6">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4">
-          Tudo o que você precisa para uma transmissão profissional
-        </h2>
+        <h2 class="text-4xl font-bold mb-4">Tudo o que você precisa para uma transmissão profissional</h2>
         <p class="text-gray-400 text-lg max-w-3xl mx-auto">
           Desenvolvido para criadores, rádios, podcasts e canais de notícias
           que desejam elevar o padrão visual de suas transmissões.
         </p>
       </div>
-
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="glass p-8 rounded-3xl">
           <div class="feature-icon">🎬</div>
           <h3 class="font-semibold text-xl mb-3">Visual Premium</h3>
-          <p class="text-gray-400">
-            Design inspirado em grandes emissoras de TV.
-          </p>
+          <p class="text-gray-400">Design inspirado em grandes emissoras de TV.</p>
         </div>
-
         <div class="glass p-8 rounded-3xl">
           <div class="feature-icon">🖥️</div>
           <h3 class="font-semibold text-xl mb-3">OBS Ready</h3>
-          <p class="text-gray-400">
-            Basta adicionar como Browser Source.
-          </p>
+          <p class="text-gray-400">Basta adicionar como Browser Source.</p>
         </div>
-
         <div class="glass p-8 rounded-3xl">
           <div class="feature-icon">⚡</div>
           <h3 class="font-semibold text-xl mb-3">Tempo Real</h3>
-          <p class="text-gray-400">
-            Atualizações instantâneas no overlay.
-          </p>
+          <p class="text-gray-400">Atualizações instantâneas no overlay.</p>
         </div>
-
         <div class="glass p-8 rounded-3xl">
           <div class="feature-icon">☁️</div>
           <h3 class="font-semibold text-xl mb-3">100% Online</h3>
-          <p class="text-gray-400">
-            Sem instalação, acesso direto no navegador.
-          </p>
+          <p class="text-gray-400">Sem instalação, acesso direto no navegador.</p>
         </div>
       </div>
     </div>
@@ -276,16 +228,9 @@
   <section id="demo" class="py-24 px-6">
     <div class="max-w-6xl mx-auto text-center">
       <h2 class="text-4xl font-bold mb-6">Veja o overlay em ação</h2>
-      <p class="text-gray-400 text-lg mb-12">
-        Qualidade visual profissional para elevar sua produção.
-      </p>
-
+      <p class="text-gray-400 text-lg mb-12">Qualidade visual profissional para elevar sua produção.</p>
       <div class="glass rounded-3xl p-4">
-        <img
-          src="./assets/demo-overlay-full.png"
-          alt="Overlay em ação"
-          class="rounded-2xl w-full"
-        />
+        <img src="./assets/demo-overlay-full.png" alt="Overlay em ação" class="rounded-2xl w-full" />
       </div>
     </div>
   </section>
@@ -299,18 +244,13 @@
         </div>
 
         <h2 class="text-4xl font-bold mb-4">Plano Pro</h2>
-        <p class="text-gray-400 mb-8">
-          Acesso completo ao PontoView News Overlay.
-        </p>
+        <p class="text-gray-400 mb-8">Acesso completo ao PontoView News Overlay.</p>
 
         <div class="text-6xl font-extrabold mb-2">
           R$ 49
           <span class="text-xl font-medium text-gray-400">/mês</span>
         </div>
-
-        <p class="text-gray-500 mb-8">
-          Cancele quando quiser.
-        </p>
+        <p class="text-gray-500 mb-8">Cancele quando quiser.</p>
 
         <ul class="text-gray-300 space-y-3 my-10 text-left max-w-md mx-auto">
           <li>✓ Overlay profissional completo</li>
@@ -320,12 +260,7 @@
           <li>✓ Suporte prioritário</li>
         </ul>
 
-        <a
-          href="https://checkout.pontoview.com.br"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-primary inline-block px-10 py-4 rounded-full font-bold text-lg"
-        >
+        <a href="./checkout.html" class="btn-primary inline-block px-10 py-4 rounded-full font-bold text-lg">
           Assinar Agora
         </a>
       </div>
@@ -335,30 +270,19 @@
   <!-- FAQ -->
   <section class="py-24 px-6">
     <div class="max-w-4xl mx-auto">
-      <h2 class="text-4xl font-bold text-center mb-12">
-        Perguntas Frequentes
-      </h2>
-
+      <h2 class="text-4xl font-bold text-center mb-12">Perguntas Frequentes</h2>
       <div class="space-y-6">
         <div class="glass p-6 rounded-2xl">
           <h3 class="font-semibold mb-2">Funciona no OBS Studio?</h3>
-          <p class="text-gray-400">
-            Sim. Basta adicionar a URL do overlay como Browser Source.
-          </p>
+          <p class="text-gray-400">Sim. Basta adicionar a URL do overlay como Browser Source.</p>
         </div>
-
         <div class="glass p-6 rounded-2xl">
           <h3 class="font-semibold mb-2">Preciso instalar algo?</h3>
-          <p class="text-gray-400">
-            Não. Todo o sistema funciona diretamente no navegador.
-          </p>
+          <p class="text-gray-400">Não. Todo o sistema funciona diretamente no navegador.</p>
         </div>
-
         <div class="glass p-6 rounded-2xl">
           <h3 class="font-semibold mb-2">Posso cancelar quando quiser?</h3>
-          <p class="text-gray-400">
-            Sim, o plano é mensal e pode ser cancelado a qualquer momento.
-          </p>
+          <p class="text-gray-400">Sim, o plano é mensal e pode ser cancelado a qualquer momento.</p>
         </div>
       </div>
     </div>
@@ -367,18 +291,9 @@
   <!-- CTA FINAL -->
   <section class="py-24 px-6 text-center">
     <div class="max-w-4xl mx-auto">
-      <h2 class="text-5xl font-bold mb-6">
-        Leve sua transmissão para outro nível
-      </h2>
-
-      <p class="text-xl text-gray-400 mb-10">
-        Assine hoje e tenha um overlay profissional em minutos.
-      </p>
-
-      <a
-        href="#planos"
-        class="btn-primary px-10 py-5 rounded-full font-bold text-lg"
-      >
+      <h2 class="text-5xl font-bold mb-6">Leve sua transmissão para outro nível</h2>
+      <p class="text-xl text-gray-400 mb-10">Assine hoje e tenha um overlay profissional em minutos.</p>
+      <a href="./checkout.html" class="btn-primary px-10 py-5 rounded-full font-bold text-lg">
         Começar Agora
       </a>
     </div>
