@@ -3,626 +3,440 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout | PontoView News Overlay</title>
-  <meta name="description" content="Assine o PontoView News Overlay Pro e tenha um overlay profissional para OBS Studio." />
+  <title>Criar conta | PontoView News Overlay</title>
+  <meta name="description" content="Crie sua conta gratuita no PontoView e comece a usar overlays profissionais para OBS." />
   <link rel="icon" href="./assets/favicon.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
   <style>
     :root {
-      --bg: #050816;
-      --card: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.08);
-      --primary: #00d4ff;
-      --primary-2: #0084ff;
+      --bg: #07111f;
+      --card: rgba(13,23,39,.88);
+      --line: rgba(255,255,255,.08);
+      --line-strong: rgba(255,255,255,.13);
+      --text: #ecf3ff;
+      --muted: #97a7c3;
+      --accent: #28c0ff;
+      --accent-2: #5a7cff;
+      --success: #19c37d;
+      --danger: #ff5d73;
+      --radius: 20px;
     }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; min-height: 100%; }
     body {
-      margin: 0;
-      font-family: "Inter", sans-serif;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
       background:
-        radial-gradient(circle at top right, rgba(0,212,255,0.07), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(0,132,255,0.07), transparent 40%),
+        radial-gradient(circle at 20% 10%, rgba(40,192,255,.15), transparent 35%),
+        radial-gradient(circle at 80% 5%, rgba(90,124,255,.15), transparent 30%),
         var(--bg);
-      color: #fff;
-      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .glass {
+    /* HEADER */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(7,17,31,.95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(24px);
+      padding: 0 24px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand img { height: 28px; width: auto; }
+    .back-link {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--muted); text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      transition: color .15s;
+    }
+    .back-link:hover { color: var(--text); }
+    .secure-badge {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; color: var(--muted);
+    }
+
+    /* MAIN */
+    main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 88px 20px 40px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      max-width: 900px; width: 100%;
       background: var(--card);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--border);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 32px 80px rgba(0,0,0,.5);
     }
 
-    .gradient-text {
-      background: linear-gradient(90deg, var(--primary), var(--primary-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    /* LEFT PANEL */
+    .left-panel {
+      background: linear-gradient(145deg, rgba(40,192,255,.1), rgba(90,124,255,.15));
+      border-right: 1px solid var(--line);
+      padding: 48px 40px;
+      display: flex; flex-direction: column; justify-content: space-between;
     }
+    .left-panel .logo { height: 32px; margin-bottom: 36px; }
+    .left-panel h1 {
+      font-size: 22px; font-weight: 900; line-height: 1.3;
+      margin: 0 0 12px;
+    }
+    .left-panel .subtitle {
+      color: var(--muted); font-size: 13px; line-height: 1.7;
+      margin: 0 0 32px;
+    }
+    .feature {
+      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;
+    }
+    .feature-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 10px;
+      background: rgba(40,192,255,.1);
+      border: 1px solid rgba(40,192,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .feature-text strong { display: block; font-size: 13px; font-weight: 800; }
+    .feature-text span { font-size: 12px; color: var(--muted); }
+    .plan-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(40,192,255,.08); border: 1px solid rgba(40,192,255,.2);
+      border-radius: 100px; padding: 6px 14px;
+      font-size: 11px; font-weight: 700; color: var(--accent);
+      margin-top: 32px;
+    }
+    .left-footer { font-size: 11px; color: var(--muted); margin-top: 24px; }
+    .left-footer a { color: var(--accent); text-decoration: none; }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      padding: 48px 40px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .right-panel h2 { font-size: 22px; font-weight: 900; margin: 0 0 6px; }
+    .right-panel .right-sub {
+      color: var(--muted); font-size: 13px; margin: 0 0 28px; line-height: 1.5;
+    }
+
+    label {
+      display: block; font-size: 11px; color: var(--muted);
+      margin: 0 0 6px; text-transform: uppercase;
+      letter-spacing: .1em; font-weight: 700;
+    }
+    .field { margin-bottom: 16px; }
+    input[type=text], input[type=email], input[type=password] {
+      width: 100%; padding: 13px 15px;
+      border-radius: 14px; border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,.04); color: var(--text);
+      outline: none; font-size: 14px; font-family: 'Inter', sans-serif;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus {
+      border-color: rgba(40,192,255,.6);
+      box-shadow: 0 0 0 3px rgba(40,192,255,.08);
+    }
+    input.error { border-color: rgba(255,93,115,.5); }
+
+    .check-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 12px; cursor: pointer;
+    }
+    .check-row input[type=checkbox] {
+      width: 16px; height: 16px; flex-shrink: 0;
+      accent-color: var(--accent); margin-top: 2px;
+    }
+    .check-row span { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .check-row a { color: var(--accent); }
 
     .btn-primary {
-      background: linear-gradient(90deg, var(--primary), var(--primary-2));
-      color: #000;
-      font-weight: 700;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 30px rgba(0,132,255,0.25);
-      border: none;
-      cursor: pointer;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(0,132,255,0.35);
-    }
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .form-input {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #fff;
-      border-radius: 12px;
-      padding: 14px 16px;
-      width: 100%;
-      font-size: 15px;
-      font-family: "Inter", sans-serif;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      outline: none;
-    }
-    .form-input::placeholder { color: rgba(255,255,255,0.3); }
-    .form-input:focus {
-      border-color: rgba(0,212,255,0.5);
-      box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
-    }
-    .form-input.error {
-      border-color: rgba(255,80,80,0.6);
-      box-shadow: 0 0 0 3px rgba(255,80,80,0.08);
-    }
-
-    .form-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 6px;
-      letter-spacing: 0.03em;
-    }
-
-    .error-msg {
-      font-size: 12px;
-      color: #f87171;
+      width: 100%; padding: 15px;
+      border-radius: 14px; border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff; font-size: 14px; font-weight: 800;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      box-shadow: 0 8px 28px rgba(40,192,255,.25);
+      transition: transform .15s, box-shadow .15s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
       margin-top: 4px;
-      display: none;
     }
-    .error-msg.visible { display: block; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 36px rgba(40,192,255,.32); }
+    .btn-primary:active { transform: scale(.98); }
+    .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+    #error-msg {
+      font-size: 12px; color: #ff93a1;
+      background: rgba(255,93,115,.08);
+      border: 1px solid rgba(255,93,115,.2);
+      border-radius: 10px; padding: 10px 14px;
+      margin-top: 12px; display: none; line-height: 1.5;
+    }
+    #error-msg.visible { display: block; }
 
     .divider {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      margin: 24px 0;
+      text-align: center; color: var(--muted); font-size: 12px;
+      margin: 16px 0; position: relative;
     }
+    .divider::before, .divider::after {
+      content: ''; position: absolute; top: 50%;
+      width: calc(50% - 28px); height: 1px;
+      background: var(--line-strong);
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
 
-    .step-badge {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      color: #000;
-      font-weight: 700;
-      font-size: 13px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .btn-signin {
+      width: 100%; padding: 13px;
+      border-radius: 14px; border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,.04); color: var(--text);
+      font-size: 13px; font-weight: 700;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      text-align: center; text-decoration: none;
+      display: block; transition: background .15s, border-color .15s;
     }
+    .btn-signin:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
 
-    .security-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0,212,255,0.06);
-      border: 1px solid rgba(0,212,255,0.12);
-      border-radius: 100px;
-      padding: 6px 14px;
-      font-size: 12px;
-      color: rgba(255,255,255,0.55);
+    /* TELA DE CONFIRMAÇÃO DE E-MAIL */
+    #confirm-screen {
+      display: none; text-align: center; padding: 12px 0;
     }
+    #confirm-screen.visible { display: block; }
+    .confirm-icon {
+      width: 72px; height: 72px; border-radius: 20px; margin: 0 auto 20px;
+      background: linear-gradient(135deg, rgba(40,192,255,.12), rgba(90,124,255,.12));
+      border: 1px solid rgba(40,192,255,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+    }
+    #confirm-screen h2 { font-size: 20px; font-weight: 900; margin: 0 0 8px; }
+    #confirm-screen p { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 0 0 16px; }
+    .email-box {
+      background: rgba(255,255,255,.04); border: 1px solid var(--line-strong);
+      border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 700;
+      margin: 0 0 20px; word-break: break-all;
+    }
+    .btn-resend {
+      width: 100%; padding: 13px; border-radius: 14px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,.04); color: var(--text);
+      font-size: 13px; font-weight: 700;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      margin-bottom: 10px; transition: background .15s;
+    }
+    .btn-resend:hover { background: rgba(255,255,255,.08); }
+    #resend-ok { font-size: 12px; color: var(--success); margin-top: 6px; display: none; }
 
-    /* Toggle anual/mensal */
-    .plan-toggle {
-      display: flex;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 100px;
-      padding: 4px;
-      gap: 4px;
-    }
-    .plan-toggle button {
-      flex: 1;
-      padding: 8px 16px;
-      border-radius: 100px;
-      border: none;
-      background: transparent;
-      color: rgba(255,255,255,0.5);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: "Inter", sans-serif;
-    }
-    .plan-toggle button.active {
-      background: linear-gradient(90deg, var(--primary), var(--primary-2));
-      color: #000;
-      font-weight: 700;
-    }
-
-    /* Sucesso */
-    #success-screen {
-      display: none;
-      text-align: center;
-      padding: 48px 24px;
-    }
-    #success-screen.visible { display: block; }
-    .success-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00d4ff22, #0084ff22);
-      border: 2px solid rgba(0,212,255,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-      font-size: 36px;
-    }
-
-    /* Spinner */
+    /* SPINNER */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(0,0,0,0.2);
-      border-top-color: #000;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.25);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .7s linear infinite;
       display: inline-block;
     }
 
-    /* Responsive */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-      .checkout-grid { grid-template-columns: 1fr !important; }
-      .order-first { order: -1; }
+      .container { grid-template-columns: 1fr; }
+      .left-panel { display: none; }
+      .right-panel { padding: 36px 28px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="./index.html" class="flex items-center gap-2 text-gray-300 hover:text-white transition text-sm">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
-        </svg>
-        Voltar
-      </a>
-      <a href="./index.html" class="flex items-center gap-3">
-        <img src="./assets/logo-pontoview.png" alt="PontoView" class="h-9 w-auto" />
-      </a>
-      <div class="flex items-center gap-2 text-xs text-gray-500">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        Checkout seguro
-      </div>
+  <header>
+    <a href="./index.html" class="back-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+      </svg>
+      Voltar
+    </a>
+    <a href="./index.html" class="brand">
+      <img src="./assets/logo-pontoview.png" alt="PontoView" />
+    </a>
+    <div class="secure-badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      Conexão segura
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="pt-28 pb-20 px-4">
-    <div class="max-w-5xl mx-auto">
+  <main>
+    <div class="container">
 
-      <!-- Título -->
-      <div class="text-center mb-10">
-        <h1 class="text-3xl font-extrabold mb-2">Finalizar <span class="gradient-text">assinatura</span></h1>
-        <p class="text-gray-400 text-sm">Preencha os dados abaixo para ativar seu acesso ao PontoView Pro</p>
+      <!-- ESQUERDA -->
+      <div class="left-panel">
+        <div>
+          <img src="./assets/logo-pontoview.png" alt="PontoView" class="logo" />
+          <h1>Overlays profissionais para o seu conteúdo</h1>
+          <p class="subtitle">Controle GCs, tickers e identidade visual em tempo real, direto do navegador.</p>
+          <div class="feature">
+            <div class="feature-icon">📡</div>
+            <div class="feature-text">
+              <strong>Transmissão em tempo real</strong>
+              <span>Alterações refletem no overlay instantaneamente</span>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🎨</div>
+            <div class="feature-text">
+              <strong>Identidade visual completa</strong>
+              <span>Cores, fontes e logo personalizados por canal</span>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-text">
+              <strong>Presets em um clique</strong>
+              <span>Salve e acione layouts inteiros instantaneamente</span>
+            </div>
+          </div>
+          <div class="plan-badge">
+            ✦ Conta gratuita · Sem cartão de crédito
+          </div>
+        </div>
+        <div class="left-footer">
+          © 2026 PontoView ·
+          <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Privacidade</a> ·
+          <a href="https://pontoview.com.br/termos-de-uso" target="_blank">Termos</a>
+        </div>
       </div>
 
-      <!-- Grid principal -->
-      <div class="grid gap-8 checkout-grid" style="grid-template-columns: 1fr 400px;">
+      <!-- DIREITA -->
+      <div class="right-panel">
 
-        <!-- COLUNA ESQUERDA: Formulário -->
-        <div id="form-section">
+        <!-- FORMULÁRIO DE CADASTRO -->
+        <div id="signup-form">
+          <h2>Criar conta gratuita</h2>
+          <p class="right-sub">Preencha os dados abaixo para começar. Não precisa de cartão de crédito.</p>
 
-          <!-- Step 1: Conta -->
-          <div class="glass rounded-3xl p-8 mb-6">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="step-badge">1</div>
-              <h2 class="font-bold text-lg">Criar conta</h2>
-            </div>
-            <div class="grid gap-4">
-              <div>
-                <label class="form-label" for="name">Nome completo</label>
-                <input class="form-input" type="text" id="name" placeholder="João Silva" autocomplete="name" />
-                <span class="error-msg" id="name-err">Informe seu nome completo.</span>
-              </div>
-              <div>
-                <label class="form-label" for="email">E-mail</label>
-                <input class="form-input" type="email" id="email" placeholder="joao@email.com" autocomplete="email" />
-                <span class="error-msg" id="email-err">Informe um e-mail válido.</span>
-              </div>
-              <div>
-                <label class="form-label" for="password">Senha de acesso</label>
-                <input class="form-input" type="password" id="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
-                <span class="error-msg" id="password-err">A senha deve ter ao menos 8 caracteres.</span>
-              </div>
-            </div>
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
           </div>
 
-          <!-- Step 2: Pagamento -->
-          <div class="glass rounded-3xl p-8 mb-6">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="step-badge">2</div>
-              <h2 class="font-bold text-lg">Forma de pagamento</h2>
-            </div>
+          <label class="check-row" for="chk-terms">
+            <input type="checkbox" id="chk-terms" />
+            <span>
+              Li e aceito os
+              <a href="https://pontoview.com.br/termos-de-uso" target="_blank">Termos de Uso</a>
+              e a
+              <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a>.
+            </span>
+          </label>
 
-            <!-- Tabs método -->
-            <div class="flex gap-3 mb-6" id="payment-tabs">
-              <button
-                onclick="setPaymentMethod('card')"
-                id="tab-card"
-                class="flex-1 py-3 rounded-xl text-sm font-semibold border border-cyan-500/50 bg-cyan-500/10 text-cyan-400 transition"
-              >
-                💳 Cartão
-              </button>
-              <button
-                onclick="setPaymentMethod('pix')"
-                id="tab-pix"
-                class="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:border-white/20 hover:text-white transition"
-              >
-                ⚡ Pix
-              </button>
-              <button
-                onclick="setPaymentMethod('boleto')"
-                id="tab-boleto"
-                class="flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:border-white/20 hover:text-white transition"
-              >
-                📄 Boleto
-              </button>
-            </div>
-
-            <!-- Cartão -->
-            <div id="method-card">
-              <div class="grid gap-4">
-                <div>
-                  <label class="form-label" for="card-number">Número do cartão</label>
-                  <input class="form-input" type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number" />
-                  <span class="error-msg" id="card-number-err">Informe um número de cartão válido.</span>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="form-label" for="card-expiry">Validade</label>
-                    <input class="form-input" type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp" />
-                    <span class="error-msg" id="card-expiry-err">Validade inválida.</span>
-                  </div>
-                  <div>
-                    <label class="form-label" for="card-cvv">CVV</label>
-                    <input class="form-input" type="text" id="card-cvv" placeholder="123" maxlength="4" autocomplete="cc-csc" />
-                    <span class="error-msg" id="card-cvv-err">CVV inválido.</span>
-                  </div>
-                </div>
-                <div>
-                  <label class="form-label" for="card-name">Nome no cartão</label>
-                  <input class="form-input" type="text" id="card-name" placeholder="JOÃO SILVA" autocomplete="cc-name" />
-                  <span class="error-msg" id="card-name-err">Informe o nome como está no cartão.</span>
-                </div>
-
-                <!-- Parcelas -->
-                <div>
-                  <label class="form-label" for="installments">Parcelas</label>
-                  <select class="form-input" id="installments" style="cursor:pointer;">
-                    <option value="1">1x de R$ 49,00 (sem juros)</option>
-                    <option value="2">2x de R$ 24,50 (sem juros)</option>
-                    <option value="3">3x de R$ 16,33 (sem juros)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <!-- Pix -->
-            <div id="method-pix" style="display:none;" class="text-center py-8">
-              <div class="inline-block p-6 glass rounded-2xl mb-4">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="120" height="120" rx="12" fill="rgba(0,212,255,0.05)"/>
-                  <!-- QR Code simulado -->
-                  <rect x="20" y="20" width="30" height="30" rx="2" fill="rgba(0,212,255,0.3)"/>
-                  <rect x="25" y="25" width="20" height="20" rx="1" fill="rgba(0,212,255,0.15)"/>
-                  <rect x="70" y="20" width="30" height="30" rx="2" fill="rgba(0,212,255,0.3)"/>
-                  <rect x="75" y="25" width="20" height="20" rx="1" fill="rgba(0,212,255,0.15)"/>
-                  <rect x="20" y="70" width="30" height="30" rx="2" fill="rgba(0,212,255,0.3)"/>
-                  <rect x="25" y="75" width="20" height="20" rx="1" fill="rgba(0,212,255,0.15)"/>
-                  <rect x="55" y="55" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
-                  <rect x="70" y="55" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
-                  <rect x="85" y="55" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
-                  <rect x="55" y="70" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
-                  <rect x="70" y="85" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
-                  <rect x="85" y="70" width="25" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
-                  <rect x="55" y="85" width="10" height="10" rx="1" fill="rgba(0,212,255,0.4)"/>
-                  <rect x="40" y="55" width="10" height="40" rx="1" fill="rgba(0,212,255,0.25)"/>
-                </svg>
-              </div>
-              <p class="text-gray-400 text-sm mb-2">Escaneie o QR Code com o app do seu banco</p>
-              <p class="text-xs text-gray-500">O acesso é liberado automaticamente após o pagamento</p>
-              <div class="mt-4 flex items-center justify-center gap-2">
-                <span class="text-xs text-gray-500">Chave Pix:</span>
-                <code class="text-xs text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full">pagamentos@pontoview.com.br</code>
-              </div>
-            </div>
-
-            <!-- Boleto -->
-            <div id="method-boleto" style="display:none;" class="py-8">
-              <div class="glass rounded-2xl p-6 text-center">
-                <div class="text-4xl mb-4">📄</div>
-                <p class="font-semibold mb-2">Boleto Bancário</p>
-                <p class="text-gray-400 text-sm mb-4">O boleto será gerado após confirmar o pedido. O prazo de compensação é de <strong class="text-white">1-3 dias úteis</strong>.</p>
-                <p class="text-xs text-gray-500">O acesso será liberado após a confirmação do pagamento.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Botão submit -->
-          <button
-            id="submit-btn"
-            onclick="handleSubmit()"
-            class="btn-primary w-full py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-3"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <span id="btn-label">Confirmar e Assinar</span>
+          <button class="btn-primary" id="btn-signup" onclick="doSignup()">
+            Criar conta
           </button>
 
-          <p class="text-center text-xs text-gray-500 mt-4">
-            Ao assinar, você concorda com os
-            <a href="#" class="text-cyan-400 hover:underline">Termos de Uso</a>
-            e a
-            <a href="#" class="text-cyan-400 hover:underline">Política de Privacidade</a>.
-          </p>
+          <div id="error-msg"></div>
+
+          <div class="divider">ou</div>
+
+          <a href="./control.html" class="btn-signin">Já tenho conta → Entrar</a>
         </div>
 
-        <!-- SUCESSO (oculto por padrão) -->
-        <div id="success-screen" class="glass rounded-3xl">
-          <div class="success-icon">✅</div>
-          <h2 class="text-2xl font-extrabold mb-3">Assinatura <span class="gradient-text">confirmada!</span></h2>
-          <p class="text-gray-400 mb-6">Seu acesso ao PontoView News Overlay Pro foi ativado. Verifique seu e-mail para os dados de acesso.</p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="./control.html" class="btn-primary px-8 py-3 rounded-full inline-block">Acessar Painel</a>
-            <a href="./index.html" class="border border-white/15 px-8 py-3 rounded-full inline-block text-sm hover:bg-white/5 transition">Voltar ao início</a>
-          </div>
-        </div>
-
-        <!-- COLUNA DIREITA: Resumo do pedido -->
-        <div class="order-first">
-
-          <!-- Toggle anual/mensal -->
-          <div class="glass rounded-3xl p-6 mb-6">
-            <p class="text-xs text-gray-500 uppercase tracking-widest mb-4 font-semibold">Escolha o período</p>
-            <div class="plan-toggle mb-4" id="period-toggle">
-              <button class="active" onclick="setPeriod('monthly', this)">Mensal</button>
-              <button onclick="setPeriod('annual', this)">Anual <span class="text-green-400 font-bold">−33%</span></button>
-            </div>
-            <div class="text-center">
-              <div class="text-4xl font-extrabold" id="price-display">R$ 49</div>
-              <div class="text-sm text-gray-400 mt-1" id="period-label">/mês · cobrado mensalmente</div>
-              <div id="savings-badge" style="display:none;" class="mt-2 inline-block text-xs bg-green-500/15 text-green-400 border border-green-500/20 px-3 py-1 rounded-full font-semibold">
-                Você economiza R$ 196/ano
-              </div>
-            </div>
-          </div>
-
-          <!-- Resumo -->
-          <div class="glass rounded-3xl p-6 mb-6">
-            <p class="text-xs text-gray-500 uppercase tracking-widest mb-4 font-semibold">Resumo do pedido</p>
-
-            <div class="flex items-start gap-3 mb-4">
-              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-lg flex-shrink-0">📺</div>
-              <div>
-                <p class="font-semibold text-sm">PontoView News Overlay Pro</p>
-                <p class="text-xs text-gray-400">Plano mensal · acesso imediato</p>
-              </div>
-            </div>
-
-            <hr class="divider" />
-
-            <ul class="space-y-2 text-sm text-gray-300 mb-4">
-              <li class="flex justify-between"><span>Overlay profissional</span><span class="text-green-400">✓</span></li>
-              <li class="flex justify-between"><span>Painel de controle</span><span class="text-green-400">✓</span></li>
-              <li class="flex justify-between"><span>Licença comercial</span><span class="text-green-400">✓</span></li>
-              <li class="flex justify-between"><span>Atualizações gratuitas</span><span class="text-green-400">✓</span></li>
-              <li class="flex justify-between"><span>Suporte prioritário</span><span class="text-green-400">✓</span></li>
-            </ul>
-
-            <hr class="divider" />
-
-            <div class="flex justify-between items-center">
-              <span class="text-gray-400 text-sm">Total hoje</span>
-              <span class="font-extrabold text-xl" id="total-display">R$ 49,00</span>
-            </div>
-            <p class="text-xs text-gray-500 mt-1 text-right" id="next-charge">Próxima cobrança em 30 dias</p>
-          </div>
-
-          <!-- Selos de segurança -->
-          <div class="flex flex-wrap gap-2 justify-center">
-            <span class="security-badge">🔒 SSL 256-bit</span>
-            <span class="security-badge">✓ Pagamento seguro</span>
-            <span class="security-badge">↩ Cancele a qualquer hora</span>
-          </div>
+        <!-- TELA DE CONFIRMAÇÃO -->
+        <div id="confirm-screen">
+          <div class="confirm-icon">✉️</div>
+          <h2>Confirme seu e-mail</h2>
+          <p>Enviamos um link de ativação para:</p>
+          <div class="email-box" id="confirm-email"></div>
+          <p>Clique no link do e-mail para ativar sua conta e depois acesse o PontoView Studio.</p>
+          <button class="btn-resend" onclick="resendEmail()">Reenviar e-mail</button>
+          <div id="resend-ok">E-mail reenviado ✓</div>
+          <a href="./control.html" class="btn-signin" style="margin-top: 12px;">Já confirmei → Entrar no Studio</a>
         </div>
 
       </div>
     </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-white/5 py-6 px-6 text-center text-gray-600 text-xs">
-    © 2026 PontoView. Todos os direitos reservados.
-  </footer>
-
   <script>
-    let currentMethod = 'card';
-    let currentPeriod = 'monthly';
+    const SUPABASE_URL = 'https://gwawftcyltlmnunttyxj.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3YXdmdGN5bHRsbW51bnR0eXhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxNTA1MjUsImV4cCI6MjA2MTcyNjUyNX0.y9BT3_GVy2fF2sPBYD-mI3BzQz0dvgvzrVPlgJ0nMHk';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    /* ── Formatação de cartão ── */
-    const cardNumber = document.getElementById('card-number');
-    if (cardNumber) {
-      cardNumber.addEventListener('input', e => {
-        let v = e.target.value.replace(/\D/g, '').substring(0, 16);
-        e.target.value = v.match(/.{1,4}/g)?.join(' ') || v;
-      });
+    let lastEmail = '';
+
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.add('visible');
+    }
+    function hideError() {
+      const el = document.getElementById('error-msg');
+      el.textContent = '';
+      el.classList.remove('visible');
     }
 
-    const cardExpiry = document.getElementById('card-expiry');
-    if (cardExpiry) {
-      cardExpiry.addEventListener('input', e => {
-        let v = e.target.value.replace(/\D/g, '').substring(0, 4);
-        if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2);
-        e.target.value = v;
-      });
-    }
+    async function doSignup() {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const terms    = document.getElementById('chk-terms').checked;
+      const btn      = document.getElementById('btn-signup');
 
-    const cardCvv = document.getElementById('card-cvv');
-    if (cardCvv) {
-      cardCvv.addEventListener('input', e => {
-        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
-      });
-    }
+      hideError();
 
-    /* ── Método de pagamento ── */
-    function setPaymentMethod(method) {
-      currentMethod = method;
-      ['card', 'pix', 'boleto'].forEach(m => {
-        const tab = document.getElementById('tab-' + m);
-        const panel = document.getElementById('method-' + m);
-        const isActive = m === method;
-        panel.style.display = isActive ? 'block' : 'none';
-        if (isActive) {
-          tab.className = 'flex-1 py-3 rounded-xl text-sm font-semibold border border-cyan-500/50 bg-cyan-500/10 text-cyan-400 transition';
-        } else {
-          tab.className = 'flex-1 py-3 rounded-xl text-sm font-semibold border border-white/10 text-gray-400 hover:border-white/20 hover:text-white transition';
-        }
-      });
-    }
+      if (!email)          { showError('Informe seu e-mail.'); return; }
+      if (password.length < 6) { showError('A senha deve ter pelo menos 6 caracteres.'); return; }
+      if (!terms)          { showError('Aceite os Termos de Uso para continuar.'); return; }
 
-    /* ── Período ── */
-    function setPeriod(period, btn) {
-      currentPeriod = period;
-      document.querySelectorAll('#period-toggle button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const priceEl = document.getElementById('price-display');
-      const periodLabel = document.getElementById('period-label');
-      const totalEl = document.getElementById('total-display');
-      const nextCharge = document.getElementById('next-charge');
-      const savingsBadge = document.getElementById('savings-badge');
-      const installments = document.getElementById('installments');
-
-      if (period === 'annual') {
-        priceEl.textContent = 'R$ 33';
-        periodLabel.textContent = '/mês · cobrado anualmente (R$ 396/ano)';
-        totalEl.textContent = 'R$ 396,00';
-        nextCharge.textContent = 'Próxima cobrança em 12 meses';
-        savingsBadge.style.display = 'inline-block';
-        if (installments) {
-          installments.innerHTML = `
-            <option value="1">1x de R$ 396,00 (sem juros)</option>
-            <option value="2">2x de R$ 198,00 (sem juros)</option>
-            <option value="3">3x de R$ 132,00 (sem juros)</option>
-            <option value="6">6x de R$ 66,00 (sem juros)</option>
-            <option value="12">12x de R$ 33,00 (sem juros)</option>
-          `;
-        }
-      } else {
-        priceEl.textContent = 'R$ 49';
-        periodLabel.textContent = '/mês · cobrado mensalmente';
-        totalEl.textContent = 'R$ 49,00';
-        nextCharge.textContent = 'Próxima cobrança em 30 dias';
-        savingsBadge.style.display = 'none';
-        if (installments) {
-          installments.innerHTML = `
-            <option value="1">1x de R$ 49,00 (sem juros)</option>
-            <option value="2">2x de R$ 24,50 (sem juros)</option>
-            <option value="3">3x de R$ 16,33 (sem juros)</option>
-          `;
-        }
-      }
-    }
-
-    /* ── Validação e submit ── */
-    function showError(fieldId, errId, show) {
-      const field = document.getElementById(fieldId);
-      const err = document.getElementById(errId);
-      if (!field || !err) return;
-      field.classList.toggle('error', show);
-      err.classList.toggle('visible', show);
-    }
-
-    function clearErrors() {
-      document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
-      document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('visible'));
-    }
-
-    function handleSubmit() {
-      clearErrors();
-      let valid = true;
-
-      const name = document.getElementById('name')?.value.trim();
-      const email = document.getElementById('email')?.value.trim();
-      const password = document.getElementById('password')?.value;
-
-      if (!name || name.split(' ').length < 2) { showError('name', 'name-err', true); valid = false; }
-      if (!email || !email.includes('@')) { showError('email', 'email-err', true); valid = false; }
-      if (!password || password.length < 8) { showError('password', 'password-err', true); valid = false; }
-
-      if (currentMethod === 'card') {
-        const cn = document.getElementById('card-number')?.value.replace(/\s/g, '');
-        const ce = document.getElementById('card-expiry')?.value;
-        const cv = document.getElementById('card-cvv')?.value;
-        const cname = document.getElementById('card-name')?.value.trim();
-
-        if (!cn || cn.length < 16) { showError('card-number', 'card-number-err', true); valid = false; }
-        if (!ce || ce.length < 5) { showError('card-expiry', 'card-expiry-err', true); valid = false; }
-        if (!cv || cv.length < 3) { showError('card-cvv', 'card-cvv-err', true); valid = false; }
-        if (!cname || cname.split(' ').length < 2) { showError('card-name', 'card-name-err', true); valid = false; }
-      }
-
-      if (!valid) return;
-
-      /* Simula processamento */
-      const btn = document.getElementById('submit-btn');
-      const btnLabel = document.getElementById('btn-label');
       btn.disabled = true;
-      btnLabel.innerHTML = '<span class="spinner"></span> Processando...';
+      btn.innerHTML = '<span class="spinner"></span> Criando conta...';
 
-      setTimeout(() => {
-        document.getElementById('form-section').style.display = 'none';
-        const successEl = document.getElementById('success-screen');
-        successEl.classList.add('visible');
-        successEl.style.display = 'block';
-        /* Scroll para o topo do sucesso */
-        successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 2200);
+      try {
+        const { error } = await sb.auth.signUp({ email, password });
+        if (error) throw error;
+
+        lastEmail = email;
+        document.getElementById('confirm-email').textContent = email;
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('confirm-screen').classList.add('visible');
+
+      } catch (e) {
+        let msg = e.message || 'Erro ao criar conta.';
+        if (msg.includes('already registered') || msg.includes('already been registered')) {
+          msg = 'Este e-mail já está cadastrado. <a href="./control.html" style="color:#28c0ff">Entrar →</a>';
+          document.getElementById('error-msg').innerHTML = msg;
+          document.getElementById('error-msg').classList.add('visible');
+          btn.disabled = false;
+          btn.innerHTML = 'Criar conta';
+          return;
+        }
+        showError(msg);
+        btn.disabled = false;
+        btn.innerHTML = 'Criar conta';
+      }
     }
-  </script>
 
+    async function resendEmail() {
+      if (!lastEmail) return;
+      await sb.auth.resend({ type: 'signup', email: lastEmail });
+      document.getElementById('resend-ok').style.display = 'block';
+      setTimeout(() => { document.getElementById('resend-ok').style.display = 'none'; }, 3000);
+    }
+
+    // Atalho: Enter para submeter
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && document.getElementById('signup-form').style.display !== 'none') {
+        doSignup();
+      }
+    });
+  </script>
 </body>
 </html>
