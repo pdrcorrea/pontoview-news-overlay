@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Criar conta | PontoView News Overlay</title>
   <meta name="description" content="Crie sua conta gratuita no PontoView e comece a usar overlays profissionais para OBS." />
-  <link rel="icon" href="./assets/favicon.png" />
+  <link rel="icon" href="https://i.ibb.co/qM3Sm8cG/6.png" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -36,8 +36,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* HEADER */
     header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 50;
       background: rgba(7,17,31,.95);
@@ -55,16 +53,8 @@
       transition: color .15s;
     }
     .back-link:hover { color: var(--text); }
-    .secure-badge {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 11px; color: var(--muted);
-    }
-
-    /* MAIN */
-    main {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      padding: 88px 20px 40px;
-    }
+    .secure-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 88px 20px 40px; }
     .container {
       display: grid;
       grid-template-columns: 1fr 420px;
@@ -76,8 +66,6 @@
       backdrop-filter: blur(20px);
       box-shadow: 0 32px 80px rgba(0,0,0,.5);
     }
-
-    /* LEFT PANEL */
     .left-panel {
       background: linear-gradient(145deg, rgba(40,192,255,.1), rgba(90,124,255,.15));
       border-right: 1px solid var(--line);
@@ -85,17 +73,9 @@
       display: flex; flex-direction: column; justify-content: space-between;
     }
     .left-panel .logo { height: 32px; margin-bottom: 36px; }
-    .left-panel h1 {
-      font-size: 22px; font-weight: 900; line-height: 1.3;
-      margin: 0 0 12px;
-    }
-    .left-panel .subtitle {
-      color: var(--muted); font-size: 13px; line-height: 1.7;
-      margin: 0 0 32px;
-    }
-    .feature {
-      display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;
-    }
+    .left-panel h1 { font-size: 22px; font-weight: 900; line-height: 1.3; margin: 0 0 12px; }
+    .left-panel .subtitle { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 0 0 32px; }
+    .feature { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
     .feature-icon {
       width: 36px; height: 36px; flex-shrink: 0;
       border-radius: 10px;
@@ -115,22 +95,10 @@
     }
     .left-footer { font-size: 11px; color: var(--muted); margin-top: 24px; }
     .left-footer a { color: var(--accent); text-decoration: none; }
-
-    /* RIGHT PANEL */
-    .right-panel {
-      padding: 48px 40px;
-      display: flex; flex-direction: column; justify-content: center;
-    }
+    .right-panel { padding: 48px 40px; display: flex; flex-direction: column; justify-content: center; }
     .right-panel h2 { font-size: 22px; font-weight: 900; margin: 0 0 6px; }
-    .right-panel .right-sub {
-      color: var(--muted); font-size: 13px; margin: 0 0 28px; line-height: 1.5;
-    }
-
-    label {
-      display: block; font-size: 11px; color: var(--muted);
-      margin: 0 0 6px; text-transform: uppercase;
-      letter-spacing: .1em; font-weight: 700;
-    }
+    .right-panel .right-sub { color: var(--muted); font-size: 13px; margin: 0 0 28px; line-height: 1.5; }
+    label { display: block; font-size: 11px; color: var(--muted); margin: 0 0 6px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
     .field { margin-bottom: 16px; }
     input[type=text], input[type=email], input[type=password] {
       width: 100%; padding: 13px 15px;
@@ -139,23 +107,11 @@
       outline: none; font-size: 14px; font-family: 'Inter', sans-serif;
       transition: border-color .2s, box-shadow .2s;
     }
-    input:focus {
-      border-color: rgba(40,192,255,.6);
-      box-shadow: 0 0 0 3px rgba(40,192,255,.08);
-    }
-    input.error { border-color: rgba(255,93,115,.5); }
-
-    .check-row {
-      display: flex; align-items: flex-start; gap: 10px;
-      margin-bottom: 12px; cursor: pointer;
-    }
-    .check-row input[type=checkbox] {
-      width: 16px; height: 16px; flex-shrink: 0;
-      accent-color: var(--accent); margin-top: 2px;
-    }
+    input:focus { border-color: rgba(40,192,255,.6); box-shadow: 0 0 0 3px rgba(40,192,255,.08); }
+    .check-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; cursor: pointer; }
+    .check-row input[type=checkbox] { width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--accent); margin-top: 2px; }
     .check-row span { font-size: 12px; color: var(--muted); line-height: 1.5; }
     .check-row a { color: var(--accent); }
-
     .btn-primary {
       width: 100%; padding: 15px;
       border-radius: 14px; border: none;
@@ -168,9 +124,7 @@
       margin-top: 4px;
     }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 36px rgba(40,192,255,.32); }
-    .btn-primary:active { transform: scale(.98); }
     .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
-
     #error-msg {
       font-size: 12px; color: #ff93a1;
       background: rgba(255,93,115,.08);
@@ -179,19 +133,10 @@
       margin-top: 12px; display: none; line-height: 1.5;
     }
     #error-msg.visible { display: block; }
-
-    .divider {
-      text-align: center; color: var(--muted); font-size: 12px;
-      margin: 16px 0; position: relative;
-    }
-    .divider::before, .divider::after {
-      content: ''; position: absolute; top: 50%;
-      width: calc(50% - 28px); height: 1px;
-      background: var(--line-strong);
-    }
+    .divider { text-align: center; color: var(--muted); font-size: 12px; margin: 16px 0; position: relative; }
+    .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: calc(50% - 28px); height: 1px; background: var(--line-strong); }
     .divider::before { left: 0; }
     .divider::after { right: 0; }
-
     .btn-signin {
       width: 100%; padding: 13px;
       border-radius: 14px; border: 1px solid var(--line-strong);
@@ -202,11 +147,7 @@
       display: block; transition: background .15s, border-color .15s;
     }
     .btn-signin:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
-
-    /* TELA DE CONFIRMAÇÃO DE E-MAIL */
-    #confirm-screen {
-      display: none; text-align: center; padding: 12px 0;
-    }
+    #confirm-screen { display: none; text-align: center; padding: 12px 0; }
     #confirm-screen.visible { display: block; }
     .confirm-icon {
       width: 72px; height: 72px; border-radius: 20px; margin: 0 auto 20px;
@@ -217,140 +158,62 @@
     }
     #confirm-screen h2 { font-size: 20px; font-weight: 900; margin: 0 0 8px; }
     #confirm-screen p { color: var(--muted); font-size: 13px; line-height: 1.7; margin: 0 0 16px; }
-    .email-box {
-      background: rgba(255,255,255,.04); border: 1px solid var(--line-strong);
-      border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 700;
-      margin: 0 0 20px; word-break: break-all;
-    }
-    .btn-resend {
-      width: 100%; padding: 13px; border-radius: 14px;
-      border: 1px solid var(--line-strong);
-      background: rgba(255,255,255,.04); color: var(--text);
-      font-size: 13px; font-weight: 700;
-      font-family: 'Inter', sans-serif; cursor: pointer;
-      margin-bottom: 10px; transition: background .15s;
-    }
+    .email-box { background: rgba(255,255,255,.04); border: 1px solid var(--line-strong); border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 700; margin: 0 0 20px; word-break: break-all; }
+    .btn-resend { width: 100%; padding: 13px; border-radius: 14px; border: 1px solid var(--line-strong); background: rgba(255,255,255,.04); color: var(--text); font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; margin-bottom: 10px; transition: background .15s; }
     .btn-resend:hover { background: rgba(255,255,255,.08); }
     #resend-ok { font-size: 12px; color: var(--success); margin-top: 6px; display: none; }
-
-    /* SPINNER */
     @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,.25);
-      border-top-color: #fff; border-radius: 50%;
-      animation: spin .7s linear infinite;
-      display: inline-block;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      .container { grid-template-columns: 1fr; }
-      .left-panel { display: none; }
-      .right-panel { padding: 36px 28px; }
-    }
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
+    @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .left-panel { display: none; } .right-panel { padding: 36px 28px; } }
   </style>
 </head>
 <body>
 
   <header>
     <a href="./index.html" class="back-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
-      </svg>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
       Voltar
     </a>
     <a href="./index.html" class="brand">
-      <img src="./assets/logo-pontoview.png" alt="PontoView" />
+      <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView" />
     </a>
     <div class="secure-badge">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       Conexão segura
     </div>
   </header>
 
   <main>
     <div class="container">
-
-      <!-- ESQUERDA -->
       <div class="left-panel">
         <div>
-          <img src="./assets/logo-pontoview.png" alt="PontoView" class="logo" />
+          <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView" class="logo" />
           <h1>Overlays profissionais para o seu conteúdo</h1>
           <p class="subtitle">Controle GCs, tickers e identidade visual em tempo real, direto do navegador.</p>
-          <div class="feature">
-            <div class="feature-icon">📡</div>
-            <div class="feature-text">
-              <strong>Transmissão em tempo real</strong>
-              <span>Alterações refletem no overlay instantaneamente</span>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">🎨</div>
-            <div class="feature-text">
-              <strong>Identidade visual completa</strong>
-              <span>Cores, fontes e logo personalizados por canal</span>
-            </div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon">⚡</div>
-            <div class="feature-text">
-              <strong>Presets em um clique</strong>
-              <span>Salve e acione layouts inteiros instantaneamente</span>
-            </div>
-          </div>
-          <div class="plan-badge">
-            ✦ Conta gratuita · Sem cartão de crédito
-          </div>
+          <div class="feature"><div class="feature-icon">📡</div><div class="feature-text"><strong>Transmissão em tempo real</strong><span>Alterações refletem no overlay instantaneamente</span></div></div>
+          <div class="feature"><div class="feature-icon">🎨</div><div class="feature-text"><strong>Identidade visual completa</strong><span>Cores, fontes e logo personalizados por canal</span></div></div>
+          <div class="feature"><div class="feature-icon">⚡</div><div class="feature-text"><strong>Presets em um clique</strong><span>Salve e acione layouts inteiros instantaneamente</span></div></div>
+          <div class="plan-badge">✦ Conta gratuita · Sem cartão de crédito</div>
         </div>
-        <div class="left-footer">
-          © 2026 PontoView ·
-          <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Privacidade</a> ·
-          <a href="https://pontoview.com.br/termos-de-uso" target="_blank">Termos</a>
-        </div>
+        <div class="left-footer">© 2026 PontoView · <a href="#">Privacidade</a> · <a href="#">Termos</a></div>
       </div>
 
-      <!-- DIREITA -->
       <div class="right-panel">
-
-        <!-- FORMULÁRIO DE CADASTRO -->
         <div id="signup-form">
           <h2>Criar conta gratuita</h2>
           <p class="right-sub">Preencha os dados abaixo para começar. Não precisa de cartão de crédito.</p>
-
-          <div class="field">
-            <label for="email">E-mail</label>
-            <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" />
-          </div>
-          <div class="field">
-            <label for="password">Senha</label>
-            <input type="password" id="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
-          </div>
-
+          <div class="field"><label for="email">E-mail</label><input type="email" id="email" placeholder="voce@email.com" autocomplete="email" /></div>
+          <div class="field"><label for="password">Senha</label><input type="password" id="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" /></div>
           <label class="check-row" for="chk-terms">
             <input type="checkbox" id="chk-terms" />
-            <span>
-              Li e aceito os
-              <a href="https://pontoview.com.br/termos-de-uso" target="_blank">Termos de Uso</a>
-              e a
-              <a href="https://pontoview.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a>.
-            </span>
+            <span>Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>.</span>
           </label>
-
-          <button class="btn-primary" id="btn-signup" onclick="doSignup()">
-            Criar conta
-          </button>
-
+          <button class="btn-primary" id="btn-signup" onclick="doSignup()">Criar conta</button>
           <div id="error-msg"></div>
-
           <div class="divider">ou</div>
-
           <a href="./control.html" class="btn-signin">Já tenho conta → Entrar</a>
         </div>
 
-        <!-- TELA DE CONFIRMAÇÃO -->
         <div id="confirm-screen">
           <div class="confirm-icon">✉️</div>
           <h2>Confirme seu e-mail</h2>
@@ -361,7 +224,6 @@
           <div id="resend-ok">E-mail reenviado ✓</div>
           <a href="./control.html" class="btn-signin" style="margin-top: 12px;">Já confirmei → Entrar no Studio</a>
         </div>
-
       </div>
     </div>
   </main>
@@ -370,73 +232,44 @@
     const SUPABASE_URL = 'https://gwawftcyltlmnunttyxj.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd3YXdmdGN5bHRsbW51bnR0eXhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxNTA1MjUsImV4cCI6MjA2MTcyNjUyNX0.y9BT3_GVy2fF2sPBYD-mI3BzQz0dvgvzrVPlgJ0nMHk';
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
     let lastEmail = '';
-
-    function showError(msg) {
-      const el = document.getElementById('error-msg');
-      el.textContent = msg;
-      el.classList.add('visible');
-    }
-    function hideError() {
-      const el = document.getElementById('error-msg');
-      el.textContent = '';
-      el.classList.remove('visible');
-    }
-
+    function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.classList.add('visible'); }
+    function hideError() { const el = document.getElementById('error-msg'); el.textContent = ''; el.classList.remove('visible'); }
     async function doSignup() {
-      const email    = document.getElementById('email').value.trim();
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const terms    = document.getElementById('chk-terms').checked;
-      const btn      = document.getElementById('btn-signup');
-
+      const terms = document.getElementById('chk-terms').checked;
+      const btn = document.getElementById('btn-signup');
       hideError();
-
-      if (!email)          { showError('Informe seu e-mail.'); return; }
+      if (!email) { showError('Informe seu e-mail.'); return; }
       if (password.length < 6) { showError('A senha deve ter pelo menos 6 caracteres.'); return; }
-      if (!terms)          { showError('Aceite os Termos de Uso para continuar.'); return; }
-
+      if (!terms) { showError('Aceite os Termos de Uso para continuar.'); return; }
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span> Criando conta...';
-
       try {
         const { error } = await sb.auth.signUp({ email, password });
         if (error) throw error;
-
         lastEmail = email;
         document.getElementById('confirm-email').textContent = email;
         document.getElementById('signup-form').style.display = 'none';
         document.getElementById('confirm-screen').classList.add('visible');
-
       } catch (e) {
         let msg = e.message || 'Erro ao criar conta.';
         if (msg.includes('already registered') || msg.includes('already been registered')) {
-          msg = 'Este e-mail já está cadastrado. <a href="./control.html" style="color:#28c0ff">Entrar →</a>';
-          document.getElementById('error-msg').innerHTML = msg;
+          document.getElementById('error-msg').innerHTML = 'Este e-mail já está cadastrado. <a href="./control.html" style="color:#28c0ff">Entrar →</a>';
           document.getElementById('error-msg').classList.add('visible');
-          btn.disabled = false;
-          btn.innerHTML = 'Criar conta';
-          return;
-        }
-        showError(msg);
+        } else { showError(msg); }
         btn.disabled = false;
         btn.innerHTML = 'Criar conta';
       }
     }
-
     async function resendEmail() {
       if (!lastEmail) return;
       await sb.auth.resend({ type: 'signup', email: lastEmail });
       document.getElementById('resend-ok').style.display = 'block';
       setTimeout(() => { document.getElementById('resend-ok').style.display = 'none'; }, 3000);
     }
-
-    // Atalho: Enter para submeter
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && document.getElementById('signup-form').style.display !== 'none') {
-        doSignup();
-      }
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('signup-form').style.display !== 'none') doSignup(); });
   </script>
 </body>
 </html>
