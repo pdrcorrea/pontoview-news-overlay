@@ -21,6 +21,7 @@
     previewTimer: null,
     noteTimer: null,
     savingPreview: false,
+    previewPromise: null,
     applyingRemote: false
   };
 
@@ -444,19 +445,36 @@
   }
 
   async function savePreview(force = false) {
-    if (!ctx.session || !ctx.state || ctx.savingPreview) return true;
+    if (!ctx.session || !ctx.state) return true;
     clearTimeout(ctx.previewTimer);
-    ctx.savingPreview = true;
+
+    if (ctx.previewPromise) {
+      const pendingOk = await ctx.previewPromise;
+      if (!pendingOk) return false;
+      if (!force) return true;
+    }
+
+    const operation = (async () => {
+      ctx.savingPreview = true;
+      try {
+        const next = buildStateFromForm();
+        const expectedRevision = ctx.state.revision;
+        const saved = await savePreviewState(next, expectedRevision, !force);
+        if (!saved) return false;
+        if (!ctx.state || saved.revision >= ctx.state.revision) ctx.state = saved;
+        renderAll();
+        $('preview-meta').textContent = `r${saved.revision} · salvo ${new Date(saved.updated_at).toLocaleTimeString('pt-BR')}`;
+        return true;
+      } finally {
+        ctx.savingPreview = false;
+      }
+    })();
+
+    ctx.previewPromise = operation;
     try {
-      const next = buildStateFromForm();
-      const saved = await savePreviewState(next, ctx.state.revision, !force);
-      if (!saved) return false;
-      ctx.state = saved;
-      renderAll();
-      $('preview-meta').textContent = `r${saved.revision} · salvo ${new Date(saved.updated_at).toLocaleTimeString('pt-BR')}`;
-      return true;
+      return await operation;
     } finally {
-      ctx.savingPreview = false;
+      if (ctx.previewPromise === operation) ctx.previewPromise = null;
     }
   }
 
@@ -504,7 +522,7 @@
     const preset = TEMPLATES[key];
     if (!preset) return;
     document.querySelectorAll('[data-template]').forEach((b) => b.classList.toggle('active', b.dataset.template === key));
-    if (!$('f-tag').value.trim()) $('f-tag').value = preset.tag;
+    $('f-tag').value = preset.tag;
     Object.entries(preset.visibility).forEach(([k, value]) => { const el = $(`v-${k}`); if (el) el.checked = value; });
     schedulePreviewSave();
   }
