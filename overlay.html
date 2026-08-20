@@ -10,26 +10,58 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Roboto:wght@400;700;900&family=Oswald:wght@400;700&family=Montserrat:wght@400;700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     :root{--tema:#003366;--texto:#fff;--tema-rgb:0,51,102;--font-family:'Inter';--ticker-bg:#111827;--ticker-text:#fff}
+    *{box-sizing:border-box}
     html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;font-family:Inter,sans-serif}
-    #pv-canvas{position:relative;width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5vw 5vh;box-sizing:border-box}
-    #pv-master{display:flex;flex-direction:column;width:90vw}.top-row{display:flex;height:4.2vh;margin-bottom:2px}
+    #pv-canvas{position:relative;width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5vw 5vh}
+    #pv-master{display:flex;flex-direction:column;width:90vw}
+    .top-row{display:flex;height:4.2vh;margin-bottom:2px}
+    #live-label,#tag-top,#side-block,#headline-wrapper,#detail-box,#ticker-wrap{will-change:transform,opacity,clip-path}
     #live-label,#tag-top{background:rgba(var(--tema-rgb),.98);color:var(--texto);display:flex;align-items:center;clip-path:inset(0 100% 0 0);opacity:0;text-transform:uppercase;font-weight:900}
-    #live-label{width:10vw;justify-content:center;font-size:1.05vw}#tag-top{padding:0 1.5vw;margin-left:2px;font-size:1.15vw;flex:1}
-    .main-bar{display:flex;margin-bottom:2px;min-height:12vh}#side-block{width:10vw;display:flex;flex-direction:column;clip-path:inset(0 100% 0 0);opacity:0;flex-shrink:0}
-    #logo-area{height:8vh;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:6px;box-sizing:border-box}#logo-area:empty{display:none}#logo-area img{max-width:100%;max-height:100%;object-fit:contain}
-    #time-box{height:4vh;background:rgba(var(--tema-rgb),.98);color:var(--texto);font-weight:900;font-size:1.25vw;display:flex;align-items:center;justify-content:center}
-    #news-content{flex:1;margin-left:2px;display:flex;flex-direction:column;overflow:hidden}#headline-wrapper{background:#fff;color:#111827;padding:0 1.5vw;display:flex;align-items:center;flex:1;clip-path:inset(0 100% 0 0);opacity:0;border-right:.8vw solid var(--tema)}
+    #live-label{width:10vw;justify-content:center;font-size:1.05vw;letter-spacing:.04em}
+    #tag-top{padding:0 1.5vw;margin-left:2px;font-size:1.15vw;flex:1;letter-spacing:.03em}
+    .main-bar{display:flex;margin-bottom:2px;min-height:12vh}
+    #side-block{width:10vw;display:flex;flex-direction:column;clip-path:inset(0 100% 0 0);opacity:0;flex-shrink:0}
+    #logo-area{height:8vh;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:6px}
+    #logo-area:empty{display:none}
+    #logo-area img{max-width:100%;max-height:100%;object-fit:contain}
+    #time-box{height:4vh;background:rgba(var(--tema-rgb),.98);color:var(--texto);font-weight:900;font-size:1.25vw;display:flex;align-items:center;justify-content:center;letter-spacing:.04em}
+    #news-content{flex:1;margin-left:2px;display:flex;flex-direction:column;overflow:hidden}
+    #headline-wrapper{background:#fff;color:#111827;padding:0 1.5vw;display:flex;align-items:center;flex:1;clip-path:inset(0 100% 0 0);opacity:0;border-right:.8vw solid var(--tema)}
     #main-text{font-size:2.5vw;font-weight:900;font-family:var(--font-family),sans-serif;text-transform:uppercase;line-height:1.06;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
     #detail-box{background:rgba(var(--tema-rgb),.98);color:var(--texto);padding:0 1.5vw;font-size:1.2vw;font-weight:700;display:flex;align-items:center;overflow:hidden;height:0;opacity:0;clip-path:inset(0 100% 0 0)}
-    #ticker-wrap{width:99%;background:var(--ticker-bg);height:4vh;overflow:hidden;display:flex;align-items:center;border-left:1vw solid var(--tema);clip-path:inset(0 100% 0 0);opacity:0;position:relative}#ticker-text{white-space:nowrap;color:var(--ticker-text);font-size:1.1vw;font-weight:700;position:absolute;will-change:transform}
+    #ticker-wrap{width:99%;background:var(--ticker-bg);height:4vh;overflow:hidden;display:flex;align-items:center;border-left:1vw solid var(--tema);clip-path:inset(0 100% 0 0);opacity:0;position:relative}
+    #ticker-text{white-space:nowrap;color:var(--ticker-text);font-size:1.1vw;font-weight:700;position:absolute;will-change:transform}
+
+    body[data-template="interview"] #main-text{text-transform:none;font-size:2.25vw}
+    body[data-template="interview"] #detail-box{text-transform:uppercase;letter-spacing:.04em;font-size:1.05vw}
+    body[data-template="breaking"] .top-row{height:4.8vh}
+    body[data-template="breaking"] #live-label{width:12vw;font-size:1.15vw}
+    body[data-template="breaking"] #main-text{font-size:2.65vw}
+    body[data-template="breaking"] #headline-wrapper{border-right-width:1.15vw}
+    body[data-template="headline"] #main-text{font-size:2.75vw}
+    body[data-template="headline"] #detail-box{font-weight:600}
   </style>
 </head>
-<body>
-  <div id="pv-canvas"><div id="pv-master">
-    <div class="top-row"><div id="live-label">AO VIVO</div><div id="tag-top"></div></div>
-    <div class="main-bar"><div id="side-block"><div id="logo-area"></div><div id="time-box">00:00</div></div><div id="news-content"><div id="headline-wrapper"><div id="main-text"></div></div><div id="detail-box"></div></div></div>
-    <div id="ticker-wrap"><div id="ticker-text"></div></div>
-  </div></div>
+<body data-template="lower_third">
+  <div id="pv-canvas">
+    <div id="pv-master">
+      <div class="top-row">
+        <div id="live-label">AO VIVO</div>
+        <div id="tag-top"></div>
+      </div>
+      <div class="main-bar">
+        <div id="side-block">
+          <div id="logo-area"></div>
+          <div id="time-box">00:00</div>
+        </div>
+        <div id="news-content">
+          <div id="headline-wrapper"><div id="main-text"></div></div>
+          <div id="detail-box"></div>
+        </div>
+      </div>
+      <div id="ticker-wrap"><div id="ticker-text"></div></div>
+    </div>
+  </div>
   <script src="./overlay-runtime.js"></script>
 </body>
 </html>
