@@ -8,11 +8,14 @@
     return value || 'CANAL';
   }
 
+  function previewSideVisible() {
+    return !!(document.getElementById('v-logo')?.checked || document.getElementById('f-show-time')?.checked);
+  }
+
   function ensureMonitor(root) {
     if (!root || root.dataset.parityReady === '1') return;
     root.dataset.parityReady = '1';
 
-    const gc = root.querySelector('.screen-gc');
     const tag = root.querySelector('.screen-tag');
     const logo = root.querySelector('.screen-logo');
     if (tag && tag.parentElement !== root) root.appendChild(tag);
@@ -39,15 +42,16 @@
 
     const sync = () => {
       fallback.textContent = channelName();
+      const preview = root.id === 'preview-screen';
       const headline = root.querySelector('.screen-copy');
       const headlineVisible = !!headline && !headline.classList.contains('screen-hidden');
-      side.classList.toggle('screen-hidden', !headlineVisible);
+      const sideVisible = preview ? previewSideVisible() : headlineVisible;
+      side.classList.toggle('screen-hidden', !sideVisible);
 
       const hasLogo = !!logo && !logo.classList.contains('hidden') && !!logo.getAttribute('src');
       if (logo) logo.style.display = hasLogo ? 'block' : 'none';
       fallback.style.display = hasLogo ? 'none' : 'flex';
 
-      const preview = root.id === 'preview-screen';
       const showTime = preview ? (document.getElementById('f-show-time')?.checked !== false) : true;
       time.classList.toggle('hidden', !showTime);
       brand.classList.toggle('no-time', !showTime);
@@ -56,7 +60,10 @@
     const observer = new MutationObserver(sync);
     observer.observe(root, { subtree: true, attributes: true, attributeFilter: ['class', 'src'], childList: true, characterData: true });
 
-    document.getElementById('f-show-time')?.addEventListener('change', sync);
+    ['v-logo', 'f-show-time'].forEach((id) => {
+      document.getElementById(id)?.addEventListener('input', sync);
+      document.getElementById(id)?.addEventListener('change', sync);
+    });
     sync();
   }
 
