@@ -33,13 +33,17 @@ window.PV_CONFIG = Object.freeze({
   const path = window.location.pathname.toLowerCase();
   if (!path.endsWith('/control.html') && !path.endsWith('control.html')) return;
 
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = './monitor-parity.css';
-  document.head.appendChild(link);
+  ['./monitor-parity.css', './operation-ui.css'].forEach((href) => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+  });
 
-  const script = document.createElement('script');
-  script.src = './monitor-parity.js';
-  script.defer = true;
-  document.head.appendChild(script);
+  ['./monitor-parity.js', './operation-ui.js'].forEach((src) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.defer = true;
+    document.head.appendChild(script);
+  });
 })();
