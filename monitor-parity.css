@@ -1,0 +1,30 @@
+/* Studio monitor parity layer: mirrors overlay.html geometry without changing Studio layout. */
+.monitor-screen{--pv-left:5%;--pv-right:5%;--pv-side:10%;--pv-gap:.2%;--pv-ticker-h:7.1%;--pv-main-h:21.3%;--pv-top-h:7.5%;--pv-bottom:5%;}
+.monitor-screen .screen-safe{z-index:0}
+.monitor-screen .screen-live,.monitor-screen .screen-tag,.monitor-screen .screen-gc,.monitor-screen .screen-ticker,.monitor-screen .pv-monitor-side{z-index:2}
+
+.monitor-screen .screen-live{left:var(--pv-left);bottom:33.8%;width:var(--pv-side);height:var(--pv-top-h);padding:0;display:flex;align-items:center;justify-content:center;font-size:clamp(6px,.62vw,10px);letter-spacing:.04em;background:var(--m-primary,#003366);color:var(--m-secondary,#fff)}
+.monitor-screen .screen-tag{position:absolute;left:15.2%;right:var(--pv-right);bottom:33.8%;height:var(--pv-top-h);padding:0 2%;display:flex;align-items:center;font-size:clamp(6px,.66vw,11px);letter-spacing:.03em;background:var(--m-primary,#003366);color:var(--m-secondary,#fff)}
+
+.monitor-screen .screen-gc{position:absolute;left:15.2%;right:var(--pv-right);bottom:12.2%;height:var(--pv-main-h);display:block}
+.monitor-screen .screen-copy{position:absolute;inset:0;padding:0;background:transparent;border:0;display:flex;flex-direction:column;min-width:0}
+.monitor-screen .screen-copy strong{flex:1;min-height:0;display:flex;align-items:center;padding:0 2.1%;background:#fff;color:#111827;border-right:1.1% solid var(--m-primary,#003366);font-size:clamp(9px,1.12vw,18px);line-height:1.05;overflow:hidden}
+.monitor-screen .screen-copy span{height:30%;min-height:0;margin:2px 0 0;padding:0 2.1%;display:flex;align-items:center;background:var(--m-primary,#003366);color:var(--m-secondary,#fff);font-size:clamp(6px,.56vw,9px);font-weight:700;overflow:hidden}
+.monitor-screen .screen-copy span.screen-hidden{display:none!important}
+
+.monitor-screen .pv-monitor-side{position:absolute;left:var(--pv-left);bottom:12.2%;width:var(--pv-side);height:var(--pv-main-h);display:flex;flex-direction:column;overflow:hidden;background:var(--m-primary,#003366)}
+.monitor-screen .pv-monitor-brand{flex:1;min-height:0;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:5%}
+.monitor-screen .pv-monitor-brand .screen-logo{position:static;max-width:92%;max-height:88%;width:auto;height:auto;object-fit:contain}
+.monitor-screen .pv-monitor-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:7%;background:var(--m-primary,#003366);color:var(--m-secondary,#fff);font-weight:900;font-size:clamp(6px,.62vw,10px);line-height:1.05;text-transform:uppercase;letter-spacing:.03em;overflow:hidden}
+.monitor-screen .pv-monitor-time{height:33.333%;min-height:0;background:var(--m-primary,#003366);color:var(--m-secondary,#fff);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(6px,.66vw,10px);letter-spacing:.04em;border-top:2px solid #020407}
+.monitor-screen .pv-monitor-time.hidden{display:none!important}
+.monitor-screen .pv-monitor-brand.no-time{height:100%}
+
+.monitor-screen .screen-ticker{left:var(--pv-left);right:var(--pv-right);bottom:var(--pv-bottom);height:var(--pv-ticker-h);min-height:0;padding:0 2%;border-left:1% solid var(--m-primary,#003366);font-size:clamp(5px,.54vw,9px);display:flex;align-items:center;background:var(--m-ticker-bg,#111827);color:var(--m-ticker-text,#fff)}
+.monitor-screen .screen-hidden{opacity:0!important;pointer-events:none}
+.monitor-screen .pv-monitor-side.screen-hidden{display:none!important}
+
+@media(max-width:760px){
+  .monitor-screen .screen-copy strong{font-size:12px}
+  .monitor-screen .screen-copy span,.monitor-screen .screen-live,.monitor-screen .screen-tag,.monitor-screen .pv-monitor-fallback,.monitor-screen .pv-monitor-time{font-size:7px}
+}
