@@ -20,11 +20,11 @@
     #live-label{width:10vw;justify-content:center;font-size:1.05vw;letter-spacing:.04em}
     #tag-top{padding:0 1.5vw;margin-left:2px;font-size:1.15vw;flex:1;letter-spacing:.03em}
     .main-bar{display:flex;margin-bottom:2px;min-height:12vh}
-    #side-block{width:10vw;display:flex;flex-direction:column;clip-path:inset(0 100% 0 0);opacity:0;flex-shrink:0}
-    #logo-area{height:8vh;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:6px}
-    #logo-area:empty{display:none}
+    #side-block{width:10vw;display:flex;flex-direction:column;clip-path:inset(0 100% 0 0);opacity:0;flex-shrink:0;background:rgba(var(--tema-rgb),.98)}
+    #logo-area{flex:1;min-height:8vh;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:6px}
     #logo-area img{max-width:100%;max-height:100%;object-fit:contain}
-    #time-box{height:4vh;background:rgba(var(--tema-rgb),.98);color:var(--texto);font-weight:900;font-size:1.25vw;display:flex;align-items:center;justify-content:center;letter-spacing:.04em}
+    #brand-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:.7vw;background:rgba(var(--tema-rgb),.98);color:var(--texto);font-family:var(--font-family),sans-serif;font-weight:900;font-size:1.05vw;line-height:1.05;letter-spacing:.035em;text-transform:uppercase;overflow:hidden}
+    #time-box{height:4vh;background:rgba(var(--tema-rgb),.98);color:var(--texto);font-weight:900;font-size:1.25vw;display:flex;align-items:center;justify-content:center;letter-spacing:.04em;border-top:2px solid transparent}
     #news-content{flex:1;margin-left:2px;display:flex;flex-direction:column;overflow:hidden}
     #headline-wrapper{background:#fff;color:#111827;padding:0 1.5vw;display:flex;align-items:center;flex:1;clip-path:inset(0 100% 0 0);opacity:0;border-right:.8vw solid var(--tema)}
     #main-text{font-size:2.5vw;font-weight:900;font-family:var(--font-family),sans-serif;text-transform:uppercase;line-height:1.06;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
@@ -51,7 +51,7 @@
       </div>
       <div class="main-bar">
         <div id="side-block">
-          <div id="logo-area"></div>
+          <div id="logo-area"><div id="brand-fallback">CANAL</div></div>
           <div id="time-box">00:00</div>
         </div>
         <div id="news-content">
