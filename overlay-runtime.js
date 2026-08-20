@@ -13,6 +13,7 @@
   let current = null;
   let currentRevision = -1;
   let currentStatus = null;
+  let currentChannelName = 'CANAL';
   let tickerTween = null;
   let channel = null;
   let refreshTimer = null;
@@ -66,8 +67,9 @@
   }
 
   function sideVisible(state) {
-    const logoVisible = !!(state.style.logoUrl && state.style.showLogo && state.visibility.logo);
-    return logoVisible || state.style.showTime !== false;
+    const hasHeadline = !!(state.visibility.headline && state.content.headline);
+    const hasLogo = !!(state.style.logoUrl && state.style.showLogo && state.visibility.logo);
+    return hasHeadline || hasLogo || state.style.showTime !== false;
   }
 
   function visibleTargets(state) {
@@ -84,15 +86,11 @@
 
   function animationVector(style) {
     switch (style) {
-      case 'slide-left':
-        return { x: -110, y: 0, scale: 1 };
-      case 'fade':
-        return { x: 0, y: 0, scale: 1 };
-      case 'scale-up':
-        return { x: 0, y: 0, scale: 0.92 };
+      case 'slide-left': return { x: -110, y: 0, scale: 1 };
+      case 'fade': return { x: 0, y: 0, scale: 1 };
+      case 'scale-up': return { x: 0, y: 0, scale: 0.92 };
       case 'slide-up':
-      default:
-        return { x: 0, y: 42, scale: 1 };
+      default: return { x: 0, y: 42, scale: 1 };
     }
   }
 
@@ -107,6 +105,34 @@
     document.body.dataset.template = state.template || 'lower_third';
   }
 
+  function applyBrand(state) {
+    const logoArea = $('logo-area');
+    const fallback = $('brand-fallback');
+    const timeBox = $('time-box');
+    let img = logoArea?.querySelector('img');
+
+    const hasLogo = !!(state.style.logoUrl && state.style.showLogo && state.visibility.logo);
+    if (hasLogo) {
+      if (!img) {
+        img = document.createElement('img');
+        img.alt = 'Logo do canal';
+        img.referrerPolicy = 'no-referrer';
+        logoArea.appendChild(img);
+      }
+      if (img.src !== state.style.logoUrl) img.src = state.style.logoUrl;
+      img.style.display = 'block';
+      if (fallback) fallback.style.display = 'none';
+    } else {
+      if (img) img.style.display = 'none';
+      if (fallback) {
+        fallback.textContent = currentChannelName || state.content.tag || 'CANAL';
+        fallback.style.display = 'flex';
+      }
+    }
+
+    if (timeBox) timeBox.style.display = state.style.showTime !== false ? 'flex' : 'none';
+  }
+
   function applyContent(state) {
     $('live-label').textContent = state.template === 'breaking' ? 'URGENTE' : 'AO VIVO';
     $('tag-top').textContent = state.content.tag || '';
@@ -114,17 +140,7 @@
     $('detail-box').textContent = state.content.detail || '';
     $('ticker-text').textContent = state.content.ticker || '';
 
-    const logoArea = $('logo-area');
-    logoArea.replaceChildren();
-    if (state.style.logoUrl && state.style.showLogo && state.visibility.logo) {
-      const img = document.createElement('img');
-      img.src = state.style.logoUrl;
-      img.alt = 'Logo do canal';
-      img.referrerPolicy = 'no-referrer';
-      logoArea.appendChild(img);
-    }
-
-    $('time-box').style.display = state.style.showTime !== false ? 'flex' : 'none';
+    applyBrand(state);
 
     const detailVisible = !!(state.visibility.detail && state.visibility.headline && state.content.detail);
     gsap.set('#detail-box', {
@@ -149,8 +165,7 @@
 
   function showInstant(state) {
     setAllHidden();
-    const targets = visibleTargets(state);
-    targets.forEach((selector) => {
+    visibleTargets(state).forEach((selector) => {
       gsap.set(selector, {
         clipPath: 'inset(0 0% 0 0)',
         opacity: 1,
@@ -261,6 +276,7 @@
 
       const revision = Number(row.revision ?? -1);
       currentStatus = row.status || null;
+      currentChannelName = String(row.channel_name || 'CANAL').trim() || 'CANAL';
       if (!force && revision <= currentRevision) return;
 
       currentRevision = revision;
