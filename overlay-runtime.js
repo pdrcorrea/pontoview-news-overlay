@@ -9,6 +9,7 @@
   let current = null;
   let tickerTween = null;
   let channel = null;
+  let refreshTimer = null;
 
   const $ = (id) => document.getElementById(id);
   const clone = (v) => JSON.parse(JSON.stringify(v));
@@ -123,6 +124,22 @@
     applyState(state, true);
   }
 
+  async function refreshProgram(instant = false) {
+    const { data, error } = await sb.rpc('get_overlay_state', { p_token: token });
+    if (error) {
+      console.error('PontoView overlay state:', error);
+      return;
+    }
+    const row = Array.isArray(data) ? data[0] : data;
+    if (row?.program_state) applyState(row.program_state, instant);
+    else blank();
+  }
+
+  function scheduleCanonicalRefresh() {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => refreshProgram(false), 90);
+  }
+
   async function bootstrap() {
     if (!token || !/^[0-9a-f-]{36}$/i.test(token)) {
       blank();
@@ -130,16 +147,10 @@
       return;
     }
 
-    const { data, error } = await sb.rpc('get_overlay_state', { p_token: token });
-    if (error) console.error('PontoView bootstrap:', error);
-    const row = Array.isArray(data) ? data[0] : data;
-    if (row?.program_state) applyState(row.program_state, true);
-    else blank();
+    await refreshProgram(true);
 
     channel = sb.channel(`overlay:${token}`)
-      .on('broadcast', { event: 'program' }, ({ payload }) => {
-        if (payload?.state) applyState(payload.state, false);
-      })
+      .on('broadcast', { event: 'program' }, scheduleCanonicalRefresh)
       .subscribe((status) => {
         if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') console.warn('PontoView Realtime:', status);
       });
