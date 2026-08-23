@@ -1,219 +1,189 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!doctype html>
+<html lang="pt-BR" data-ui-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#07111f">
-  <title>PontoView Studio · Newsroom</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto:wght@400;700;900&family=Oswald:wght@400;700&family=Montserrat:wght@400;700;900&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
-  <link rel="stylesheet" href="./studio.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"></script>
-  <script src="./app-config.js"></script>
-  <script src="./access-gate.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>PontoView Control V7.8 Workstation</title>
+<style>
+:root{
+ color-scheme:dark; --brand:#003E8D;--brand-hi:#1269BF;--accent:#87D7FC;--danger:#E44D61;--success:#33C990;--warning:#EAAE45;
+ --bg:#0B0F14;--bar:#111820;--panel:#151C25;--panel2:#19222D;--panel3:#10161E;--field:#101720;--line:#2A3543;--line2:#354354;--text:#EDF3F8;--text2:#B9C5D2;--muted:#718196;--shadow:0 10px 30px rgba(0,0,0,.22);
+ --monitor-h:430px;--left-dock:265px;--right-dock:350px;
+}
+html[data-ui-theme="light"]{color-scheme:light;--bg:#D9E0E7;--bar:#F7F9FB;--panel:#FFFFFF;--panel2:#F2F5F8;--panel3:#E8EDF2;--field:#FFFFFF;--line:#C7D1DC;--line2:#B9C6D3;--text:#101720;--text2:#344253;--muted:#687789;--shadow:0 7px 24px rgba(27,43,61,.08)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:"Segoe UI Variable Text","Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.topbar{height:48px;background:var(--bar);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 14px;user-select:none}.brand{display:flex;align-items:center;gap:12px}.brand img{width:125px;height:28px;object-fit:contain;object-position:left center}.brand .logo-blue{display:none}html[data-ui-theme="light"] .brand .logo-white{display:none}html[data-ui-theme="light"] .brand .logo-blue{display:block}.app-title{padding-left:12px;border-left:1px solid var(--line);font-size:11px;color:var(--muted);font-weight:600}.top-center{display:flex;align-items:center;gap:5px}.mode-button{height:28px;border:1px solid transparent;background:transparent;border-radius:4px;padding:0 12px;color:var(--muted);font-size:10.5px;font-weight:650}.mode-button:hover{background:var(--panel2);color:var(--text)}.mode-button.active{background:var(--panel2);border-color:var(--line);color:var(--text)}.header-actions{display:flex;align-items:center;gap:7px}.connection{height:28px;border:1px solid var(--line);border-radius:4px;padding:0 9px;display:flex;align-items:center;gap:7px;color:var(--muted);font-size:9.5px}.dot{width:7px;height:7px;border-radius:50%;background:var(--warning)}.dot.ok{background:var(--success)}.icon-button{height:28px;border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:0 9px;font-size:9.5px;font-weight:650;color:var(--text2)}
+.app{height:calc(100vh - 48px);display:flex;flex-direction:column;min-height:0}.monitor-zone{height:var(--monitor-h);min-height:255px;flex:0 0 auto;padding:10px 10px 8px;background:var(--bg)}.monitor-grid{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 126px minmax(0,1fr);gap:8px}.video-monitor{min-width:0;min-height:0;display:flex;flex-direction:column;border:1px solid var(--line);background:var(--panel3);box-shadow:var(--shadow)}.monitor-titlebar{height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid var(--line);background:var(--panel)}.monitor-name{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750;letter-spacing:.03em}.monitor-name i{width:8px;height:8px;border-radius:2px}.preview-monitor .monitor-name i{background:#2D86D6}.program-monitor .monitor-name i{background:#E84D5E}.monitor-meta{font-size:9px;color:var(--muted);font-weight:600}.monitor-screen{position:relative;flex:1;min-height:0;overflow:hidden;background:#020406}.monitor-screen::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.03);pointer-events:none}.monitor-iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;background:transparent}.monitor-bottom{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 9px;border-top:1px solid var(--line);background:var(--panel3);font-size:8.5px;color:var(--muted)}.monitor-bottom b{color:var(--text2);font-weight:650}
+.transition-rack{border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;min-height:0}.rack-title{height:34px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);font-weight:800;letter-spacing:.08em}.rack-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px;gap:7px}.rack-selected{text-align:center;margin-bottom:5px;min-height:34px}.rack-selected b{display:block;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rack-selected small{display:block;color:var(--muted);font-size:8.5px;margin-top:2px}.transport{height:38px;border:1px solid var(--line2);border-radius:4px;background:var(--panel2);font-size:9.5px;font-weight:800;letter-spacing:.03em}.transport:hover{filter:brightness(1.08)}.transport.preview{color:#8CCDFB}.transport.take{height:46px;background:var(--brand);border-color:#2377C6;color:#fff;font-size:11px}.transport.out{color:#FF7786;border-color:rgba(228,77,97,.5);background:rgba(228,77,97,.07)}.transport:disabled{opacity:.35;cursor:not-allowed}.pending{margin-top:4px;min-height:38px;border-top:1px solid var(--line);padding:9px 3px 0;text-align:center;color:var(--muted);font-size:8px;font-weight:750;line-height:1.35}.pending i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;background:#526171}.pending.active{color:#FFD177}.pending.active i{background:#EAAE45}
+.main-splitter{height:6px;flex:0 0 6px;cursor:row-resize;background:var(--bar);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative}.main-splitter::after{content:"";position:absolute;left:50%;top:2px;width:46px;height:1px;background:var(--line2);transform:translateX(-50%)}body.resizing{cursor:row-resize;user-select:none}
+.bottom-zone{flex:1;min-height:0;padding:0 10px 10px}.bottom-grid{height:100%;display:grid;grid-template-columns:var(--left-dock) minmax(390px,1fr) var(--right-dock);gap:8px;min-height:0}.dock{min-width:0;min-height:0;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;overflow:hidden}.dock-head{height:36px;flex:0 0 36px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid var(--line);background:var(--panel2)}.dock-head h2{margin:0;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.dock-head span{font-size:8.5px;color:var(--muted)}.dock-scroll{flex:1;min-height:0;overflow:auto}.dock-scroll::-webkit-scrollbar{width:9px}.dock-scroll::-webkit-scrollbar-thumb{background:var(--line2);border:2px solid var(--panel);border-radius:8px}.dock-scroll::-webkit-scrollbar-track{background:transparent}
+.element-columns{height:26px;display:grid;grid-template-columns:minmax(0,1fr) 43px 43px;align-items:center;padding:0 5px;border-bottom:1px solid var(--line);color:var(--muted);font-size:8px;font-weight:800;letter-spacing:.05em}.element-columns span:nth-child(n+2){text-align:center}.element-list{padding:5px}.element-row{min-height:45px;display:grid;grid-template-columns:minmax(0,1fr) 43px 43px;align-items:stretch;border:1px solid transparent;border-radius:4px;margin-bottom:2px}.element-row:hover{background:var(--panel2)}.element-row.active{background:rgba(24,106,179,.12);border-color:rgba(76,146,208,.35)}.element-select{min-width:0;border:0;background:transparent;text-align:left;padding:7px 7px}.element-select strong{display:block;font-size:10.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.element-select small{display:block;margin-top:2px;color:var(--muted);font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.state-toggle{align-self:center;justify-self:center;width:35px;height:24px;border:1px solid var(--line);border-radius:3px;background:var(--panel3);font-size:7.5px;font-weight:850;color:#65758A}.state-toggle.pvw.on{color:#8FD3FF;border-color:#2C6B9E;background:#102D44}.state-toggle.pgm.on{color:#FF9AA5;border-color:#934354;background:#3A1820}.system-area{border-top:1px solid var(--line);padding:6px}.system-nav{width:100%;height:32px;border:0;border-radius:3px;background:transparent;text-align:left;padding:0 8px;color:var(--text2);font-size:9.5px}.system-nav:hover,.system-nav.active{background:var(--panel2)}.legend{padding:7px 8px 9px;color:var(--muted);font-size:8px;line-height:1.5}.legend b{color:var(--text2)}
+.editor-dock .dock-head{height:44px;flex-basis:44px}.editor-heading{min-width:0}.editor-heading h1{margin:0;font-size:12px;font-weight:750}.editor-heading p{margin:2px 0 0;color:var(--muted);font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.editor-status{height:24px;display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:3px;padding:0 7px;color:var(--muted);font-size:8px;font-weight:800}.editor-status i{width:6px;height:6px;border-radius:50%;background:#526171}.editor-status.air{color:#FF8996;border-color:#7C3A46;background:#351820}.editor-status.air i{background:#E84D5E}.editor-content{padding:8px 8px 18px}.editor-section{display:none}.editor-section.active{display:block}
+.card{border:1px solid var(--line);background:var(--panel3);margin-bottom:7px}.card-head{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid var(--line);background:var(--panel2)}.card-head h2{margin:0;font-size:9.5px;font-weight:750}.card-head span{font-size:8px;color:var(--muted)}.card-body{padding:10px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.field{display:block;margin:0 0 9px;color:var(--text2);font-size:9px;font-weight:600}.field:last-child{margin-bottom:0}.field-label{display:flex;justify-content:space-between;gap:8px}.counter{font-size:8px;color:var(--muted)}input[type=text],input[type=url],input[type=number],select,textarea{width:100%;margin-top:5px;border:1px solid var(--line2);border-radius:3px;background:var(--field);color:var(--text);padding:7px 8px;font-size:10px;outline:none}input[type=text],input[type=url],select{height:33px}textarea{min-height:65px;resize:vertical;line-height:1.4}input:focus,select:focus,textarea:focus{border-color:#337EC1;box-shadow:0 0 0 2px rgba(51,126,193,.13)}.help{margin-top:6px;color:var(--muted);font-size:8px;line-height:1.5}.theme-note{margin-top:8px;padding:8px 9px;border-left:3px solid var(--brand);background:var(--panel2);color:var(--muted);font-size:8px;line-height:1.5}.checks{display:flex;flex-wrap:wrap;gap:5px}.check{display:flex;align-items:center;gap:6px;padding:6px 7px;border:1px solid var(--line);background:var(--panel2);font-size:8.5px;color:var(--text2)}.check input{margin:0;accent-color:var(--brand)}.file-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:end}.file-button,.secondary-button,.primary-button{position:relative;height:33px;border-radius:3px;padding:0 9px;font-size:8.5px;font-weight:750;white-space:nowrap}.file-button,.secondary-button{border:1px solid var(--line2);background:var(--panel2);color:var(--text2)}.primary-button{border:1px solid #2575BE;background:var(--brand);color:#fff}.file-button{display:flex;align-items:center}.file-button input{position:absolute;inset:0;opacity:0;cursor:pointer}.danger-button{border-color:#813B47;color:#FF8290;background:#35181E}.profile-row{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;align-items:end}.preset-editor{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}.preset-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-top:7px}.preset-item{display:grid;grid-template-columns:minmax(0,1fr) auto;border:1px solid var(--line);background:var(--panel2)}.preset-load{border:0;background:transparent;padding:7px 8px;text-align:left;min-width:0}.preset-load b{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.preset-load small{display:block;color:var(--muted);font-size:7.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.preset-tools{display:flex;border-left:1px solid var(--line)}.preset-tools button{width:28px;border:0;border-left:1px solid var(--line);background:transparent;color:var(--muted);font-size:8px;font-weight:850}.preset-tools button:first-child{border-left:0}.color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.color-field{display:flex;align-items:center;justify-content:space-between;gap:7px;padding:6px 7px;border:1px solid var(--line);font-size:8.5px}.color-field input{width:34px;height:25px;border:0;padding:0;margin:0;background:transparent}.range-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.range-row input{width:100%}
+.right-stack{display:grid;grid-template-rows:minmax(210px,.95fr) minmax(190px,1.05fr);height:100%;min-height:0}.right-panel{min-height:0;display:flex;flex-direction:column}.right-panel+.right-panel{border-top:1px solid var(--line)}.quick-grid{padding:6px;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:4px}.quick{min-height:42px;border:1px solid var(--line);background:var(--panel3);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px;text-align:left;padding:6px 7px}.quick:hover{background:var(--panel2)}.quick.on{border-color:#6A3540;background:#31171C}.quick span:first-child{min-width:0}.quick b{display:block;font-size:8.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quick small{display:block;margin-top:2px;color:var(--muted);font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quick-state{font-size:7.5px;font-weight:900;color:#75869A}.quick.on .quick-state{color:#FF8996}.quick kbd{display:none}.breaking-quick.on{border-color:#A53D4A;background:#43161C}.clear-program{margin:0 6px 7px;height:29px;border:1px solid #7E3944;background:#32171C;color:#FF7F8D;border-radius:3px;font-size:8.5px;font-weight:800}
+.scene-save{padding:6px;border-bottom:1px solid var(--line)}.scene-save-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px}.scene-save input{margin:0}.scene-list{padding:6px;overflow:auto}.scene-empty{padding:12px 8px;color:var(--muted);font-size:8px;line-height:1.45;text-align:center;border:1px dashed var(--line)}.scene-item{display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;gap:5px;padding:5px;border:1px solid var(--line);background:var(--panel3);margin-bottom:4px}.scene-key{width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:#123D69;color:#DDEEFF;font-size:7.5px;font-weight:850}.scene-main{border:0;background:transparent;text-align:left;padding:0;min-width:0}.scene-main b{display:block;font-size:8.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.scene-main small{display:block;margin-top:2px;color:var(--muted);font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.scene-tools{display:flex}.scene-tools button{width:24px;height:24px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:8px}.scene-tools button+button{border-left:0}
+.preview-options{display:flex;align-items:center;gap:7px}.preview-options select{margin:0;width:auto;height:25px;padding:0 24px 0 6px;font-size:8px}.safe-check{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:8px}.safe-check input{margin:0;accent-color:var(--brand)}.mini-btn{height:25px;border:1px solid var(--line);border-radius:3px;background:var(--panel2);color:var(--text2);padding:0 7px;font-size:8px}
+.toast{position:fixed;left:50%;bottom:18px;z-index:200;transform:translate(-50%,10px);padding:8px 12px;border:1px solid #42536A;background:#101823;color:#F2F6FA;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.35);font-size:9px;opacity:0;pointer-events:none;transition:.18s}.toast.show{opacity:1;transform:translate(-50%,0)}
+body[data-workmode="operation"] .editor-dock{display:none}body[data-workmode="operation"] .bottom-grid{grid-template-columns:minmax(300px,.8fr) minmax(480px,1.2fr)}body[data-workmode="operation"] .elements-dock{grid-column:1}body[data-workmode="operation"] .ops-dock{grid-column:2}.shortcut-hint{font-size:8px;color:var(--muted)}
+@media(max-width:1180px){:root{--left-dock:225px;--right-dock:300px}.monitor-grid{grid-template-columns:minmax(0,1fr) 105px minmax(0,1fr)}.quick-grid{grid-template-columns:1fr}.app-title{display:none}.preset-list{grid-template-columns:1fr}}
+@media(max-width:900px){body{overflow:auto}.app{height:auto}.monitor-zone{height:auto}.monitor-grid{grid-template-columns:1fr}.transition-rack{order:3;min-height:160px}.main-splitter{display:none}.bottom-zone{height:auto}.bottom-grid{grid-template-columns:1fr}.dock{min-height:300px}.video-monitor{min-height:280px}.monitor-screen{aspect-ratio:16/9;flex:none}.top-center{display:none}body[data-workmode="operation"] .bottom-grid{grid-template-columns:1fr}.right-stack{min-height:520px}}
+</style>
 </head>
-<body>
-  <header class="topbar">
-    <div class="brand">
-      <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView">
-      <div class="brand-copy"><strong>PONTOVIEW STUDIO</strong><span>Newsroom Graphics</span></div>
+<body data-workmode="edit">
+<header class="topbar">
+  <div class="brand"><img class="logo-white" src="assets/pontoview-logo-white.png" alt="PontoView"><img class="logo-blue" src="assets/pontoview-logo-blue.png" alt="PontoView"><span class="app-title">Broadcast Graphics Workstation</span></div>
+  <div class="top-center"><button class="mode-button active" data-workmode="edit">EDIÇÃO</button><button class="mode-button" data-workmode="operation">OPERAÇÃO</button></div>
+  <div class="header-actions"><div class="connection"><i id="connectionDot" class="dot"></i><span id="connectionText">aguardando overlay</span></div><button id="themeToggle" class="icon-button" type="button">Tema claro</button></div>
+</header>
+<div class="app">
+  <section class="monitor-zone">
+    <div class="monitor-grid">
+      <article class="video-monitor preview-monitor">
+        <div class="monitor-titlebar"><div class="monitor-name"><i></i>PREVIEW</div><div class="monitor-meta"><span id="previewSceneState">0 gráficos</span></div></div>
+        <div id="previewViewport" class="monitor-screen"><iframe id="previewFrame" class="monitor-iframe" src="overlay.html?preview=1" title="Preview"></iframe></div>
+        <div class="monitor-bottom"><div class="preview-options"><label class="safe-check"><input id="showSafe" type="checkbox"> SAFE</label><select id="previewResolution"><option value="1920x1080">1920 × 1080</option><option value="1280x720">1280 × 720</option><option value="3840x2160">3840 × 2160</option></select><button id="refreshPreview" class="mini-btn" type="button">SYNC</button></div><b>PVW</b></div>
+      </article>
+
+      <aside class="transition-rack">
+        <div class="rack-title">TRANSIÇÃO</div>
+        <div class="rack-body">
+          <div class="rack-selected"><b id="dockName">GC principal</b><small id="dockHint">Elemento selecionado</small></div>
+          <button id="previewAction" class="transport preview" type="button">PREVIEW</button>
+          <button id="takeAction" class="transport take" type="button" title="Envia toda a composição do Preview para o Program">APLICAR PVW</button>
+          <button id="outAction" class="transport out" type="button">OUT</button>
+          <div id="pendingBadge" class="pending"><i></i> PREVIEW = PROGRAM</div>
+        </div>
+      </aside>
+
+      <article class="video-monitor program-monitor">
+        <div class="monitor-titlebar"><div class="monitor-name"><i></i>PROGRAM</div><div class="monitor-meta"><span id="programSceneState">0 gráficos</span></div></div>
+        <div id="programViewport" class="monitor-screen"><iframe id="programFrame" class="monitor-iframe" src="overlay.html?monitor=1" title="Program"></iframe></div>
+        <div class="monitor-bottom"><span>SAÍDA DO OBS</span><b>PGM</b></div>
+      </article>
     </div>
-    <div class="status-cluster">
-      <span class="pill"><span id="conn-dot" class="conn-dot"></span><span id="conn-label">Offline</span></span>
-      <span id="live-pill" class="pill">SEM SESSÃO</span>
-      <span id="plan-pill" class="pill">FREE</span>
-      <span id="user-email" class="pill"></span>
-      <button id="logout-btn" class="btn ghost" title="Sair"><span class="material-symbols-rounded">logout</span></button>
+  </section>
+  <div id="mainSplitter" class="main-splitter" title="Arraste para redimensionar os monitores"></div>
+  <section class="bottom-zone">
+    <div class="bottom-grid">
+      <aside class="dock elements-dock">
+        <div class="dock-head"><h2>Elementos</h2><span>PVW / PGM</span></div>
+        <div class="element-columns"><span>GRÁFICO</span><span>PVW</span><span>PGM</span></div>
+        <div class="dock-scroll"><div id="elementList" class="element-list"></div><div class="system-area"><button class="system-nav" data-select-system="theme">Aparência e safe area</button><div class="legend"><b>PVW</b> prepara a peça no Preview. <b>PGM</b> liga/desliga diretamente no ar.<br>Atalhos: A ao vivo · T ticker · G manchete · D destaque · B bug.</div></div></div>
+      </aside>
+
+      <main class="dock editor-dock">
+        <div class="dock-head"><div class="editor-heading"><h1 id="editorTitle">GC principal</h1><p id="editorDescription">Edite o conteúdo sem alterar o Program.</p></div><div id="editorStatus" class="editor-status"><i></i><span>FORA DO AR</span></div></div>
+        <div class="dock-scroll editor-content">
+          <section id="sec-liveTag" class="editor-section"></section><section id="sec-module" class="editor-section"></section><section id="sec-topicBar" class="editor-section"></section><section id="sec-personBar" class="editor-section"></section><section id="sec-lowerThird" class="editor-section active"></section><section id="sec-highlight" class="editor-section"></section><section id="sec-ticker" class="editor-section"></section><section id="sec-bug" class="editor-section"></section><section id="sec-fullscreen" class="editor-section"></section><section id="sec-theme" class="editor-section"></section>
+        </div>
+      </main>
+
+      <aside class="dock ops-dock">
+        <div class="right-stack">
+          <section class="right-panel"><div class="dock-head"><h2>Program</h2><span>operação direta</span></div><div id="quickGrid" class="quick-grid"></div><button id="clearProgram" class="clear-program" type="button">OUT DE TODOS OS GRÁFICOS</button></section>
+          <section class="right-panel"><div class="dock-head"><h2>Cenas / Presets</h2><span>Shift + 1…9</span></div><div class="scene-save"><div class="scene-save-row"><input id="sceneName" type="text" maxlength="34" placeholder="Nome da composição"><button id="saveScene" class="primary-button" type="button">SALVAR</button></div></div><div id="sceneList" class="scene-list"></div></section>
+        </div>
+      </aside>
     </div>
-  </header>
+  </section>
+</div>
+<div id="toast" class="toast"></div>
+<datalist id="statusPresets"><option>AO VIVO</option><option>EXCLUSIVO</option><option>URGENTE</option><option>AGORA</option><option>DIRETO DE BRASÍLIA</option><option>IMAGENS AO VIVO</option><option>GRAVADO</option><option>BREAKING NEWS</option></datalist>
+<script>(()=>{
+'use strict';
+const CHANNEL='pontoview-overlay-v6',OLD_CHANNEL='pontoview-overlay-v5',DRAFT_KEY=CHANNEL+':draft',ELEMENT_PRESET_KEY=CHANNEL+':element-presets',SCENE_PRESET_KEY=CHANNEL+':scene-presets',UI_KEY=CHANNEL+':ui-theme',WORKMODE_KEY=CHANNEL+':workmode';
+const DEFAULT={theme:{primary:'#003E8D',accent:'#87D7FC',navy:'#082B5B',ink:'#101827',soft:'#F1F5F9',safeX:64,safeY:52,showSafe:false},breaking:{enabled:false,primary:'#E3182D',dark:'#730913',accent:'#FFD147'},liveTag:{visible:false,position:'left',dock:'composition',text:'AO VIVO'},module:{visible:false,position:'left',brandText:'PontoView News',logo:'assets/pontoview-logo-blue.png',transparentLogo:false,showDate:true,showTime:true,dateFormat:'DD MMM'},topicBar:{visible:false,position:'left',text:'NOTÍCIAS'},personBar:{visible:false,position:'left',name:'NOME DA PESSOA',role:'CARGO OU FUNÇÃO'},lowerThird:{visible:false,position:'left',profile:'news',title:'MANCHETE PRINCIPAL DA NOTÍCIA',subtitle:'Linha de apoio com contexto ou informação complementar'},highlight:{visible:false,position:'left',tag:'DESTAQUE',title:'MANCHETE DE DESTAQUE',subtitle:'Informação complementar'},ticker:{visible:false,tag:'ÚLTIMAS',text:'Informações e notícias da PontoView em tempo real.',speed:24,rightMode:'auto',rightText:'PONTOVIEW',showDate:true,showTime:true,dateFormat:'DD MMM'},bug:{visible:false,logo:'assets/pontoview-logo-blue.png',text:'PontoView',position:'top-right',transparentLogo:true},fullscreen:{visible:false,mode:'headline',label:'DESTAQUE',title:'INFORMAÇÃO EM TELA CHEIA',subtitle:'Uma tela editorial para mudança de bloco, informações especiais e destaques.',image:'',list:'Primeiro ponto\nSegundo ponto\nTerceiro ponto'}};
+const META={liveTag:{name:'Ao vivo / status',desc:'Tag operacional independente',hint:'Atalho A liga/desliga este elemento no Program'},module:{name:'Módulo lateral',desc:'Marca, data e relógio',hint:'Marca independente, alinhada à mesma régua do lower third'},topicBar:{name:'Tag / editoria',desc:'Tema editorial independente',hint:'Faixa editorial independente do GC principal'},personBar:{name:'Nome / cargo',desc:'Identificação independente',hint:'Nome e função em uma faixa própria'},lowerThird:{name:'GC principal',desc:'Manchete e linha de apoio',hint:'Corpo principal do lower third'},highlight:{name:'Destaque',desc:'Mini-GC de apoio',hint:'Ocupa a base quando o GC principal não está ativo'},ticker:{name:'Ticker',desc:'Rodapé contínuo',hint:'Sempre ocupa toda a largura do rodapé'},bug:{name:'Bug / logo',desc:'Marca permanente de tela',hint:'Quatro posições predefinidas e fundo opcionalmente transparente'},fullscreen:{name:'Tela cheia',desc:'Mudança de bloco',hint:'Substitui temporariamente a composição'}};
+const KEYS=Object.keys(META),PROFILES={news:{status:'AO VIVO',topic:'NOTÍCIAS',breaking:false},interview:{status:'AO VIVO',topic:'ENTREVISTA',breaking:false},reporter:{status:'AO VIVO',topic:'REPORTAGEM',breaking:false},live:{status:'AO VIVO',topic:'AO VIVO',breaking:false},urgent:{status:'URGENTE',topic:'URGENTE',breaking:false},exclusive:{status:'EXCLUSIVO',topic:'EXCLUSIVO',breaking:false},breaking:{status:'BREAKING NEWS',topic:'URGENTE',breaking:true}};
+const clone=v=>JSON.parse(JSON.stringify(v));const $=id=>document.getElementById(id);function merge(base,extra){if(!extra||typeof extra!=='object')return base;for(const k of Object.keys(extra)){if(extra[k]&&typeof extra[k]==='object'&&!Array.isArray(extra[k]))base[k]=merge(base[k]&&typeof base[k]==='object'?base[k]:{},extra[k]);else base[k]=extra[k]}return base}
+function esc(s){return String(s??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c))}
+let program=clone(DEFAULT),draft=clone(DEFAULT),selected='lowerThird',bc=null,elementPresets=[],scenePresets=[],programFsSnapshot=null,draftFsSnapshot=null,previewSize=[1920,1080],previewTimer=0;
+try{bc=new BroadcastChannel(CHANNEL)}catch(_){ }
+function migrateV5(state){if(!state||state.liveTag)return state;const n=merge(clone(DEFAULT),state),mod=state.module||{},gc=state.lowerThird||{};n.liveTag={visible:!!(mod.visible&&mod.showStatus),position:mod.position||'left',dock:'composition',text:mod.status||'AO VIVO'};n.module={...n.module,...mod,transparentLogo:false};delete n.module.status;delete n.module.showStatus;n.topicBar={visible:!!gc.visible,position:gc.position||'left',text:gc.topic||'NOTÍCIAS'};n.personBar={visible:!!gc.visible,position:gc.position||'left',name:gc.name||'',role:gc.role||''};n.lowerThird={...n.lowerThird,...gc};delete n.lowerThird.topic;delete n.lowerThird.name;delete n.lowerThird.role;return n}
+try{let p=localStorage.getItem(CHANNEL+':program');if(!p){const old=localStorage.getItem(OLD_CHANNEL+':program');if(old)p=JSON.stringify(migrateV5(JSON.parse(old)))}if(p)program=merge(clone(DEFAULT),JSON.parse(p));let d=localStorage.getItem(DRAFT_KEY);if(!d){const old=localStorage.getItem(OLD_CHANNEL+':draft');if(old)d=JSON.stringify(migrateV5(JSON.parse(old)))}draft=d?merge(clone(DEFAULT),JSON.parse(d)):clone(program);elementPresets=JSON.parse(localStorage.getItem(ELEMENT_PRESET_KEY)||'[]');scenePresets=JSON.parse(localStorage.getItem(SCENE_PRESET_KEY)||'[]');if(!scenePresets.length){const oldScenes=JSON.parse(localStorage.getItem(OLD_CHANNEL+':scene-presets')||'[]');scenePresets=oldScenes.map(p=>({...p,state:migrateV5(p.state)}))}}catch(_){draft=clone(program);elementPresets=[];scenePresets=[]}
+let hadDraft=false;try{hadDraft=!!localStorage.getItem(DRAFT_KEY)||!!localStorage.getItem(OLD_CHANNEL+':draft')}catch(_){}if(!hadDraft){draft.liveTag.visible=true;draft.module.visible=true;draft.topicBar.visible=true;draft.personBar.visible=true;draft.lowerThird.visible=true;draft.ticker.visible=true;draft.bug.visible=true}
 
-  <main>
-    <section id="auth-view" class="auth-wrap">
-      <div class="auth-card panel">
-        <div class="auth-info">
-          <div class="pill pro">PontoView Newsroom</div>
-          <h1>Preview separado do que está no ar.</h1>
-          <p>Prepare GCs, manchetes, entrevistados e ticker em qualquer dispositivo. O OBS só muda quando você executa <strong>TAKE</strong>.</p>
-          <div class="feature-list">
-            <div class="feature"><span class="material-symbols-rounded">preview</span><div><strong>Preview / Program</strong><br><small>Sem alterações acidentais no ar.</small></div></div>
-            <div class="feature"><span class="material-symbols-rounded">sync</span><div><strong>Realtime</strong><br><small>Desktop e celular compartilham o mesmo estado.</small></div></div>
-            <div class="feature"><span class="material-symbols-rounded">tv</span><div><strong>OBS Browser Source</strong><br><small>Overlay transparente em 1920×1080.</small></div></div>
-          </div>
-        </div>
-        <div class="auth-form">
-          <h2>Acessar o Studio</h2>
-          <div class="auth-tabs">
-            <div id="auth-tab-login" class="auth-tab active">Entrar</div>
-            <div id="auth-tab-signup" class="auth-tab">Criar conta</div>
-          </div>
-          <div class="form-grid">
-            <div class="field"><label>E-mail</label><input id="auth-email" type="email" autocomplete="email" placeholder="voce@canal.com"></div>
-            <div class="field"><label>Senha</label><input id="auth-password" type="password" autocomplete="current-password" placeholder="Mínimo 6 caracteres"></div>
-            <button id="auth-submit" class="btn primary full">Entrar</button>
-            <div id="auth-msg" class="auth-msg"></div>
-          </div>
-        </div>
-      </div>
-    </section>
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1500)}
+function renderPendingState(){const el=$('pendingBadge');if(!el)return;const pending=JSON.stringify(draft)!==JSON.stringify(program);el.classList.toggle('active',pending);el.innerHTML=pending?'<i></i> PVW PRONTO PARA APLICAR':'<i></i> PREVIEW = PROGRAM';const pv=$('previewSceneState'),pg=$('programSceneState');if(pv)pv.textContent=KEYS.filter(k=>draft[k].visible).length+' gráficos';if(pg)pg.textContent=KEYS.filter(k=>program[k].visible).length+' gráficos'}
+function setPath(obj,path,val){const a=path.split('.');let r=obj;for(let i=0;i<a.length-1;i++)r=r[a[i]];r[a[a.length-1]]=val}function getPath(obj,path){return path.split('.').reduce((a,k)=>a?.[k],obj)}
+function persistDraft(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify(draft))}catch(_){}}
+function persistProgram(){try{localStorage.setItem(CHANNEL+':program',JSON.stringify(program))}catch(_){}}
+function sendProgram(meta){persistProgram();const nonce=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);const msg={type:'PROGRAM',state:program,meta,nonce};bc?.postMessage(msg);try{localStorage.setItem(CHANNEL,JSON.stringify(msg))}catch(_){}renderNav();renderQuick();renderEditorHeader();renderPendingState()}
+function sendPreview(meta={mode:'preview'}){draft.theme.showSafe=$('showSafe').checked;persistDraft();try{$('previewFrame').contentWindow.postMessage({type:'PONTOVIEW_PREVIEW',state:draft,meta},'*')}catch(_){}renderNav();renderPendingState()}
+function schedulePreview(){clearTimeout(previewTimer);previewTimer=setTimeout(()=>sendPreview({mode:'preview'}),80)}
+function readInput(el){if(el.type==='checkbox')return el.checked;if(el.type==='number'||el.type==='range')return Number(el.value);return el.value}
+function bindFields(){document.querySelectorAll('[data-path]').forEach(el=>{const evt=(el.tagName==='SELECT'||el.type==='checkbox'||el.type==='color')?'change':'input';el.addEventListener(evt,()=>{setPath(draft,el.dataset.path,readInput(el));updateCounters();schedulePreview()})});document.querySelectorAll('[data-file-target]').forEach(el=>el.addEventListener('change',()=>{const f=el.files?.[0];if(!f)return;if(f.size>2200000){toast('Use uma imagem menor que 2,2 MB');el.value='';return}const reader=new FileReader();reader.onload=()=>{setPath(draft,el.dataset.fileTarget,reader.result);const field=document.querySelector(`[data-path="${el.dataset.fileTarget}"]`);if(field)field.value=reader.result;schedulePreview();toast('Imagem carregada no Preview')};reader.readAsDataURL(f)}))}
+function syncForm(){document.querySelectorAll('[data-path]').forEach(el=>{const v=getPath(draft,el.dataset.path);if(v===undefined)return;if(el.type==='checkbox')el.checked=!!v;else el.value=v});$('showSafe').checked=!!draft.theme.showSafe;updateCounters();renderElementPresets()}
+function updateCounters(){document.querySelectorAll('[data-count]').forEach(c=>{const path=c.dataset.count,input=document.querySelector(`[data-path="${path}"]`);if(input)c.textContent=`${String(getPath(draft,path)||'').length}/${input.maxLength||'∞'}`})}
+function positionOptions(current='left'){return`<option value="left" ${current==='left'?'selected':''}>Inferior esquerdo</option><option value="center" ${current==='center'?'selected':''}>Inferior central</option><option value="right" ${current==='right'?'selected':''}>Inferior direito</option>`}
+function elementPresetCard(){return`<div class="card"><div class="card-head"><h2>Presets deste elemento</h2><span>conteúdo reutilizável</span></div><div class="card-body"><div class="preset-editor"><input id="elementPresetName" type="text" maxlength="32" placeholder="Nome do preset"><button id="saveElementPreset" class="primary-button" type="button">Salvar preset</button></div><div id="elementPresetList" class="preset-list"></div></div></div>`}
+function buildForms(){
+$('sec-liveTag').innerHTML=`<div class="card"><div class="card-head"><h2>Ao vivo / status</h2><span>elemento independente • atalho A</span></div><div class="card-body"><div class="grid2"><label class="field">Posição na composição<select data-path="liveTag.position">${positionOptions()}</select></label><label class="field">Encaixe<select data-path="liveTag.dock"><option value="composition">Na composição do GC</option><option value="above-bug">Acima do bug / logo</option><option value="below-bug">Abaixo do bug / logo</option></select></label></div><label class="field" style="margin-top:12px">Texto<input type="text" list="statusPresets" maxlength="32" data-path="liveTag.text"></label><div class="help">Em <b>Na composição</b>, o status usa a régua lateral do lower third. Em <b>Acima/Abaixo do bug</b>, acompanha a posição da logo e usa a mesma largura. Se o bug estiver OFF, o AO VIVO volta automaticamente para a composição.</div></div></div>${elementPresetCard()}`;
+$('sec-module').innerHTML=`<div class="card"><div class="card-head"><h2>Módulo lateral</h2><span>marca + relógio</span></div><div class="card-body"><label class="field">Posição<select data-path="module.position">${positionOptions()}</select></label><label class="field">Nome do programa<input type="text" maxlength="48" data-path="module.brandText"></label><div class="file-row"><label class="field">Logo<input type="text" data-path="module.logo" placeholder="URL ou caminho local"></label><label class="file-button">Escolher imagem<input type="file" accept="image/png,image/jpeg,image/webp" data-file-target="module.logo"></label></div><div class="checks"><label class="check"><input type="checkbox" data-path="module.transparentLogo"> fundo transparente com imagem</label><label class="check"><input type="checkbox" data-path="module.showDate"> data</label><label class="check"><input type="checkbox" data-path="module.showTime"> hora</label></div><label class="field" style="margin-top:12px">Formato da data<select data-path="module.dateFormat"><option value="DD MMM">22 AGO</option><option value="DD/MM">22/08</option><option value="DD MMM YYYY">22 AGO 2026</option><option value="DDD DD MMM">SÁB 22 AGO</option></select></label><div class="help">Se data e hora forem ocultadas, a marca ocupa automaticamente todo o corpo do módulo. O fundo transparente é ideal para logos PNG.</div></div></div>${elementPresetCard()}`;
+$('sec-topicBar').innerHTML=`<div class="card"><div class="card-head"><h2>Tag / editoria</h2><span>faixa editorial independente</span></div><div class="card-body"><div class="grid2"><label class="field">Posição<select data-path="topicBar.position">${positionOptions()}</select></label><label class="field"><span class="field-label">Texto <span class="counter" data-count="topicBar.text"></span></span><input type="text" maxlength="30" data-path="topicBar.text"></label></div><div class="help">A faixa usa a mesma régua do nome/cargo e do GC, mas pode entrar, atualizar e sair de forma independente.</div></div></div>${elementPresetCard()}`;
+$('sec-personBar').innerHTML=`<div class="card"><div class="card-head"><h2>Nome / cargo</h2><span>identificação independente</span></div><div class="card-body"><label class="field">Posição<select data-path="personBar.position">${positionOptions()}</select></label><div class="grid2"><label class="field"><span class="field-label">Nome <span class="counter" data-count="personBar.name"></span></span><input type="text" maxlength="48" data-path="personBar.name"></label><label class="field"><span class="field-label">Cargo / função <span class="counter" data-count="personBar.role"></span></span><input type="text" maxlength="58" data-path="personBar.role"></label></div><div class="help">Nome e cargo formam uma única faixa operacional, independente da manchete e da editoria.</div></div></div>${elementPresetCard()}`;
+$('sec-lowerThird').innerHTML=`<div class="card"><div class="card-head"><h2>GC principal</h2><span>manchete + apoio</span></div><div class="card-body"><div class="profile-row"><label class="field">Perfil editorial<select id="profileSelect" data-path="lowerThird.profile"><option value="news">Notícia</option><option value="interview">Entrevista</option><option value="reporter">Repórter</option><option value="live">Ao vivo</option><option value="urgent">Urgente</option><option value="exclusive">Exclusivo</option><option value="breaking">Breaking News</option></select></label><label class="field">Posição<select data-path="lowerThird.position">${positionOptions()}</select></label><button id="applyProfile" class="secondary-button" type="button">Aplicar perfil</button></div><label class="field"><span class="field-label">Manchete <span class="counter" data-count="lowerThird.title"></span></span><input type="text" maxlength="96" data-path="lowerThird.title"></label><label class="field"><span class="field-label">Linha de apoio <span class="counter" data-count="lowerThird.subtitle"></span></span><input type="text" maxlength="150" data-path="lowerThird.subtitle"></label><div class="help">A tag/editoria e o nome/cargo agora são gráficos separados. O perfil editorial apenas prepara textos recomendados nesses elementos e a paleta Breaking, sem amarrar suas ativações.</div></div></div>${elementPresetCard()}`;
+$('sec-highlight').innerHTML=`<div class="card"><div class="card-head"><h2>Destaque</h2><span>mini-GC independente</span></div><div class="card-body"><div class="grid2"><label class="field">Tag<input type="text" maxlength="28" data-path="highlight.tag"></label><label class="field">Posição<select data-path="highlight.position">${positionOptions()}</select></label></div><label class="field">Manchete<input type="text" maxlength="88" data-path="highlight.title"></label><label class="field">Linha de apoio<input type="text" maxlength="130" data-path="highlight.subtitle"></label><div class="help">Com o GC principal no mesmo alinhamento, o Destaque fica acima. Sem o GC, ocupa a área do corpo principal e mantém a régua dos demais elementos.</div></div></div>${elementPresetCard()}`;
+$('sec-ticker').innerHTML=`<div class="card"><div class="card-head"><h2>Ticker</h2><span>rodapé contínuo</span></div><div class="card-body"><div class="grid2"><label class="field">Tema / tag<input type="text" maxlength="24" data-path="ticker.tag"></label><label class="field">Velocidade<select data-path="ticker.speed"><option value="14">Rápida</option><option value="20">Normal rápida</option><option value="24">Normal</option><option value="32">Lenta</option><option value="42">Muito lenta</option></select></label></div><label class="field">Texto contínuo<textarea data-path="ticker.text"></textarea></label><div class="grid2"><label class="field">Área direita<select data-path="ticker.rightMode"><option value="auto">Data / hora automática</option><option value="custom">Texto livre</option></select></label><label class="field">Texto livre<input type="text" maxlength="34" data-path="ticker.rightText"></label></div><div class="checks"><label class="check"><input type="checkbox" data-path="ticker.showDate"> data</label><label class="check"><input type="checkbox" data-path="ticker.showTime"> hora</label></div><label class="field" style="margin-top:12px">Formato da data<select data-path="ticker.dateFormat"><option value="DD MMM">22 AGO</option><option value="DD/MM">22/08</option><option value="DD MMM YYYY">22 AGO 2026</option><option value="DDD DD MMM">SÁB 22 AGO</option></select></label></div></div>${elementPresetCard()}`;
+$('sec-bug').innerHTML=`<div class="card"><div class="card-head"><h2>Bug / logo</h2><span>marca de tela</span></div><div class="card-body"><label class="field">Posição<select data-path="bug.position"><option value="top-left">Superior esquerdo</option><option value="top-right">Superior direito</option><option value="bottom-left">Inferior esquerdo</option><option value="bottom-right">Inferior direito</option></select></label><label class="field">Texto de fallback<input type="text" maxlength="34" data-path="bug.text"></label><div class="file-row"><label class="field">Logo<input type="text" data-path="bug.logo" placeholder="URL ou caminho local"></label><label class="file-button">Escolher imagem<input type="file" accept="image/png,image/jpeg,image/webp" data-file-target="bug.logo"></label></div><div class="checks"><label class="check"><input type="checkbox" data-path="bug.transparentLogo"> fundo transparente com imagem</label></div><div class="help">Com fundo transparente, PNGs aparecem diretamente sobre o vídeo, sem caixa branca nem borda. Em posição inferior, a caixa usa exatamente a altura do GC principal e a largura do módulo lateral. Se a imagem falhar, o fallback em texto volta ao cartão sólido.</div></div></div>${elementPresetCard()}`;
+$('sec-fullscreen').innerHTML=`<div class="card"><div class="card-head"><h2>Tela cheia</h2><span>mudança de bloco</span></div><div class="card-body"><div class="grid2"><label class="field">Modelo<select data-path="fullscreen.mode"><option value="headline">Manchete</option><option value="breaking">Breaking News</option><option value="quote">Citação</option><option value="info">Informação</option><option value="list">Lista / agenda</option><option value="image">Imagem + texto</option></select></label><label class="field">Etiqueta<input type="text" maxlength="28" data-path="fullscreen.label"></label></div><label class="field">Título<input type="text" maxlength="120" data-path="fullscreen.title"></label><label class="field">Texto complementar<textarea data-path="fullscreen.subtitle"></textarea></label><label class="field">Lista, um item por linha<textarea data-path="fullscreen.list"></textarea></label><div class="file-row"><label class="field">Imagem opcional<input type="text" data-path="fullscreen.image" placeholder="URL ou caminho local"></label><label class="file-button">Escolher imagem<input type="file" accept="image/png,image/jpeg,image/webp" data-file-target="fullscreen.image"></label></div><div class="help">Ao entrar no Program, a tela cheia retira os demais gráficos com OUT e guarda a cena. Ao sair, a composição anterior volta com IN.</div></div></div>${elementPresetCard()}`;
+$('sec-theme').innerHTML=`<div class="card"><div class="card-head"><h2>Identidade PontoView</h2><span>personalização controlada</span></div><div class="card-body"><div class="color-grid"><label class="color-field"><span>Azul principal</span><input type="color" data-path="theme.primary"></label><label class="color-field"><span>Azul claro</span><input type="color" data-path="theme.accent"></label><label class="color-field"><span>Navy</span><input type="color" data-path="theme.navy"></label><label class="color-field"><span>Breaking</span><input type="color" data-path="breaking.primary"></label><label class="color-field"><span>Breaking escuro</span><input type="color" data-path="breaking.dark"></label><label class="color-field"><span>Breaking acento</span><input type="color" data-path="breaking.accent"></label></div><div style="margin-top:12px"><button id="resetTheme" class="secondary-button">Restaurar identidade PontoView</button></div></div></div><div class="card"><div class="card-head"><h2>Safe area</h2><span>ticker fora da margem</span></div><div class="card-body"><div class="grid2"><label class="field">Margem horizontal<select data-path="theme.safeX"><option value="48">Compacta</option><option value="64">Padrão</option><option value="80">Ampla</option></select></label><label class="field">Margem vertical<select data-path="theme.safeY"><option value="36">Compacta</option><option value="52">Padrão</option><option value="70">Ampla</option></select></label></div><div class="theme-note">Todos os elementos inferiores compartilham a mesma régua de composição. Alterações de largura, ativação do módulo e mudanças de encaixe usam transições suaves em vez de cortes secos.</div></div></div>`;
+}
+function renderNav(){const root=$('elementList');root.innerHTML=KEYS.map(k=>`<div class="element-row ${selected===k?'active':''} ${program[k].visible?'on-air':''}" data-row="${k}"><button class="element-select" data-select="${k}"><strong>${META[k].name}</strong><small>${META[k].desc}</small></button><button class="state-toggle pvw ${draft[k].visible?'on':''}" data-pvw="${k}" title="Preview">${draft[k].visible?'ON':'OFF'}</button><button class="state-toggle pgm ${program[k].visible?'on':''}" data-quick="${k}" title="Program">${program[k].visible?'ON':'OFF'}</button></div>`).join('');document.querySelectorAll('.system-nav').forEach(b=>b.classList.toggle('active',selected==='theme'));renderPendingState()}
+function renderEditorHeader(){const system=selected==='theme';$('editorTitle').textContent=system?'Aparência':META[selected].name;$('editorDescription').textContent=system?'Cores, modo Breaking e área segura da saída.':META[selected].hint;const on=!system&&!!program[selected].visible;$('editorStatus').style.display=system?'none':'flex';$('editorStatus').classList.toggle('air',on);$('editorStatus').querySelector('span').textContent=on?'NO AR':'FORA DO AR';$('dockName').textContent=system?'Aparência':META[selected].name;$('dockHint').textContent=system?'Tema da saída':'Elemento selecionado';$('takeAction').textContent='APLICAR PVW';$('takeAction').title='Envia toda a composição do Preview para o Program';$('outAction').disabled=system||!on;$('previewAction').disabled=false;renderPendingState()}
+function selectEditor(key){selected=key;document.querySelectorAll('.editor-section').forEach(s=>s.classList.remove('active'));$('sec-'+key).classList.add('active');renderNav();renderEditorHeader();syncForm()}
+function renderQuick(){const root=$('quickGrid');root.innerHTML=`<button class="quick live-quick ${program.liveTag.visible?'on':''}" data-quick="liveTag"><span><b>AO VIVO / STATUS</b><small>ativação imediata • tecla A</small></span><kbd>A</kbd><span class="quick-state">${program.liveTag.visible?'ON':'OFF'}</span></button><button class="quick breaking-quick ${program.breaking.enabled?'on':''}" data-breaking><span><b>Breaking News</b><small>paleta + stinger</small></span><span class="quick-state">${program.breaking.enabled?'ON':'OFF'}</span></button>`+KEYS.filter(k=>k!=='liveTag').map(k=>`<button class="quick ${program[k].visible?'on':''}" data-quick="${k}"><span><b>${META[k].name}</b><small>${META[k].desc}</small></span><span class="quick-state">${program[k].visible?'ON':'OFF'}</span></button>`).join('')}
+function activePresetSummary(key,data){if(key==='liveTag')return data.text||'AO VIVO';if(key==='topicBar')return data.text||'Editoria';if(key==='personBar')return [data.name,data.role].filter(Boolean).join(' | ')||'Identificação';if(key==='lowerThird')return data.title||'GC';if(key==='module')return data.brandText||'Módulo';if(key==='highlight')return data.title||'Destaque';if(key==='ticker')return data.tag||'Ticker';if(key==='bug')return data.text||'Bug';if(key==='fullscreen')return data.title||'Tela cheia';return''}
+function saveElementPresets(){try{localStorage.setItem(ELEMENT_PRESET_KEY,JSON.stringify(elementPresets))}catch(_){}}
+function renderElementPresets(){if(selected==='theme')return;const root=document.querySelector('#sec-'+selected+' #elementPresetList');if(!root)return;const list=elementPresets.filter(p=>p.key===selected);root.innerHTML=list.length?list.slice(0,12).map(p=>`<div class="preset-item"><button class="preset-load" data-ep-load="${p.id}"><b>${esc(p.name)}</b><small>${esc(activePresetSummary(p.key,p.data))}</small></button><div class="preset-tools"><button data-ep-take="${p.id}" title="TAKE">T</button><button data-ep-delete="${p.id}" title="Excluir">×</button></div></div>`).join(''):`<div class="help" style="grid-column:1/-1;margin:2px 0">Nenhum preset salvo para este elemento.</div>`}
+function elementPresetSave(){if(selected==='theme')return;const input=document.querySelector('#sec-'+selected+' #elementPresetName'),name=input.value.trim()||`${META[selected].name} ${elementPresets.filter(p=>p.key===selected).length+1}`;const data=clone(draft[selected]);data.visible=false;elementPresets.unshift({id:crypto.randomUUID?.()||String(Date.now()+Math.random()),key:selected,name,data,breakingEnabled:!!draft.breaking.enabled});elementPresets=elementPresets.slice(0,80);saveElementPresets();input.value='';renderElementPresets();toast('Preset do elemento salvo')}
+function elementPresetLoad(id,take=false){const p=elementPresets.find(x=>x.id===id);if(!p)return;const vis=draft[p.key].visible;draft[p.key]=merge(clone(DEFAULT[p.key]),clone(p.data));draft[p.key].visible=vis;if(typeof p.breakingEnabled==='boolean')draft.breaking.enabled=p.breakingEnabled;selectEditor(p.key);sendPreview();if(take){const was=program[p.key].visible;program[p.key]=clone(draft[p.key]);program[p.key].visible=true;if(typeof p.breakingEnabled==='boolean')program.breaking.enabled=p.breakingEnabled;sendProgram({mode:was?'update':'take',target:p.key,preset:p.name});toast(`${was?'UPDATE':'TAKE'}: ${p.name}`)}else toast(`Carregado no Preview: ${p.name}`)}
+function saveScenePresets(){try{localStorage.setItem(SCENE_PRESET_KEY,JSON.stringify(scenePresets))}catch(_){}}
+function sceneSummary(s){const active=KEYS.filter(k=>s[k]?.visible).map(k=>META[k].name);return active.length?active.join(' • '):'Cena limpa'}
+function renderScenes(){const root=$('sceneList');root.innerHTML=scenePresets.length?scenePresets.slice(0,9).map((p,i)=>`<div class="scene-item"><span class="scene-key">${i+1}</span><button class="scene-main" data-scene-take="${p.id}"><b>${esc(p.name)}</b><small>${esc(sceneSummary(p.state))}</small></button><div class="scene-tools"><button data-scene-load="${p.id}" title="Carregar no Preview">P</button><button data-scene-delete="${p.id}" title="Excluir">×</button></div></div>`).join(''):`<div class="scene-empty">Monte a composição no Preview usando os botões <b>PVW</b> e salve o conjunto aqui.</div>`}
+function saveScene(){const name=$('sceneName').value.trim()||`Cena ${scenePresets.length+1}`;scenePresets.unshift({id:crypto.randomUUID?.()||String(Date.now()+Math.random()),name,state:clone(draft)});scenePresets=scenePresets.slice(0,30);$('sceneName').value='';saveScenePresets();renderScenes();toast('Composição salva')}
+function loadScene(id,take=false){const p=scenePresets.find(x=>x.id===id);if(!p)return;draft=merge(clone(DEFAULT),clone(p.state));syncForm();renderNav();sendPreview({mode:'scene'});if(take){program=clone(draft);programFsSnapshot=null;sendProgram({mode:'scene',preset:p.name});toast(`TAKE CENA: ${p.name}`)}else toast(`Cena carregada no Preview: ${p.name}`)}
+function enterFullscreenIn(state,isProgram){const snap={};KEYS.forEach(k=>{if(k!=='fullscreen')snap[k]=!!state[k].visible});if(isProgram)programFsSnapshot=snap;else draftFsSnapshot=snap;KEYS.forEach(k=>{if(k!=='fullscreen')state[k].visible=false});state.fullscreen.visible=true}
+function exitFullscreenIn(state,isProgram){state.fullscreen.visible=false;const snap=isProgram?programFsSnapshot:draftFsSnapshot;if(snap)Object.entries(snap).forEach(([k,v])=>state[k].visible=!!v);if(isProgram)programFsSnapshot=null;else draftFsSnapshot=null}
+function togglePreview(key){if(key==='fullscreen'){if(draft.fullscreen.visible)exitFullscreenIn(draft,false);else enterFullscreenIn(draft,false)}else draft[key].visible=!draft[key].visible;sendPreview({mode:'scene'});renderNav()}
+function applyPreviewToProgram(){
+  // O switcher promove a cena inteira preparada no Preview para o Program.
+  // Visibilidades OFF também são copiadas, então o PGM termina exatamente igual ao PVW.
+  clearTimeout(previewTimer);
+  sendPreview({mode:'preview'}); // garante que o monitor PVW e o estado aplicado sejam o mesmo frame lógico
+  const previousProgram=clone(program),next=clone(draft);
+  if(next.fullscreen.visible){
+    if(draftFsSnapshot)programFsSnapshot=clone(draftFsSnapshot);
+    else{programFsSnapshot={};KEYS.forEach(k=>{if(k!=='fullscreen')programFsSnapshot[k]=!!previousProgram[k].visible})}
+  }else programFsSnapshot=null;
+  program=next;
+  sendProgram({mode:'scene',source:'preview',applyAll:true});
+  toast('Preview aplicado ao Program');
+}
+function takeSelected(){if(selected==='theme'){program.theme=clone(draft.theme);program.breaking=clone(draft.breaking);sendProgram({mode:'theme'});toast('Aparência aplicada');return}const key=selected;if(key==='fullscreen'){if(program.fullscreen.visible){program.fullscreen=clone(draft.fullscreen);program.fullscreen.visible=true;sendProgram({mode:'update',target:'fullscreen'});toast('Fullscreen atualizado')}else{enterFullscreenIn(program,true);program.fullscreen=clone(draft.fullscreen);program.fullscreen.visible=true;sendProgram({mode:'scene',target:'fullscreen'});toast('Fullscreen no ar')}return}const was=program[key].visible;program[key]=clone(draft[key]);program[key].visible=true;sendProgram({mode:was?'update':'take',target:key});toast(was?'UPDATE enviado':'TAKE enviado')}
+function outSelected(){if(selected==='theme'||!program[selected]?.visible)return;if(selected==='fullscreen'){exitFullscreenIn(program,true);sendProgram({mode:'scene',target:'fullscreen'});toast('Fullscreen OUT e cena restaurada');return}program[selected].visible=false;sendProgram({mode:'out',target:selected});toast(`${META[selected].name}: OUT`)}
+function toggleProgram(key){if(key==='fullscreen'){if(program.fullscreen.visible)exitFullscreenIn(program,true);else{program.fullscreen=clone(draft.fullscreen);enterFullscreenIn(program,true);program.fullscreen.visible=true}sendProgram({mode:'scene',target:'fullscreen'});return}if(program.fullscreen.visible){toast('Retire a tela cheia antes de alterar a cena');return}if(program[key].visible){program[key].visible=false;sendProgram({mode:'out',target:key})}else{program[key]=clone(draft[key]);program[key].visible=true;sendProgram({mode:'take',target:key})}}
+function clearProgram(){if(program.fullscreen.visible)programFsSnapshot=null;KEYS.forEach(k=>program[k].visible=false);sendProgram({mode:'clear'});toast('Todos os gráficos em OUT')}
+function toggleBreaking(){program.breaking.enabled=!program.breaking.enabled;draft.breaking.enabled=program.breaking.enabled;sendProgram({mode:'breaking'});sendPreview({mode:'breaking'});syncForm();toast(program.breaking.enabled?'Breaking News ativado':'Breaking News desativado')}
+function setPreviewResolution(v){const [w,h]=v.split('x').map(Number);previewSize=[w,h];['previewFrame','programFrame'].forEach(id=>{const frame=$(id);if(frame){frame.style.width=w+'px';frame.style.height=h+'px'}});resizePreview()}
+function resizeOne(vp,frame){if(!vp||!frame)return;const [w,h]=previewSize;const scale=Math.min(vp.clientWidth/w,vp.clientHeight/h);frame.style.transform=`scale(${scale})`;frame.style.left=Math.max(0,(vp.clientWidth-w*scale)/2)+'px';frame.style.top=Math.max(0,(vp.clientHeight-h*scale)/2)+'px'}
+function resizePreview(){resizeOne($('previewViewport'),$('previewFrame'));resizeOne($('programViewport'),$('programFrame'))}
+function setUiTheme(t){document.documentElement.dataset.uiTheme=t;try{localStorage.setItem(UI_KEY,t)}catch(_){}$('themeToggle').textContent=t==='dark'?'Tema claro':'Tema escuro'}
 
-    <section id="selector-view" class="shell hidden">
-      <div class="selector-wrap">
-        <div class="selector-panel panel">
-          <h2>1. Canal</h2><p>O workspace existente agora representa o canal.</p>
-          <div id="channel-list" class="entity-list"></div>
-          <div class="form-grid">
-            <div class="field"><label>Novo canal</label><input id="new-channel-name" placeholder="Ex: PontoNews"></div>
-            <div class="field"><label>Slug</label><input id="new-channel-slug" placeholder="pontonews"></div>
-            <button id="create-channel-btn" class="btn primary"><span class="material-symbols-rounded">add</span>Criar canal</button>
-          </div>
-        </div>
-        <div id="program-panel" class="selector-panel panel hidden">
-          <h2>2. Programa</h2><p>Canal selecionado: <strong id="selected-channel"></strong></p>
-          <div id="program-list" class="entity-list"></div>
-          <div class="form-grid">
-            <div class="field"><label>Novo programa</label><input id="new-program-name" placeholder="Ex: Jornal da Manhã"></div>
-            <div class="field"><label>Slug</label><input id="new-program-slug" placeholder="jornal-da-manha"></div>
-            <button id="create-program-btn" class="btn primary"><span class="material-symbols-rounded">add</span>Criar programa</button>
-          </div>
-        </div>
-      </div>
-      <div id="session-panel" class="selector-panel panel hidden" style="margin-top:16px">
-        <h2>3. Sessão ao vivo</h2><p>Programa: <strong id="selected-program"></strong>. Reabra uma sessão ou crie uma nova.</p>
-        <div id="session-list" class="entity-list"></div>
-        <div class="row wrap">
-          <div class="field" style="flex:1;min-width:220px"><label>Nome da sessão</label><input id="new-session-name" placeholder="Ex: Edição 20/08"></div>
-          <button id="create-session-btn" class="btn primary" style="align-self:end"><span class="material-symbols-rounded">radio_button_checked</span>Nova sessão</button>
-        </div>
-      </div>
-    </section>
 
-    <section id="studio-view" class="shell hidden">
-      <div class="contextbar panel">
-        <div class="breadcrumbs">
-          <span class="crumb">Canal <strong id="crumb-channel"></strong></span><span>›</span>
-          <span class="crumb">Programa <strong id="crumb-program"></strong></span><span>›</span>
-          <span class="crumb">Sessão <strong id="crumb-session"></strong></span>
-          <span id="session-status-label" class="pill">READY</span>
-        </div>
-        <div class="context-actions">
-          <button id="live-btn" class="btn success"><span class="material-symbols-rounded">sensors</span>Entrar LIVE</button>
-          <button id="end-btn" class="btn danger"><span class="material-symbols-rounded">stop_circle</span>Encerrar</button>
-          <button id="back-selector-btn" class="btn"><span class="material-symbols-rounded">swap_horiz</span>Trocar sessão</button>
-        </div>
-      </div>
+function setWorkMode(mode){document.body.dataset.workmode=mode;document.querySelectorAll('[data-workmode]').forEach(b=>b.classList.toggle('active',b.dataset.workmode===mode));try{localStorage.setItem(WORKMODE_KEY,mode)}catch(_){} }
+function initSplitter(){const split=$('mainSplitter');if(!split)return;let dragging=false;split.addEventListener('pointerdown',e=>{dragging=true;split.setPointerCapture(e.pointerId);document.body.classList.add('resizing')});split.addEventListener('pointermove',e=>{if(!dragging)return;const top=48;const min=255,max=Math.max(min,innerHeight-330);const h=Math.max(min,Math.min(max,e.clientY-top));document.documentElement.style.setProperty('--monitor-h',h+'px');resizePreview()});split.addEventListener('pointerup',()=>{dragging=false;document.body.classList.remove('resizing')});split.addEventListener('pointercancel',()=>{dragging=false;document.body.classList.remove('resizing')})}
 
-      <div class="console-grid">
-        <div class="monitor preview panel">
-          <div class="monitor-head"><div class="monitor-title"><span class="material-symbols-rounded">preview</span>Preview</div><span class="monitor-badge">PREPARAÇÃO</span></div>
-          <div id="preview-screen" class="monitor-screen">
-            <div class="screen-safe"></div><img class="screen-logo hidden" alt="logo"><div class="screen-live">AO VIVO</div>
-            <div class="screen-gc"><div class="screen-tag">AO VIVO</div><div class="screen-copy"><strong>Sem conteúdo</strong><span></span></div></div>
-            <div class="screen-ticker"></div>
-          </div>
-          <div class="monitor-meta"><span>Não está no ar</span><span id="preview-meta">r0</span></div>
-        </div>
-
-        <div class="monitor program panel">
-          <div class="monitor-head"><div class="monitor-title"><span class="material-symbols-rounded">tv</span>Program</div><span class="monitor-badge">ON AIR</span></div>
-          <div id="program-screen" class="monitor-screen">
-            <div class="screen-safe"></div><img class="screen-logo hidden" alt="logo"><div class="screen-live">AO VIVO</div>
-            <div class="screen-gc"><div class="screen-tag">AO VIVO</div><div class="screen-copy"><strong>Sem conteúdo</strong><span></span></div></div>
-            <div class="screen-ticker"></div>
-          </div>
-          <div class="monitor-meta"><span>Exatamente o que o OBS recebe</span><span id="program-meta">r0</span></div>
-        </div>
-
-        <div class="take-stack">
-          <button id="clear-program-btn" class="btn danger"><span class="material-symbols-rounded">visibility_off</span>Limpar Program</button>
-          <button id="take-btn" class="take-btn" disabled>TAKE</button>
-          <button id="clear-preview-btn" class="btn"><span class="material-symbols-rounded">ink_eraser</span>Limpar Preview</button>
-          <div class="quick-bank panel">
-            <h3>Controles rápidos</h3>
-            <div class="quick-buttons">
-              <button class="btn active" data-template="lower_third">Lower Third</button>
-              <button class="btn" data-template="headline">Manchete</button>
-              <button class="btn" data-template="breaking">Breaking</button>
-              <button class="btn" data-template="interview">Identificação</button>
-              <button id="toggle-ticker-btn" class="btn">Ticker</button>
-              <button id="toggle-logo-btn" class="btn">Logo</button>
-              <button id="toggle-clock-btn" class="btn">Relógio</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lower-grid">
-        <div id="editor-card" class="editor-card panel">
-          <h3>Editor de Preview</h3>
-          <div class="editor-tabs">
-            <button class="editor-tab active" data-editor-tab="content">Conteúdo</button>
-            <button class="editor-tab" data-editor-tab="ticker">Ticker</button>
-            <button class="editor-tab" data-editor-tab="style">Estilo</button>
-            <button class="editor-tab" data-editor-tab="visibility">Visibilidade</button>
-            <button class="editor-tab" data-editor-tab="obs">OBS</button>
-          </div>
-
-          <div id="editor-content" class="editor-section active">
-            <div class="fields-2">
-              <div class="field"><label>Tag / Categoria</label><input id="f-tag" maxlength="48" placeholder="AO VIVO"></div>
-              <div class="field"><label>Headline / Nome</label><input id="f-headline" maxlength="100" placeholder="Manchete ou nome do entrevistado"></div>
-            </div>
-            <div class="field"><label>Detalhe / Cargo / Subtítulo</label><input id="f-detail" maxlength="140" placeholder="Cargo, local ou complemento"></div>
-          </div>
-
-          <div id="editor-ticker" class="editor-section">
-            <div class="field"><label>Texto do ticker</label><textarea id="f-ticker" maxlength="600" placeholder="Notícias em sequência · Próxima informação ·"></textarea></div>
-            <div class="field"><label>Velocidade</label><div class="range-row"><input id="f-ticker-speed" type="range" min="20" max="200" value="80"><output id="speed-output">80px/s</output></div></div>
-          </div>
-
-          <div id="editor-style" class="editor-section">
-            <div class="fields-2">
-              <div class="field"><label>Cor primária</label><input id="f-primary" class="color-input" type="color" value="#003366"></div>
-              <div class="field"><label>Cor secundária</label><input id="f-secondary" class="color-input" type="color" value="#ffffff"></div>
-              <div class="field"><label>Fundo ticker</label><input id="f-ticker-bg" class="color-input" type="color" value="#111827"></div>
-              <div class="field"><label>Texto ticker</label><input id="f-ticker-text" class="color-input" type="color" value="#ffffff"></div>
-            </div>
-            <div class="fields-2">
-              <div class="field"><label>Fonte</label><select id="f-font"><option>Inter</option><option>Roboto</option><option>Oswald</option><option>Montserrat</option><option>Lato</option></select></div>
-              <div class="field"><label>Animação</label><select id="f-animation"><option value="slide-up">Slide up</option><option value="slide-left">Slide left</option><option value="fade">Fade</option><option value="scale-up">Scale up</option></select></div>
-            </div>
-            <div class="field"><label>Logo do canal (URL)</label><input id="f-logo" placeholder="https://..."></div>
-            <div class="row wrap">
-              <button id="save-channel-style-btn" class="btn"><span class="material-symbols-rounded">save</span>Salvar como padrão do canal</button>
-            </div>
-          </div>
-
-          <div id="editor-visibility" class="editor-section">
-            <div class="fields-2">
-              <label class="toggle"><span>AO VIVO</span><input id="v-live" type="checkbox"></label>
-              <label class="toggle"><span>Tag</span><input id="v-tag" type="checkbox"></label>
-              <label class="toggle"><span>Headline</span><input id="v-headline" type="checkbox"></label>
-              <label class="toggle"><span>Detalhe</span><input id="v-detail" type="checkbox"></label>
-              <label class="toggle"><span>Ticker</span><input id="v-ticker" type="checkbox"></label>
-              <label class="toggle"><span>Logo</span><input id="v-logo" type="checkbox"></label>
-              <label class="toggle"><span>Usar logo configurada</span><input id="f-show-logo" type="checkbox"></label>
-              <label class="toggle"><span>Relógio</span><input id="f-show-time" type="checkbox" checked></label>
-            </div>
-          </div>
-
-          <div id="editor-obs" class="editor-section">
-            <div class="field"><label>Browser Source</label><input id="overlay-url" readonly></div>
-            <div class="row wrap"><button id="copy-overlay-btn" class="btn primary"><span class="material-symbols-rounded">content_copy</span>Copiar URL</button><button id="open-overlay-btn" class="btn"><span class="material-symbols-rounded">open_in_new</span>Abrir overlay</button></div>
-            <div class="inline-msg">Use 1920×1080 no OBS. O overlay lê somente Program e não exige login.</div>
-          </div>
-        </div>
-
-        <div class="side-stack">
-          <div class="notes-card panel"><h3>Notas da sessão</h3><textarea id="notes" placeholder="Próxima pauta, observações rápidas, recados operacionais..."></textarea><div id="notes-meta" class="note-meta">Sincronizado entre dispositivos</div></div>
-          <div class="preset-card panel"><h3>Presets</h3><div class="preset-toolbar"><button id="save-preset-btn" class="btn primary"><span class="material-symbols-rounded">bookmark_add</span>Salvar Preview</button></div><div id="preset-list" class="preset-list"></div></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="toast-host" class="toast-host"></div>
-  <script src="./studio.js"></script>
+buildForms();bindFields();
+document.addEventListener('click',e=>{const wm=e.target.closest('[data-workmode]');if(wm)setWorkMode(wm.dataset.workmode);const sel=e.target.closest('[data-select]');if(sel)selectEditor(sel.dataset.select);const sys=e.target.closest('[data-select-system]');if(sys)selectEditor(sys.dataset.selectSystem);const pvw=e.target.closest('[data-pvw]');if(pvw){e.stopPropagation();togglePreview(pvw.dataset.pvw)}const q=e.target.closest('[data-quick]');if(q)toggleProgram(q.dataset.quick);if(e.target.closest('[data-breaking]'))toggleBreaking();const save=e.target.closest('#saveElementPreset');if(save)elementPresetSave();const epLoad=e.target.closest('[data-ep-load]');if(epLoad)elementPresetLoad(epLoad.dataset.epLoad,false);const epTake=e.target.closest('[data-ep-take]');if(epTake)elementPresetLoad(epTake.dataset.epTake,true);const epDel=e.target.closest('[data-ep-delete]');if(epDel){elementPresets=elementPresets.filter(p=>p.id!==epDel.dataset.epDelete);saveElementPresets();renderElementPresets();toast('Preset removido')}const st=e.target.closest('[data-scene-take]');if(st)loadScene(st.dataset.sceneTake,true);const sl=e.target.closest('[data-scene-load]');if(sl)loadScene(sl.dataset.sceneLoad,false);const sd=e.target.closest('[data-scene-delete]');if(sd){scenePresets=scenePresets.filter(p=>p.id!==sd.dataset.sceneDelete);saveScenePresets();renderScenes();toast('Composição removida')}});
+$('applyProfile').onclick=()=>{const p=PROFILES[draft.lowerThird.profile]||PROFILES.news;draft.liveTag.text=p.status;draft.topicBar.text=p.topic;draft.breaking.enabled=p.breaking;syncForm();sendPreview();toast('Perfil editorial preparado nos elementos independentes')};
+$('resetTheme').onclick=()=>{Object.assign(draft.theme,clone(DEFAULT.theme));Object.assign(draft.breaking,clone(DEFAULT.breaking),{enabled:draft.breaking.enabled});syncForm();sendPreview();toast('Identidade PontoView restaurada')};
+$('previewAction').onclick=()=>{if(selected!=='theme'&&!draft[selected].visible){if(selected==='fullscreen')enterFullscreenIn(draft,false);else draft[selected].visible=true;renderNav()}sendPreview({mode:'scene'});toast('Preview atualizado')};$('takeAction').onclick=applyPreviewToProgram;$('outAction').onclick=outSelected;$('clearProgram').onclick=clearProgram;$('saveScene').onclick=saveScene;$('showSafe').onchange=()=>{draft.theme.showSafe=$('showSafe').checked;sendPreview()};$('refreshPreview').onclick=()=>sendPreview({mode:'preview'});$('previewResolution').onchange=e=>setPreviewResolution(e.target.value);$('themeToggle').onclick=()=>setUiTheme(document.documentElement.dataset.uiTheme==='dark'?'light':'dark');
+addEventListener('keydown',e=>{const tag=(e.target?.tagName||'').toLowerCase(),typing=tag==='input'||tag==='textarea'||tag==='select'||e.target?.isContentEditable;if(typing)return;if(e.shiftKey&&!e.altKey&&!e.ctrlKey&&!e.metaKey){const n=Number(e.key);if(n>=1&&n<=9&&scenePresets[n-1]){e.preventDefault();loadScene(scenePresets[n-1].id,true);return}}if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;const k=e.key.toLowerCase();if(k==='a'){e.preventDefault();toggleProgram('liveTag')}else if(k==='t'){e.preventDefault();toggleProgram('ticker')}else if(k==='b'){e.preventDefault();toggleProgram('bug')}else if(k==='g'){e.preventDefault();toggleProgram('lowerThird')}else if(k==='d'){e.preventDefault();toggleProgram('highlight')}else if(k==='u'){e.preventDefault();applyPreviewToProgram()}else if(e.code==='Space'){e.preventDefault();applyPreviewToProgram()}else if(e.key==='Escape'){e.preventDefault();outSelected()}});
+let initialTheme='dark';try{initialTheme=localStorage.getItem(UI_KEY)||'dark'}catch(_){}setUiTheme(initialTheme);
+if(bc)bc.onmessage=e=>{if(e.data?.type==='OVERLAY_READY'){$('connectionDot').classList.add('ok');$('connectionText').textContent='overlay conectado';sendProgram({mode:'sync'})}};
+$('previewFrame').addEventListener('load',()=>setTimeout(()=>sendPreview({mode:'sync'}),120));$('programFrame').addEventListener('load',()=>setTimeout(()=>sendProgram({mode:'sync'}),150));const ro=new ResizeObserver(resizePreview);ro.observe($('previewViewport'));ro.observe($('programViewport'));setPreviewResolution('1920x1080');initSplitter();let wm='edit';try{wm=localStorage.getItem(WORKMODE_KEY)||'edit'}catch(_){}setWorkMode(wm);
+renderNav();renderQuick();renderScenes();selectEditor('lowerThird');syncForm();renderPendingState();setTimeout(()=>sendPreview({mode:'sync'}),180);setTimeout(()=>{if(!$('connectionDot').classList.contains('ok'))$('connectionText').textContent='controle pronto'},1500);
+})();</script>
 </body>
 </html>
