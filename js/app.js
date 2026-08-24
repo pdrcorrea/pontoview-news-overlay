@@ -115,3 +115,7 @@ $$('[data-cookie-settings]').forEach(el => el.addEventListener('click', e => {
   e.preventDefault();
   cookieBanner?.classList.add('show');
 }));
+
+const pageParams = new URLSearchParams(location.search);
+if (pageParams.get('cadastro') === '1') openAuth('signup');
+if (pageParams.get('entrar') === '1') openAuth('signin');
