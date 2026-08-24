@@ -3,47 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="description" content="Área do cliente PontoView Studio. Acesse sua biblioteca de overlays e gerencie sua assinatura." />
+  <meta name="description" content="Área do cliente PontoView Studio. Acesse seus overlays, assinatura e conta." />
   <title>Meu Studio | PontoView Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
   <link rel="stylesheet" href="./studio-app.css" />
+  <link rel="stylesheet" href="./studio-clean.css" />
 </head>
 <body class="pv-app-body">
   <div id="authScreen" class="pv-auth-screen">
     <section class="pv-auth-brand">
-      <a href="./index.html" class="pv-auth-logo-wrap">
-        <img src="./assets/logo-pontoview.png" alt="PontoView" />
-        <span>Studio</span>
-      </a>
-      <div class="pv-auth-copy">
-        <span class="pv-kicker">PONTOVIEW STUDIO</span>
-        <h1>Sua marca em cena.</h1>
-        <p>Entre para acessar sua biblioteca de overlays, assinatura e controles.</p>
-      </div>
-      <div class="pv-auth-visual" aria-hidden="true">
-        <div class="pv-auth-screen-frame">
-          <div class="pv-auth-bug">PONTOVIEW</div>
-          <div class="pv-auth-lt">
-            <span>JORNALISMO</span>
-            <strong>INFORMAÇÃO COM IDENTIDADE</strong>
-            <small>Overlays profissionais controlados pelo navegador</small>
-          </div>
-        </div>
-      </div>
+      <a href="./index.html" class="pv-auth-logo-wrap"><img src="./assets/logo-pontoview.png" alt="PontoView" /><span>Studio</span></a>
+      <div class="pv-auth-copy"><span class="pv-kicker">PONTOVIEW STUDIO</span><h1>Sua marca em cena.</h1><p>Entre para acessar seus overlays.</p></div>
+      <div class="pv-auth-visual" aria-hidden="true"><div class="pv-auth-screen-frame"><div class="pv-auth-bug">PONTOVIEW</div><div class="pv-auth-lt"><span>JORNALISMO</span><strong>INFORMAÇÃO COM IDENTIDADE</strong><small>Gráficos controlados pelo navegador</small></div></div></div>
     </section>
-
     <section class="pv-auth-panel">
       <div class="pv-auth-card">
-        <a href="./index.html" class="pv-auth-mobile-brand">
-          <img src="./assets/logo-pontoview.png" alt="PontoView" />
-          <span>Studio</span>
-        </a>
-        <span class="pv-kicker">ÁREA DO CLIENTE</span>
-        <h2>Entre no seu Studio</h2>
-        <p class="pv-muted">Use a mesma conta em qualquer dispositivo.</p>
+        <a href="./index.html" class="pv-auth-mobile-brand"><img src="./assets/logo-pontoview.png" alt="PontoView" /><span>Studio</span></a>
+        <span class="pv-kicker">ÁREA DO CLIENTE</span><h2>Entre no seu Studio</h2>
         <form id="loginForm" class="pv-auth-form">
           <label class="pv-field"><span>E-mail</span><input id="loginEmail" type="email" autocomplete="email" placeholder="voce@empresa.com.br" required /></label>
           <label class="pv-field"><span>Senha</span><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha" required /></label>
@@ -53,7 +32,7 @@
         </form>
         <div class="pv-auth-divider"><span>ou</span></div>
         <button id="createAccountButton" type="button" class="pv-button pv-button-secondary pv-button-full">Criar uma conta</button>
-        <p class="pv-auth-legal">Ao continuar, você declara estar de acordo com os <a href="./termos.html">Termos de Uso</a> e a <a href="./privacidade.html">Política de Privacidade</a>.</p>
+        <p class="pv-auth-legal">Ao continuar, você concorda com os <a href="./termos.html">Termos de Uso</a> e a <a href="./privacidade.html">Política de Privacidade</a>.</p>
       </div>
     </section>
   </div>
@@ -62,87 +41,70 @@
     <aside class="pv-sidebar">
       <div class="pv-sidebar-brand"><a href="./index.html"><img src="./assets/logo-pontoview.png" alt="PontoView" /><span>Studio</span></a></div>
       <nav class="pv-sidebar-nav" aria-label="Navegação principal">
-        <button class="pv-nav-item active" data-view="home" type="button"><span class="pv-nav-icon material-symbols-rounded" aria-hidden="true">home</span><span>Início</span></button>
-        <button class="pv-nav-item" data-view="library" type="button"><span class="pv-nav-icon material-symbols-rounded" aria-hidden="true">grid_view</span><span>Overlays</span></button>
+        <button class="pv-nav-item active" data-view="library" type="button"><span class="pv-nav-icon material-symbols-rounded" aria-hidden="true">grid_view</span><span>Overlays</span></button>
         <button class="pv-nav-item" data-view="billing" type="button"><span class="pv-nav-icon material-symbols-rounded" aria-hidden="true">credit_card</span><span>Assinatura</span></button>
-        <button class="pv-nav-item" data-view="account" type="button"><span class="pv-nav-icon material-symbols-rounded" aria-hidden="true">person</span><span>Minha conta</span></button>
+        <button class="pv-nav-item" data-view="account" type="button"><span class="pv-nav-icon material-symbols-rounded" aria-hidden="true">person</span><span>Conta</span></button>
       </nav>
-      <div class="pv-sidebar-help"><span>PRECISA DE AJUDA?</span><p>Encontre orientações sobre configuração e uso.</p><a href="mailto:suporte@pontoview.com.br">Falar com suporte</a></div>
-      <button id="logoutButton" class="pv-sidebar-logout" type="button"><span class="material-symbols-rounded" aria-hidden="true">logout</span> Sair</button>
+      <button id="logoutButton" class="pv-sidebar-logout" type="button"><span class="material-symbols-rounded" aria-hidden="true">logout</span>Sair</button>
     </aside>
 
     <div class="pv-app-content">
       <header class="pv-topbar">
         <button id="sidebarToggle" class="pv-mobile-menu" type="button" aria-label="Abrir menu"><span class="material-symbols-rounded" aria-hidden="true">menu</span></button>
-        <div class="pv-topbar-title"><span id="topbarEyebrow">MEU STUDIO</span><strong id="topbarTitle">Início</strong></div>
+        <div class="pv-topbar-title"><span>MEU STUDIO</span><strong id="topbarTitle">Overlays</strong></div>
         <div class="pv-topbar-actions">
           <div id="subscriptionChip" class="pv-subscription-chip is-checking"><i></i><span>Verificando acesso</span></div>
           <button id="accountMenuButton" class="pv-user-button" type="button"><span id="userInitials">PV</span><div><strong id="userName">Conta PontoView</strong><small id="userEmail">—</small></div></button>
         </div>
       </header>
 
-      <main class="pv-main">
-        <section class="pv-view active" data-view-panel="home">
-          <div class="pv-welcome-row"><div><span class="pv-kicker">PONTOVIEW STUDIO</span><h1 id="welcomeTitle">Bem-vindo ao seu Studio.</h1><p>Escolha um overlay disponível e entre na operação.</p></div></div>
-          <div id="paywallBanner" class="pv-paywall-banner" hidden>
-            <div class="pv-paywall-copy"><span class="pv-paywall-icon material-symbols-rounded" aria-hidden="true">lock</span><div><strong>Sua conta está pronta. Falta liberar o Studio.</strong><p>Assine para acessar os overlays e seus controles em qualquer dispositivo.</p></div></div>
-            <button class="pv-button pv-button-primary" data-action="subscribe" type="button">Assinar por R$ 59/mês</button>
+      <main class="pv-main pv-main-clean">
+        <section class="pv-view active" data-view-panel="library">
+          <div class="pv-page-heading pv-page-heading-clean"><span class="pv-kicker">OVERLAYS</span><h1 id="welcomeTitle">Seus overlays.</h1><p>Escolha o que deseja operar.</p></div>
+          <div id="paywallBanner" class="pv-paywall-banner pv-paywall-compact" hidden>
+            <div class="pv-paywall-copy"><span class="pv-paywall-icon material-symbols-rounded" aria-hidden="true">lock</span><div><strong>Assine para liberar o Studio.</strong><p>Acesso ao PontoView News por R$ 59/mês.</p></div></div>
+            <button class="pv-button pv-button-primary" data-action="subscribe" type="button">Assinar</button>
           </div>
 
-          <section class="pv-dashboard-section">
-            <div class="pv-section-heading"><div><span class="pv-kicker">BIBLIOTECA</span><h2>Escolha o que vai para o ar.</h2></div><button class="pv-text-button" data-go-view="library" type="button">Ver biblioteca completa</button></div>
-            <div class="pv-overlay-grid pv-overlay-grid-home">
-              <article class="pv-overlay-card pv-overlay-card-featured" data-product="news_overlay">
-                <div class="pv-overlay-preview pv-news-preview">
-                  <div class="pv-preview-live">AO VIVO</div><div class="pv-preview-brand">PONTOVIEW<br>NEWS</div>
-                  <div class="pv-preview-lower"><div class="pv-preview-meta"><span>POLÍTICA</span><b>ANA MARTINS</b><small>REPÓRTER</small></div><strong>CONGRESSO RETOMA VOTAÇÕES NESTA SEMANA</strong><small>Líderes partidários negociam a pauta do plenário</small></div>
-                  <div class="pv-preview-ticker"><b>AGORA</b><span>Informação em tempo real · Preview e Program · Controle pelo navegador</span></div>
-                  <div class="pv-overlay-lock" data-lock-overlay><span class="material-symbols-rounded" aria-hidden="true">lock</span><strong>Disponível com a assinatura</strong></div>
-                </div>
-                <div class="pv-overlay-card-body">
-                  <div class="pv-overlay-card-heading"><div><span class="pv-product-state">DISPONÍVEL AGORA</span><h3>PontoView News</h3></div><span class="pv-version">NEWS</span></div>
-                  <p>GCs, identificação, editorias, destaques, ticker, módulo lateral e operação Preview / Program / TAKE.</p>
-                  <div class="pv-overlay-tags"><span>Notícias</span><span>WebTV</span><span>Entrevistas</span><span>Podcasts</span></div>
-                  <div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="news_overlay" type="button">Abrir overlay</button><a class="pv-button pv-button-secondary" href="./news.html">Ver detalhes</a></div>
-                </div>
-              </article>
-              <article class="pv-overlay-card pv-overlay-card-coming"><div class="pv-coming-visual"><span class="material-symbols-rounded" aria-hidden="true">add</span></div><div class="pv-overlay-card-body"><span class="pv-product-state pv-product-state-muted">EM DESENVOLVIMENTO</span><h3>Novos overlays</h3><p>A biblioteca do PontoView Studio crescerá sem mudar sua conta ou sua forma de acesso.</p><div class="pv-overlay-tags"><span>Uma conta</span><span>Uma biblioteca</span></div></div></article>
-            </div>
-          </section>
-
-          <section class="pv-dashboard-section"><div class="pv-section-heading"><div><span class="pv-kicker">ACESSO</span><h2>Seu Studio, em qualquer tela.</h2></div></div><div class="pv-info-grid"><article class="pv-info-card"><span>01</span><strong>Faça login</strong><p>Sua conta identifica seus produtos, configurações e assinatura.</p></article><article class="pv-info-card"><span>02</span><strong>Escolha o overlay</strong><p>A biblioteca mostra o que está disponível para sua conta.</p></article><article class="pv-info-card"><span>03</span><strong>Entre na operação</strong><p>Canal, programa e sessão passam a ser gerenciados dentro do overlay escolhido.</p></article></div></section>
-        </section>
-
-        <section class="pv-view" data-view-panel="library">
-          <div class="pv-page-heading"><span class="pv-kicker">OVERLAYS</span><h1>Sua biblioteca.</h1><p>Veja os produtos disponíveis no PontoView Studio e abra o controle que precisa usar.</p></div>
-          <div class="pv-library-toolbar"><div class="pv-filter-pills"><button class="active">Todos</button><button>Disponíveis</button><button>Em breve</button></div><span id="libraryAccessLabel" class="pv-library-access">Verificando assinatura…</span></div>
-          <div class="pv-overlay-grid pv-overlay-grid-library">
-            <article class="pv-overlay-card" data-product="news_overlay"><div class="pv-overlay-preview pv-news-preview compact"><div class="pv-preview-brand">PONTOVIEW<br>NEWS</div><div class="pv-preview-lower"><div class="pv-preview-meta"><span>ECONOMIA</span></div><strong>MERCADO FECHA O DIA EM ALTA</strong><small>Principais índices avançaram nesta sessão</small></div><div class="pv-overlay-lock" data-lock-overlay><span class="material-symbols-rounded" aria-hidden="true">lock</span><strong>Assine para usar</strong></div></div><div class="pv-overlay-card-body"><span class="pv-product-state">DISPONÍVEL AGORA</span><h3>PontoView News</h3><p>Sistema gráfico para notícias, entrevistas, podcasts e web TVs.</p><div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="news_overlay" type="button">Abrir overlay</button><a class="pv-button pv-button-secondary" href="./news.html">Ver detalhes</a></div></div></article>
-            <article class="pv-overlay-card pv-overlay-card-coming"><div class="pv-coming-visual"><span class="material-symbols-rounded" aria-hidden="true">add</span></div><div class="pv-overlay-card-body"><span class="pv-product-state pv-product-state-muted">EM BREVE</span><h3>Próximos produtos</h3><p>Novos sistemas gráficos serão adicionados ao catálogo conforme estiverem prontos.</p></div></article>
+          <div class="pv-overlay-grid pv-overlay-grid-library pv-overlay-grid-single">
+            <article class="pv-overlay-card pv-overlay-card-featured" data-product="news_overlay">
+              <div class="pv-overlay-preview pv-news-preview compact">
+                <div class="pv-preview-live">AO VIVO</div><div class="pv-preview-brand">PONTOVIEW<br>NEWS</div>
+                <div class="pv-preview-lower"><div class="pv-preview-meta"><span>POLÍTICA</span><b>ANA MARTINS</b><small>REPÓRTER</small></div><strong>CONGRESSO RETOMA VOTAÇÕES NESTA SEMANA</strong><small>Líderes partidários negociam a pauta do plenário</small></div>
+                <div class="pv-preview-ticker"><b>AGORA</b><span>Informação em tempo real · Preview e Program</span></div>
+                <div class="pv-overlay-lock" data-lock-overlay><span class="material-symbols-rounded" aria-hidden="true">lock</span><strong>Assinatura necessária</strong></div>
+              </div>
+              <div class="pv-overlay-card-body pv-overlay-card-body-clean">
+                <div class="pv-overlay-card-heading"><div><span class="pv-product-state">DISPONÍVEL</span><h3>PontoView News</h3></div><span class="pv-version">NEWS</span></div>
+                <p>GCs, identificação, editorias, destaques, ticker e operação Preview / Program / TAKE.</p>
+                <div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="news_overlay" type="button">Abrir overlay</button><a class="pv-button pv-button-secondary" href="./news.html">Detalhes</a></div>
+              </div>
+            </article>
           </div>
         </section>
 
         <section class="pv-view" data-view-panel="billing">
-          <div class="pv-page-heading"><span class="pv-kicker">ASSINATURA</span><h1>Seu acesso ao Studio.</h1><p>Consulte o status da assinatura e as informações de cobrança.</p></div>
-          <div class="pv-billing-grid">
-            <article class="pv-billing-card pv-billing-main"><div class="pv-billing-head"><div><span class="pv-kicker">PONTOVIEW STUDIO</span><h2>Assinatura mensal</h2></div><span id="billingStatus" class="pv-billing-status">Verificando</span></div><div class="pv-billing-price"><strong>R$ 59</strong><span>/ mês</span></div><p>Acesso à biblioteca disponível, controles online, sincronização, atualizações e suporte.</p><div class="pv-billing-meta"><div><span>Início</span><strong id="billingStarted">—</strong></div><div><span>Próxima renovação</span><strong id="billingExpires">—</strong></div></div><div class="pv-billing-actions"><button class="pv-button pv-button-primary" data-action="subscribe" type="button">Gerenciar assinatura</button><button class="pv-button pv-button-secondary" type="button" data-action="billing-help">Ajuda com cobrança</button></div></article>
-            <article class="pv-billing-card"><span class="pv-kicker">INCLUÍDO</span><h3>Um login. Uma biblioteca.</h3><ul class="pv-check-list"><li>Overlays disponíveis na sua assinatura</li><li>Operação no computador e no celular</li><li>Atualizações e correções</li><li>Hospedagem pela PontoView</li><li>Suporte de uso</li></ul></article>
-          </div>
+          <div class="pv-page-heading pv-page-heading-clean"><span class="pv-kicker">ASSINATURA</span><h1>Assinatura.</h1><p>Status e cobrança do seu Studio.</p></div>
+          <article class="pv-billing-card pv-billing-main pv-billing-clean">
+            <div class="pv-billing-head"><div><h2>PontoView Studio</h2></div><span id="billingStatus" class="pv-billing-status">Verificando</span></div>
+            <div class="pv-billing-price"><strong>R$ 59</strong><span>/ mês</span></div>
+            <div class="pv-billing-meta"><div><span>Início</span><strong id="billingStarted">—</strong></div><div><span>Renovação</span><strong id="billingExpires">—</strong></div></div>
+            <div class="pv-billing-actions"><button class="pv-button pv-button-primary" data-action="subscribe" type="button">Assinar</button><button class="pv-button pv-button-secondary" type="button" data-action="billing-help">Ajuda com cobrança</button></div>
+          </article>
         </section>
 
         <section class="pv-view" data-view-panel="account">
-          <div class="pv-page-heading"><span class="pv-kicker">MINHA CONTA</span><h1>Conta e privacidade.</h1><p>Informações básicas da sua conta PontoView.</p></div>
-          <div class="pv-account-grid">
-            <article class="pv-settings-card"><h2>Perfil</h2><div class="pv-profile-row"><div id="accountAvatar" class="pv-account-avatar">PV</div><div><strong id="accountName">Conta PontoView</strong><span id="accountEmail">—</span></div></div><div class="pv-settings-list"><div><span>Nome</span><strong id="accountNameRow">—</strong></div><div><span>E-mail</span><strong id="accountEmailRow">—</strong></div></div></article>
-            <article class="pv-settings-card"><h2>Privacidade e segurança</h2><div class="pv-settings-links"><a href="./privacidade.html"><span>Política de Privacidade</span><b>›</b></a><a href="./termos.html"><span>Termos de Uso</span><b>›</b></a><a href="./cookies.html"><span>Preferências de cookies</span><b>›</b></a><button type="button" data-action="password-reset"><span>Alterar senha</span><b>›</b></button></div></article>
+          <div class="pv-page-heading pv-page-heading-clean"><span class="pv-kicker">CONTA</span><h1>Sua conta.</h1></div>
+          <div class="pv-account-grid pv-account-grid-clean">
+            <article class="pv-settings-card"><div class="pv-profile-row"><div id="accountAvatar" class="pv-account-avatar">PV</div><div><strong id="accountName">Conta PontoView</strong><span id="accountEmail">—</span></div></div><div class="pv-settings-list"><div><span>Nome</span><strong id="accountNameRow">—</strong></div><div><span>E-mail</span><strong id="accountEmailRow">—</strong></div></div></article>
+            <article class="pv-settings-card"><div class="pv-settings-links"><button type="button" data-action="password-reset"><span>Alterar senha</span><b>›</b></button><a href="./privacidade.html"><span>Privacidade</span><b>›</b></a><a href="./termos.html"><span>Termos de Uso</span><b>›</b></a></div></article>
           </div>
         </section>
       </main>
     </div>
 
     <nav class="pv-mobile-nav" aria-label="Navegação mobile">
-      <button class="active" data-view="home" type="button"><span class="material-symbols-rounded" aria-hidden="true">home</span>Início</button>
-      <button data-view="library" type="button"><span class="material-symbols-rounded" aria-hidden="true">grid_view</span>Overlays</button>
+      <button class="active" data-view="library" type="button"><span class="material-symbols-rounded" aria-hidden="true">grid_view</span>Overlays</button>
       <button data-view="billing" type="button"><span class="material-symbols-rounded" aria-hidden="true">credit_card</span>Assinatura</button>
       <button data-view="account" type="button"><span class="material-symbols-rounded" aria-hidden="true">person</span>Conta</button>
     </nav>
