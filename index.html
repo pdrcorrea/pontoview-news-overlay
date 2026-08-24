@@ -1,301 +1,246 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>PontoView News Overlay | Overlay Profissional para OBS Studio</title>
-
-  <meta name="description" content="Overlay profissional para OBS Studio com visual broadcast premium. Ideal para canais de notícias, podcasts, rádios e transmissões ao vivo." />
-
-  <meta property="og:title" content="PontoView News Overlay" />
-  <meta property="og:description" content="Overlay broadcast profissional para OBS Studio." />
-  <meta property="og:image" content="https://i.ibb.co/qM3Sm8cG/6.png" />
-  <meta property="og:type" content="website" />
-
-  <link rel="icon" href="https://i.ibb.co/qM3Sm8cG/6.png" />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-
+  <meta name="description" content="PontoView Studio: biblioteca de gráficos profissionais para transmissões ao vivo, com controle em tempo real pelo navegador." />
+  <title>PontoView Studio | Gráficos para transmissões ao vivo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-  <style>
-    :root {
-      --bg: #050816;
-      --bg-secondary: #0b1220;
-      --card: rgba(255, 255, 255, 0.06);
-      --border: rgba(255, 255, 255, 0.08);
-      --text: #ffffff;
-      --muted: #9ca3af;
-      --primary: #00d4ff;
-      --primary-2: #0084ff;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      font-family: "Inter", sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(0, 212, 255, 0.08), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(0, 132, 255, 0.08), transparent 40%),
-        var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    .gradient-text {
-      background: linear-gradient(90deg, var(--primary), var(--primary-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .glass {
-      background: var(--card);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--border);
-    }
-
-    .btn-primary {
-      background: linear-gradient(90deg, var(--primary), var(--primary-2));
-      color: #fff;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 30px rgba(0, 132, 255, 0.25);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(0, 132, 255, 0.35);
-    }
-
-    .hero-glow {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.12), transparent 30%),
-        radial-gradient(circle at 80% 30%, rgba(0, 132, 255, 0.12), transparent 30%);
-      pointer-events: none;
-    }
-
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 14px;
-      background: rgba(0, 212, 255, 0.08);
-      border: 1px solid rgba(0, 212, 255, 0.15);
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-    }
-  </style>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-
-  <!-- HEADER -->
-  <header class="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3">
-        <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView" class="h-10 w-auto" />
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="./index.html" aria-label="PontoView Studio">
+        <img class="brand-logo" src="./assets/logo-pontoview.png" alt="PontoView" /> <span class="brand-studio">Studio</span>
       </a>
-
-      <nav class="hidden md:flex items-center gap-4">
-        <a href="#beneficios" class="text-gray-300 hover:text-white transition">Benefícios</a>
-        <a href="#demo" class="text-gray-300 hover:text-white transition">Demonstração</a>
-        <a href="#planos" class="text-gray-300 hover:text-white transition">Planos</a>
+      <nav id="navLinks" class="nav-links">
+        <a class="nav-link" href="#overlays">Overlays</a>
+        <a class="nav-link" href="#studio">Studio</a>
+        <a class="nav-link" href="#como-funciona">Como funciona</a>
+        <a class="nav-link" href="#modelos">Assinatura</a>
+        <a class="nav-link" href="#faq">FAQ</a>
       </nav>
-
-      <div class="flex items-center gap-3">
-        <a href="./control.html" class="hidden sm:inline-flex border border-white/15 px-5 py-2.5 rounded-full font-medium hover:bg-white/5 transition">
-          Painel de Controle
-        </a>
-        <a href="./checkout.html" class="btn-primary px-6 py-3 rounded-full font-semibold">
-          Assinar Agora
-        </a>
+      <div class="nav-actions">
+        <button class="btn btn-ghost" data-auth-open="signin" data-logged-out>Entrar</button>
+        <button class="btn btn-primary" data-auth-open="signup" data-logged-out>Criar conta</button>
+        <a class="btn btn-primary" href="./studio.html" data-logged-in style="display:none">Abrir Studio</a>
       </div>
+      <button id="menuButton" class="btn btn-ghost icon-btn mobile-menu" aria-label="Abrir menu"><span class="material-symbols-rounded" aria-hidden="true">menu</span></button>
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="relative pt-40 pb-24 px-6">
-    <div class="hero-glow"></div>
-    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-      <div>
-        <span class="inline-block px-4 py-2 rounded-full bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-6">
-          Overlay Profissional para OBS Studio
-        </span>
-
-        <h1 class="text-5xl lg:text-7xl font-extrabold leading-tight mb-6">
-          Seu canal com visual
-          <span class="gradient-text">broadcast profissional</span>
-        </h1>
-
-        <p class="text-xl text-gray-300 leading-relaxed mb-10 max-w-2xl">
-          Um overlay elegante e moderno para canais de notícias, podcasts,
-          rádios e transmissões ao vivo. Controle títulos, chamadas e
-          informações em tempo real.
-        </p>
-
-        <div class="flex flex-wrap gap-4">
-          <a href="./checkout.html" class="btn-primary px-8 py-4 rounded-full font-semibold text-lg">
-            Assinar por R$ 49/mês
-          </a>
-          <a href="./overlay.html" class="border border-cyan-500/30 px-8 py-4 rounded-full font-semibold hover:bg-cyan-500/10 transition">
-            Ver Overlay ao Vivo
-          </a>
-          <a href="./control.html" class="border border-white/15 px-8 py-4 rounded-full font-semibold hover:bg-white/5 transition">
-            Acessar Painel
-          </a>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">PontoView Studio</span>
+          <h1>Sua marca <span class="accent">em cena.</span></h1>
+          <p>Identidade visual para transmissões ao vivo. Overlays profissionais, informação organizada e controle simples para colocar sua marca em cena.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#overlays">Explorar overlays</a>
+            <button class="btn btn-ghost" data-auth-open="signin">Entrar no Studio</button>
+          </div>
+          <div class="hero-meta">
+            <span><i></i> Sem instalação na versão online</span>
+            <span><i></i> Desktop + mobile</span>
+            <span><i></i> Browser Source</span>
+          </div>
         </div>
-
-        <div class="mt-8 flex flex-wrap gap-6 text-sm text-gray-400">
-          <span>✓ Compatível com OBS</span>
-          <span>✓ Atualização em tempo real</span>
-          <span>✓ Sem instalação</span>
+        <div class="broadcast-shell hero-product-demo" aria-label="Demonstração fiel do PontoView News">
+          <div class="pvnews-demo pvnews-demo-hero">
+            <div class="pvnews-video" aria-hidden="true"><div class="pvnews-video-panel"></div><div class="pvnews-silhouette"></div></div>
+            <div class="pvnews-bug"><img src="./assets/logo-pontoview.png" alt="PontoView" /></div>
+            <div class="pvnews-anchor">
+              <div class="pvnews-lower-frame">
+                <div class="pvnews-module-column">
+                  <div class="pvnews-live">AO VIVO</div>
+                  <div class="pvnews-module"><div class="pvnews-module-brand"><span>PontoView<br>News</span></div><div class="pvnews-module-clock"><span>24 AGO</span><i></i><span>13:25</span></div></div>
+                </div>
+                <div class="pvnews-content-column">
+                  <div class="pvnews-detail-strip"><div class="pvnews-topic">POLÍTICA</div><div class="pvnews-person"><strong>ANA MARTINS</strong><i></i><span>REPÓRTER</span></div></div>
+                  <div class="pvnews-gc"><div class="pvnews-headline">CONGRESSO RETOMA VOTAÇÕES NESTA SEMANA</div><div class="pvnews-support">Líderes partidários negociam a pauta do plenário</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="pvnews-ticker"><div class="pvnews-ticker-tag">ÚLTIMAS</div><div class="pvnews-ticker-window"><span>Informações e notícias da PontoView em tempo real.</span></div><div class="pvnews-ticker-right">24 AGO · 13:25</div></div>
+          </div>
+          <div class="workstation-card" aria-label="Miniatura do controle real do PontoView News">
+            <div class="workstation-top"><strong>PontoView</strong><span>Broadcast Graphics Workstation</span><i></i></div>
+            <div class="workstation-main">
+              <div class="workstation-monitor"><b>PREVIEW</b><span class="workstation-screen pvw"></span></div>
+              <div class="workstation-rack"><span>PVW</span><strong>TAKE</strong><span>OUT</span></div>
+              <div class="workstation-monitor"><b>PROGRAM</b><span class="workstation-screen pgm"></span></div>
+            </div>
+            <div class="workstation-docks"><span>ELEMENTOS</span><span>EDIÇÃO</span><span>PRESETS / NOTAS</span></div>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="relative">
-        <div class="glass rounded-3xl p-4 shadow-2xl">
-          <img src="https://i.ibb.co/Kx6SPs84/1.png" alt="Demonstração do Overlay" class="rounded-2xl w-full bg-white p-4" />
-        </div>
-      </div>
+    <div class="logo-strip">
+      <div class="container logo-strip-inner"><strong>PontoView News hoje</strong><span>Preview / Program</span><span>TAKE</span><span>OBS Browser Source</span><span>1920 × 1080</span><span>Desktop + mobile</span></div>
     </div>
-  </section>
 
-  <!-- BENEFÍCIOS -->
-  <section id="beneficios" class="py-24 px-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4">Tudo o que você precisa para uma transmissão profissional</h2>
-        <p class="text-gray-400 text-lg max-w-3xl mx-auto">
-          Desenvolvido para criadores, rádios, podcasts e canais de notícias
-          que desejam elevar o padrão visual de suas transmissões.
-        </p>
-      </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="glass p-8 rounded-3xl">
-          <div class="feature-icon">🎬</div>
-          <h3 class="font-semibold text-xl mb-3">Visual Premium</h3>
-          <p class="text-gray-400">Design inspirado em grandes emissoras de TV.</p>
-        </div>
-        <div class="glass p-8 rounded-3xl">
-          <div class="feature-icon">🖥️</div>
-          <h3 class="font-semibold text-xl mb-3">OBS Ready</h3>
-          <p class="text-gray-400">Basta adicionar como Browser Source.</p>
-        </div>
-        <div class="glass p-8 rounded-3xl">
-          <div class="feature-icon">⚡</div>
-          <h3 class="font-semibold text-xl mb-3">Tempo Real</h3>
-          <p class="text-gray-400">Atualizações instantâneas no overlay.</p>
-        </div>
-        <div class="glass p-8 rounded-3xl">
-          <div class="feature-icon">☁️</div>
-          <h3 class="font-semibold text-xl mb-3">100% Online</h3>
-          <p class="text-gray-400">Sem instalação, acesso direto no navegador.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DEMO -->
-  <section id="demo" class="py-24 px-6">
-    <div class="max-w-6xl mx-auto text-center">
-      <h2 class="text-4xl font-bold mb-6">Veja o overlay em ação</h2>
-      <p class="text-gray-400 text-lg mb-12">Qualidade visual profissional para elevar sua produção.</p>
-      <div class="glass rounded-3xl p-4">
-        <img src="https://i.ibb.co/Kx6SPs84/1.png" alt="Overlay em ação" class="rounded-2xl w-full bg-white p-6" />
-      </div>
-    </div>
-  </section>
-
-  <!-- PLANOS -->
-  <section id="planos" class="py-24 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="glass rounded-3xl p-12 text-center relative overflow-hidden">
-        <div class="absolute top-0 right-0 bg-cyan-400 text-black px-4 py-2 rounded-bl-2xl font-bold text-sm">
-          MAIS POPULAR
-        </div>
-
-        <h2 class="text-4xl font-bold mb-4">Plano Pro</h2>
-        <p class="text-gray-400 mb-8">Acesso completo ao PontoView News Overlay.</p>
-
-        <div class="text-6xl font-extrabold mb-2">
-          R$ 49
-          <span class="text-xl font-medium text-gray-400">/mês</span>
-        </div>
-        <p class="text-gray-500 mb-8">Cancele quando quiser.</p>
-
-        <ul class="text-gray-300 space-y-3 my-10 text-left max-w-md mx-auto">
-          <li>✓ Overlay profissional completo</li>
-          <li>✓ Painel de controle online</li>
-          <li>✓ Atualizações gratuitas</li>
-          <li>✓ Licença comercial</li>
-          <li>✓ Suporte prioritário</li>
-        </ul>
-
-        <a href="./checkout.html" class="btn-primary inline-block px-10 py-4 rounded-full font-bold text-lg">
-          Assinar Agora
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="py-24 px-6">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="text-4xl font-bold text-center mb-12">Perguntas Frequentes</h2>
-      <div class="space-y-6">
-        <div class="glass p-6 rounded-2xl">
-          <h3 class="font-semibold mb-2">Funciona no OBS Studio?</h3>
-          <p class="text-gray-400">Sim. Basta adicionar a URL do overlay como Browser Source.</p>
-        </div>
-        <div class="glass p-6 rounded-2xl">
-          <h3 class="font-semibold mb-2">Preciso instalar algo?</h3>
-          <p class="text-gray-400">Não. Todo o sistema funciona diretamente no navegador.</p>
-        </div>
-        <div class="glass p-6 rounded-2xl">
-          <h3 class="font-semibold mb-2">Posso cancelar quando quiser?</h3>
-          <p class="text-gray-400">Sim, o plano é mensal e pode ser cancelado a qualquer momento.</p>
-        </div>
-        <div class="glass p-6 rounded-2xl">
-          <h3 class="font-semibold mb-2">Como funciona o pagamento?</h3>
-          <p class="text-gray-400">Via Mercado Pago. Após o pagamento, sua conta é ativada automaticamente.</p>
-        </div>
-        <div class="glass p-6 rounded-2xl">
-          <h3 class="font-semibold mb-2">O que acontece se eu atrasar o pagamento?</h3>
-          <p class="text-gray-400">Você tem um prazo de tolerância. Após esse prazo, o acesso é suspenso automaticamente até a regularização.</p>
+    <section id="overlays" class="section">
+      <div class="container">
+        <span class="eyebrow">Biblioteca</span>
+        <h2 class="section-title">Um Studio. Diferentes identidades.</h2>
+        <p class="section-copy">A biblioteca começa com o PontoView News. Cada overlay nasce como um produto próprio, mas compartilha a mesma experiência de conta e operação do Studio.</p>
+        <div class="library-grid">
+          <article class="product-card">
+            <div class="product-visual product-news-real">
+              <div class="pvnews-demo pvnews-demo-card">
+                <div class="pvnews-video pvnews-video-clean" aria-hidden="true"></div>
+                <div class="pvnews-bug pvnews-bug-text">PV NEWS</div>
+                <div class="pvnews-anchor">
+                  <div class="pvnews-highlight"><div class="pvnews-highlight-tag">DESTAQUE</div><div class="pvnews-highlight-body"><strong>PAUTA DO DIA</strong><span>Informação complementar em bloco independente</span></div></div>
+                  <div class="pvnews-lower-frame">
+                    <div class="pvnews-module-column"><div class="pvnews-live">AO VIVO</div><div class="pvnews-module"><div class="pvnews-module-brand"><span>PontoView<br>News</span></div><div class="pvnews-module-clock"><span>24 AGO</span><i></i><span>13:25</span></div></div></div>
+                    <div class="pvnews-content-column"><div class="pvnews-detail-strip"><div class="pvnews-topic">BRASIL</div><div class="pvnews-person"><strong>MARINA COSTA</strong><i></i><span>JORNALISTA</span></div></div><div class="pvnews-gc"><div class="pvnews-headline">NOTÍCIAS COM IDENTIDADE VISUAL PRÓPRIA</div><div class="pvnews-support">GC, editoria, identificação e apoio em uma única régua</div></div></div>
+                  </div>
+                </div>
+                <div class="pvnews-ticker"><div class="pvnews-ticker-tag">ÚLTIMAS</div><div class="pvnews-ticker-window"><span>Ticker contínuo para informações e chamadas.</span></div><div class="pvnews-ticker-right">13:25</div></div>
+              </div>
+            </div>
+            <div class="product-body">
+              <div class="product-head"><div><h3>PontoView News</h3><p class="muted">Sistema gráfico para notícias, entrevistas e informação.</p></div><span class="status-pill"><i></i> DISPONÍVEL</span></div>
+              <div class="product-features"><span class="chip">GC principal</span><span class="chip">Nome e cargo</span><span class="chip">Editorias</span><span class="chip">Ticker</span><span class="chip">Destaques</span><span class="chip">Logo / Bug</span><span class="chip">Módulo lateral</span></div>
+              <div class="hero-actions"><a class="btn btn-primary" href="./news.html">Conhecer o News</a><a class="btn btn-ghost" href="#demo">Testar demonstração</a></div>
+            </div>
+          </article>
+          <article class="future-card">
+            <div><div class="future-art"><span class="material-symbols-rounded" aria-hidden="true">layers</span></div><span class="eyebrow">Em evolução</span><h3>Novos overlays entram aqui.</h3><p class="muted">O Studio foi preparado para crescer com novos sistemas gráficos sem transformar a home em um catálogo de promessas.</p></div>
+            <a class="btn btn-ghost" href="mailto:contato@pontoview.com.br?subject=Novidades%20PontoView%20Studio">Receber novidades</a>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA FINAL -->
-  <section class="py-24 px-6 text-center">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="text-5xl font-bold mb-6">Leve sua transmissão para outro nível</h2>
-      <p class="text-xl text-gray-400 mb-10">Assine hoje e tenha um overlay profissional em minutos.</p>
-      <a href="./checkout.html" class="btn-primary px-10 py-5 rounded-full font-bold text-lg">
-        Começar Agora
-      </a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="border-t border-white/5 py-8 px-6">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <img src="https://i.ibb.co/qM3Sm8cG/6.png" alt="PontoView" class="h-8" />
-      <p class="text-gray-500 text-sm">© 2026 PontoView. Todos os direitos reservados.</p>
-      <div class="flex gap-4 text-sm text-gray-500">
-        <a href="#" class="hover:text-white transition">Privacidade</a>
-        <a href="#" class="hover:text-white transition">Termos</a>
+    <section id="studio" class="section section-dark">
+      <div class="container">
+        <span class="eyebrow">Operação</span>
+        <h2 class="section-title">Um estúdio gráfico no navegador.</h2>
+        <p class="section-copy">Prepare o próximo gráfico sem alterar o que está no ar. Quando estiver pronto, TAKE. Simples para pequenas operações, familiar para quem conhece broadcast.</p>
+        <div class="features-grid">
+          <article class="feature-card"><div class="feature-icon"><span class="material-symbols-rounded" aria-hidden="true">visibility</span></div><h3>Preview</h3><p>Edite textos, estilos e elementos em uma área separada da transmissão.</p></article>
+          <article class="feature-card"><div class="feature-icon"><span class="material-symbols-rounded" aria-hidden="true">live_tv</span></div><h3>Program</h3><p>Veja com clareza o estado que está efetivamente sendo exibido ao público.</p></article>
+          <article class="feature-card"><div class="feature-icon"><span class="material-symbols-rounded" aria-hidden="true">publish</span></div><h3>TAKE</h3><p>Envie o estado preparado para o ar apenas quando a operação estiver pronta.</p></article>
+          <article class="feature-card"><div class="feature-icon"><span class="material-symbols-rounded" aria-hidden="true">smartphone</span></div><h3>Mobile</h3><p>Atalhos de ação e presets otimizados para controlar rapidamente pelo celular.</p></article>
+        </div>
       </div>
+    </section>
+
+    <section id="demo" class="section">
+      <div class="container">
+        <span class="eyebrow">Experimente a operação</span>
+        <h2 class="section-title">Prepare no Preview. Coloque no ar com TAKE.</h2>
+        <p class="section-copy">A demonstração abaixo usa a mesma lógica do PontoView News: editoria, identificação, manchete, apoio e ticker são preparados primeiro. O Program só muda quando o operador executa o TAKE.</p>
+        <div class="demo-grid demo-grid-real">
+          <div class="demo-panel demo-editor-real">
+            <div class="field"><label for="demoTag">Editoria</label><input id="demoTag" value="ECONOMIA" maxlength="28" /></div>
+            <div class="demo-row-2">
+              <div class="field"><label for="demoName">Nome</label><input id="demoName" value="ANA MARTINS" maxlength="32" /></div>
+              <div class="field"><label for="demoRole">Cargo</label><input id="demoRole" value="REPÓRTER" maxlength="32" /></div>
+            </div>
+            <div class="field"><label for="demoHeadline">Manchete</label><input id="demoHeadline" value="MERCADO FECHA O DIA EM ALTA" maxlength="80" /></div>
+            <div class="field"><label for="demoDetail">Linha de apoio</label><input id="demoDetail" value="Principais índices avançaram nesta sessão" maxlength="100" /></div>
+            <div class="field"><label for="demoTicker">Ticker</label><input id="demoTicker" value="Mercado acompanha novos dados divulgados nesta tarde." maxlength="140" /></div>
+            <div class="demo-actions"><button id="demoPreview" class="btn">Atualizar Preview</button><button id="demoTake" class="btn btn-danger">TAKE</button></div>
+            <div class="demo-note">Editar os campos não altera o que está no ar. A atualização visual acontece somente ao enviar o conteúdo para Preview ou Program.</div>
+          </div>
+          <div class="demo-stage-wrap real-stage-wrap">
+            <div class="demo-monitor preview-monitor">
+              <div class="demo-monitor-head"><span>PREVIEW</span><span class="monitor-state monitor-state-preview">● PVW</span></div>
+              <div class="pvnews-demo pvnews-demo-monitor preview-border" id="previewFrame">
+                <div class="pvnews-video pvnews-video-clean" aria-hidden="true"></div>
+                <div class="pvnews-anchor"><div class="pvnews-lower-frame"><div class="pvnews-module-column"><div class="pvnews-live">AO VIVO</div><div class="pvnews-module"><div class="pvnews-module-brand"><span>PontoView<br>News</span></div><div class="pvnews-module-clock"><span>24 AGO</span><i></i><span>13:25</span></div></div></div><div class="pvnews-content-column"><div class="pvnews-detail-strip"><div class="pvnews-topic" id="previewTag">ECONOMIA</div><div class="pvnews-person"><strong id="previewName">ANA MARTINS</strong><i></i><span id="previewRole">REPÓRTER</span></div></div><div class="pvnews-gc"><div class="pvnews-headline" id="previewHeadline">MERCADO FECHA O DIA EM ALTA</div><div class="pvnews-support" id="previewDetail">Principais índices avançaram nesta sessão</div></div></div></div></div>
+                <div class="pvnews-ticker"><div class="pvnews-ticker-tag">ÚLTIMAS</div><div class="pvnews-ticker-window"><span id="previewTicker">Mercado acompanha novos dados divulgados nesta tarde.</span></div><div class="pvnews-ticker-right">13:25</div></div>
+              </div>
+            </div>
+            <div class="demo-monitor program-monitor">
+              <div class="demo-monitor-head"><span>PROGRAM</span><span class="monitor-state monitor-state-program">● PGM</span></div>
+              <div class="pvnews-demo pvnews-demo-monitor program-border" id="programFrame">
+                <div class="pvnews-video pvnews-video-clean" aria-hidden="true"></div>
+                <div class="pvnews-anchor"><div class="pvnews-lower-frame"><div class="pvnews-module-column"><div class="pvnews-live">AO VIVO</div><div class="pvnews-module"><div class="pvnews-module-brand"><span>PontoView<br>News</span></div><div class="pvnews-module-clock"><span>24 AGO</span><i></i><span>13:25</span></div></div></div><div class="pvnews-content-column"><div class="pvnews-detail-strip"><div class="pvnews-topic" id="programTag">NOTÍCIAS</div><div class="pvnews-person"><strong id="programName">PONTO VIEW</strong><i></i><span id="programRole">STUDIO</span></div></div><div class="pvnews-gc"><div class="pvnews-headline" id="programHeadline">PROGRAMA PERMANECE INDEPENDENTE</div><div class="pvnews-support" id="programDetail">O conteúdo no ar só muda quando o operador executa o TAKE</div></div></div></div></div>
+                <div class="pvnews-ticker"><div class="pvnews-ticker-tag">ÚLTIMAS</div><div class="pvnews-ticker-window"><span id="programTicker">Preview e Program trabalham como estados separados.</span></div><div class="pvnews-ticker-right">13:25</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="section section-dark">
+      <div class="container">
+        <span class="eyebrow">Acesso</span><h2 class="section-title">Do site ao controle.</h2>
+        <p class="section-copy">A biblioteca é pública para conhecer. A operação é liberada na conta após a assinatura.</p>
+        <div class="steps">
+          <article class="step"><span class="step-num">01 · CONHEÇA</span><h3>Veja a biblioteca</h3><p>Conheça os overlays disponíveis e veja como cada sistema funciona.</p></article>
+          <article class="step"><span class="step-num">02 · ACESSE</span><h3>Crie sua conta</h3><p>Entre no PontoView Studio com seu próprio login.</p></article>
+          <article class="step"><span class="step-num">03 · ASSINE</span><h3>Libere o Studio</h3><p>Após a confirmação do pagamento, os produtos disponíveis na sua conta são liberados.</p></article>
+          <article class="step"><span class="step-num">04 · OPERE</span><h3>Escolha e abra</h3><p>Selecione o overlay e siga para Canal, Programa, Sessão e Controle.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="modelos" class="section">
+      <div class="container">
+        <span class="eyebrow">Assinatura</span><h2 class="section-title">Um acesso. Uma biblioteca.</h2>
+        <p class="section-copy">A assinatura libera o PontoView Studio na sua conta. Hoje, o produto disponível para operação é o PontoView News.</p>
+        <div class="studio-plan-wrap">
+          <article class="pricing-card featured studio-plan-card"><span class="pricing-badge">PONTOVIEW STUDIO</span><div><h3>Assinatura mensal</h3><p class="muted">Entre, escolha o overlay disponível e opere pelo navegador.</p><div class="price">R$ 59 <small>/ mês</small></div><p class="small">Cobrança recorrente mensal. O acesso permanece ativo enquanto a assinatura estiver vigente.</p></div><ul class="pricing-list"><li>Acesso à biblioteca da sua conta</li><li>PontoView News disponível atualmente</li><li>Controle desktop e mobile</li><li>Preview / Program / TAKE</li><li>Sincronização e atualizações online</li></ul><div class="plan-actions"><button class="btn btn-primary" data-auth-open="signup">Criar conta e continuar</button><button class="btn btn-ghost" data-auth-open="signin">Já tenho uma conta</button></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="container">
+        <span class="eyebrow">FAQ</span><h2 class="section-title">Perguntas antes do TAKE.</h2>
+        <div class="faq">
+          <div class="faq-item open"><button class="faq-q"><span>Como o overlay entra na transmissão?</span><span class="material-symbols-rounded faq-icon" aria-hidden="true">expand_less</span></button><div class="faq-a">O PontoView News gera uma URL de Browser Source para a sessão. A implementação atual é preparada e testada para uso no OBS em 1920 × 1080 com fundo transparente.</div></div>
+          <div class="faq-item"><button class="faq-q"><span>Preciso pagar antes de usar?</span><span class="material-symbols-rounded faq-icon" aria-hidden="true">expand_more</span></button><div class="faq-a">Sim. Você pode conhecer a biblioteca sem login, mas abrir e operar os overlays exige uma conta com assinatura ativa.</div></div>
+          <div class="faq-item"><button class="faq-q"><span>Quais overlays estão disponíveis hoje?</span><span class="material-symbols-rounded faq-icon" aria-hidden="true">expand_more</span></button><div class="faq-a">Neste momento, o produto disponível para operação é o PontoView News. Novos overlays só serão apresentados como disponíveis quando estiverem prontos para uso.</div></div>
+          <div class="faq-item"><button class="faq-q"><span>Posso controlar pelo celular?</span><span class="material-symbols-rounded faq-icon" aria-hidden="true">expand_more</span></button><div class="faq-a">Sim. A experiência mobile prioriza ações rápidas, presets e comandos de Preview/TAKE para operações em movimento.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight"><div class="container"><div class="cta-panel"><h2>Conheça a biblioteca. Entre quando estiver pronto para operar.</h2><button class="btn" data-auth-open="signup">Criar conta no Studio</button></div></div></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><a class="brand" href="./index.html"><img class="brand-logo" src="./assets/logo-pontoview.png" alt="PontoView" /> <span class="brand-studio">Studio</span></a><p class="small" style="max-width:330px;margin-top:16px">Biblioteca de gráficos profissionais para transmissões ao vivo.</p></div>
+        <div class="footer-col"><h4>Produto</h4><a href="#overlays">Overlays</a><a href="./news.html">PontoView News</a><a href="#studio">Como funciona</a><a href="#modelos">Assinatura</a></div>
+        <div class="footer-col"><h4>Suporte</h4><a href="mailto:suporte@pontoview.com.br">Contato</a><a href="./studio.html">Meu Studio</a><a href="#faq">Perguntas frequentes</a></div>
+        <div class="footer-col"><h4>Legal</h4><a href="./privacidade.html">Política de Privacidade</a><a href="./termos.html">Termos de Uso</a><a href="./cookies.html">Política de Cookies</a><a href="#" data-cookie-settings>Preferências de cookies</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 PontoView. Todos os direitos reservados.</span><span>PontoView Studio · Sua marca em cena.</span></div>
     </div>
   </footer>
 
+  <div id="authModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Acesso ao PontoView Studio">
+    <div class="modal"><div class="modal-head"><h2>Acessar o Studio</h2><button id="closeAuth" class="close-btn" aria-label="Fechar"><span class="material-symbols-rounded" aria-hidden="true">close</span></button></div>
+      <div class="auth-tabs"><button class="auth-tab active" data-auth-mode="signin">Entrar</button><button class="auth-tab" data-auth-mode="signup">Criar conta</button></div>
+      <form id="authForm" class="auth-form">
+        <div id="nameField" class="field" style="display:none"><label>Nome</label><input id="authName" autocomplete="name" placeholder="Seu nome" /></div>
+        <div class="field"><label>E-mail</label><input id="authEmail" type="email" autocomplete="email" required placeholder="voce@canal.com.br" /></div>
+        <div class="field"><label>Senha</label><input id="authPassword" type="password" minlength="8" autocomplete="current-password" required placeholder="Mínimo de 8 caracteres" /></div>
+        <div id="authMessage" class="auth-message"></div>
+        <button id="authSubmit" class="btn btn-primary btn-wide" type="submit">Entrar</button>
+        <div style="text-align:center;margin-top:13px"><button id="resetPassword" type="button" class="text-link">Esqueci minha senha</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="cookieBanner" class="cookie-banner"><div class="cookie-inner"><p><strong style="color:white">Sua privacidade importa.</strong> Usamos cookies essenciais para autenticação e preferências. Recursos opcionais só são ativados com sua permissão.</p><div class="cookie-actions"><button id="cookieEssential" class="btn btn-ghost">Usar só essenciais</button><button id="cookieAccept" class="btn btn-primary">Aceitar opcionais</button></div></div></div>
+
+  <script src="./app-config.js"></script>
+  <script src="./js/demo.js"></script>
+  <script type="module" src="./js/app.js"></script>
 </body>
 </html>
