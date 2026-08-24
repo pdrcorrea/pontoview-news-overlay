@@ -1,0 +1,32 @@
+[hidden]{display:none!important}
+
+.pv-sidebar-logout{margin-top:auto}
+.pv-main-clean{max-width:1180px;padding-top:34px}
+.pv-page-heading-clean{margin-bottom:22px}
+.pv-page-heading-clean h1{font-size:clamp(32px,3.6vw,46px);margin-bottom:8px}
+.pv-page-heading-clean p{font-size:14px}
+.pv-paywall-compact{margin:0 0 24px;padding:16px 18px;box-shadow:none}
+.pv-paywall-compact .pv-paywall-copy p{font-size:11px}
+.pv-overlay-grid-single{grid-template-columns:minmax(0,900px);max-width:900px}
+.pv-overlay-card-body-clean{padding:20px}
+.pv-overlay-card-body-clean .pv-overlay-actions{margin-top:18px}
+.pv-overlay-card-body-clean p{max-width:650px}
+.pv-billing-clean{max-width:760px}
+.pv-account-grid-clean{max-width:900px}
+.pv-account-grid-clean .pv-settings-card{min-height:0}
+
+@media(max-width:900px){
+  .pv-main-clean{padding-top:24px}
+  .pv-overlay-grid-single{grid-template-columns:1fr}
+  .pv-paywall-compact{align-items:flex-start}
+}
+
+@media(max-width:640px){
+  .pv-page-heading-clean h1{font-size:32px}
+  .pv-paywall-compact{display:grid;gap:14px}
+  .pv-paywall-compact .pv-button{width:100%}
+  .pv-topbar-actions{gap:6px}
+  .pv-subscription-chip{padding:0 8px}
+  .pv-user-button>div{display:none}
+  .pv-overlay-card-body-clean{padding:17px}
+}
