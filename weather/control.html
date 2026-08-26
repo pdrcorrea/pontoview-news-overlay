@@ -23,7 +23,7 @@
       <span class="pill"><span id="conn-dot" class="conn-dot"></span><span id="conn-label">Offline</span></span>
       <span id="live-pill" class="pill">SEM SESSÃO</span>
       <span id="user-email" class="pill"></span>
-      <button id="logout-btn" class="btn ghost hidden" type="button"><span class="material-symbols-rounded">logout</span></button>
+      <button id="logout-btn" class="btn ghost hidden" type="button" title="Sair"><span class="material-symbols-rounded">logout</span></button>
     </div>
   </header>
 
@@ -33,11 +33,11 @@
         <div class="auth-info">
           <span class="weather-brand-mark"><span class="material-symbols-rounded">partly_cloudy_day</span> PontoView Weather</span>
           <h1>Clima com linguagem de broadcast.</h1>
-          <p>Prepare até cinco cidades em Preview, confira os dados meteorológicos e coloque o widget no ar apenas quando estiver pronto.</p>
+          <p>Prepare até cinco cidades em Preview, escolha a localização correta e coloque o widget no ar apenas quando estiver pronto.</p>
           <div class="feature-list">
             <div class="feature"><span class="material-symbols-rounded">compare_arrows</span><div><strong>Preview / Program</strong><br><small>Edite sem alterar o que está no ar.</small></div></div>
-            <div class="feature"><span class="material-symbols-rounded">location_city</span><div><strong>Até 5 cidades</strong><br><small>Rotação automática ou painel multi-cidades.</small></div></div>
-            <div class="feature"><span class="material-symbols-rounded">cloud_sync</span><div><strong>Open-Meteo</strong><br><small>Dados atuais, mínima, máxima, umidade e vento.</small></div></div>
+            <div class="feature"><span class="material-symbols-rounded">location_city</span><div><strong>1 a 5 cidades</strong><br><small>Carrossel automático ou painel simultâneo.</small></div></div>
+            <div class="feature"><span class="material-symbols-rounded">cloud_sync</span><div><strong>Dados via backend</strong><br><small>Cache central e atualização meteorológica automática.</small></div></div>
           </div>
         </div>
         <div class="auth-form">
@@ -63,18 +63,13 @@
             <button id="create-channel-btn" class="btn" type="button"><span class="material-symbols-rounded">add</span>Criar canal</button>
           </div>
         </article>
-
         <div class="side-stack">
           <article id="program-panel" class="panel selector-panel hidden">
             <h2>Programa</h2><p id="selected-channel">Selecione um canal</p>
             <div id="program-list" class="entity-list"></div>
-            <div class="fields-2">
-              <div class="field"><label for="new-program-name">Programa</label><input id="new-program-name" placeholder="Ex.: Jornal da Tarde"></div>
-              <div class="field"><label for="new-program-slug">Slug</label><input id="new-program-slug" placeholder="jornal-da-tarde"></div>
-            </div>
+            <div class="fields-2"><div class="field"><label for="new-program-name">Programa</label><input id="new-program-name" placeholder="Ex.: Jornal da Tarde"></div><div class="field"><label for="new-program-slug">Slug</label><input id="new-program-slug" placeholder="jornal-da-tarde"></div></div>
             <button id="create-program-btn" class="btn" type="button"><span class="material-symbols-rounded">add</span>Criar programa</button>
           </article>
-
           <article id="session-panel" class="panel selector-panel hidden">
             <h2>Sessão ao vivo</h2><p id="selected-program">Selecione um programa</p>
             <div id="session-list" class="entity-list"></div>
@@ -95,32 +90,23 @@
         <article class="panel monitor preview">
           <div class="monitor-head"><div class="monitor-title"><span class="material-symbols-rounded">visibility</span>Preview</div><span class="monitor-badge">PVW</span></div>
           <div class="weather-monitor-screen"><div class="weather-safe"></div><div id="preview-stage" class="weather-stage"></div></div>
-          <div class="monitor-meta"><span id="preview-meta">Pronto para editar</span><span id="preview-weather-meta">Dados locais</span></div>
+          <div class="monitor-meta"><span id="preview-meta">Pronto para editar</span><span id="preview-weather-meta">Backend Weather</span></div>
         </article>
-
         <article class="panel monitor program">
           <div class="monitor-head"><div class="monitor-title"><span class="material-symbols-rounded">sensors</span>Program</div><span class="monitor-badge">PGM</span></div>
           <div class="weather-monitor-screen"><div class="weather-safe"></div><div id="program-stage" class="weather-stage"></div></div>
           <div class="monitor-meta"><span id="program-meta">Fora do ar</span><span id="session-status-label">READY</span></div>
         </article>
-
         <aside class="take-stack">
-          <div class="weather-actions">
-            <button id="on-air-btn" class="air-btn on" type="button">ON AIR</button>
-            <button id="take-btn" class="take-btn" type="button">TAKE</button>
-            <button id="off-air-btn" class="air-btn off" type="button">OFF AIR</button>
-          </div>
-          <div class="weather-pvw-actions">
-            <button id="pvw-show-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility</span>PVW ON</button>
-            <button id="pvw-hide-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility_off</span>PVW OFF</button>
-          </div>
+          <div class="weather-actions"><button id="on-air-btn" class="air-btn on" type="button">ON AIR</button><button id="take-btn" class="take-btn" type="button">TAKE</button><button id="off-air-btn" class="air-btn off" type="button">OFF AIR</button></div>
+          <div class="weather-pvw-actions"><button id="pvw-show-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility</span>PVW ON</button><button id="pvw-hide-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility_off</span>PVW OFF</button></div>
           <section class="panel quick-bank">
-            <h3>Layouts</h3>
+            <h3>Presets de comportamento</h3>
             <div class="layout-bank">
-              <button class="btn layout-btn" data-template="compact" type="button">Compacto</button>
-              <button class="btn layout-btn" data-template="informative" type="button">Informativo</button>
-              <button class="btn layout-btn" data-template="complete" type="button">Completo</button>
-              <button class="btn layout-btn" data-template="multi" type="button">Multi</button>
+              <button class="btn layout-btn" data-preset="compact" type="button">Compacto</button>
+              <button class="btn layout-btn" data-preset="informative" type="button">Informativo</button>
+              <button class="btn layout-btn" data-preset="complete" type="button">Completo</button>
+              <button class="btn layout-btn" data-preset="multi" type="button">Multi-cidades</button>
             </div>
           </section>
         </aside>
@@ -128,65 +114,63 @@
 
       <div class="lower-grid">
         <article class="panel editor-card">
-          <div class="editor-tabs">
-            <button class="editor-tab active" data-section="cities" type="button">Cidades</button>
-            <button class="editor-tab" data-section="display" type="button">Exibição</button>
-            <button class="editor-tab" data-section="style" type="button">Estilo</button>
-          </div>
+          <div class="editor-tabs"><button class="editor-tab active" data-section="cities" type="button">Cidades</button><button class="editor-tab" data-section="display" type="button">Exibição</button><button class="editor-tab" data-section="style" type="button">Estilo</button></div>
 
           <section id="section-cities" class="editor-section active">
-            <div class="field"><label>Adicionar cidade</label><div class="city-search"><input id="city-search-input" placeholder="Digite cidade, estado ou CEP"><button id="city-search-btn" class="btn" type="button"><span class="material-symbols-rounded">search</span>Buscar</button></div><div id="city-search-results" class="search-results"></div></div>
-            <div id="city-list" class="city-list"></div><div id="city-limit" class="city-limit">0 / 5 cidades</div>
-            <div class="fields-2">
-              <label class="switchline"><div><strong>Rotação automática</strong><small>Alterna as cidades no layout individual.</small></div><input id="rotation-enabled" type="checkbox"></label>
-              <div class="field"><label for="rotation-interval">Tempo por cidade</label><select id="rotation-interval"><option value="5">5 segundos</option><option value="8">8 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option><option value="20">20 segundos</option></select></div>
+            <div class="field">
+              <label>Pesquisar localização</label>
+              <div class="city-search"><input id="city-search-input" placeholder="Ex.: São Paulo, SP ou Paris, France"><button id="city-search-btn" class="btn" type="button"><span class="material-symbols-rounded">search</span>Buscar</button></div>
+              <div class="field-help">A cidade só é cadastrada depois que você escolhe um resultado. Estado, país e coordenadas ficam vinculados à seleção.</div>
+              <div id="city-search-results" class="search-results"></div>
             </div>
+            <div id="city-list" class="city-list"></div><div id="city-limit" class="city-limit">0 / 5 cidades</div>
+
+            <div class="behavior-grid">
+              <div class="field"><label for="mode-select">Modo de exibição</label><select id="mode-select"><option value="carousel">Carrossel · uma cidade por vez</option><option value="panel">Painel · cidades simultâneas</option></select></div>
+              <div class="field"><label for="rotation-interval">Tempo por cidade</label><select id="rotation-interval"><option value="5">5 segundos</option><option value="8">8 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option><option value="20">20 segundos</option></select></div>
+              <label class="switchline"><div><strong>Rotação automática</strong><small>No carrossel, alterna as cidades mantendo a moldura.</small></div><input id="rotation-enabled" type="checkbox"></label>
+            </div>
+
+            <div class="manual-city-wrap"><div><strong>Cidade no Preview</strong><small>Escolha manualmente qual cidade inicia no TAKE.</small></div><div id="manual-city-bank" class="manual-city-bank"></div></div>
           </section>
 
           <section id="section-display" class="editor-section">
             <div class="fields-2">
-              <div class="field"><label for="position-select">Posição</label><select id="position-select"><option value="top-left">Superior esquerda</option><option value="top-right">Superior direita</option><option value="bottom-left">Inferior esquerda</option><option value="bottom-right">Inferior direita</option></select></div>
-              <div class="field"><label for="template-select">Layout</label><select id="template-select"><option value="compact">Compacto</option><option value="informative">Informativo</option><option value="complete">Completo</option><option value="multi">Multi-cidades</option></select></div>
+              <div class="field"><label for="template-select">Conteúdo do módulo</label><select id="template-select"><option value="compact">Compacto · cidade + temperatura</option><option value="informative">Informativo · + condição</option><option value="complete">Completo · + mínima/máxima</option></select></div>
+              <div class="field"><label>Tamanho</label><div class="fixed-size-note"><span class="material-symbols-rounded">aspect_ratio</span><div><strong>Módulo lateral PontoView</strong><small>Mesmo footprint visual do módulo lateral do News.</small></div></div></div>
             </div>
+
+            <div class="field"><label>Posição na tela</label><div id="position-grid" class="position-grid" role="group" aria-label="Posição do widget">
+              <button type="button" data-position="top-left" title="Superior esquerda">↖</button><button type="button" data-position="top-center" title="Superior centro">↑</button><button type="button" data-position="top-right" title="Superior direita">↗</button>
+              <button type="button" data-position="middle-left" title="Centro esquerda">←</button><button type="button" data-position="middle-center" title="Centro">•</button><button type="button" data-position="middle-right" title="Centro direita">→</button>
+              <button type="button" data-position="bottom-left" title="Inferior esquerda">↙</button><button type="button" data-position="bottom-center" title="Inferior centro">↓</button><button type="button" data-position="bottom-right" title="Inferior direita">↘</button>
+            </div></div>
+            <div class="fields-2"><div class="field"><label>Deslocamento horizontal</label><div class="offset-control"><input id="offset-x" type="range" min="-300" max="300" step="10"><output id="offset-x-output">0 px</output></div></div><div class="field"><label>Deslocamento vertical</label><div class="offset-control"><input id="offset-y" type="range" min="-220" max="220" step="10"><output id="offset-y-output">0 px</output></div></div></div>
+
             <div class="fields-2">
               <label class="switchline"><div><strong>Condição</strong><small>Ex.: Parcialmente nublado</small></div><input id="show-condition" type="checkbox"></label>
               <label class="switchline"><div><strong>Mínima / máxima</strong><small>Temperaturas previstas para hoje.</small></div><input id="show-minmax" type="checkbox"></label>
-              <label class="switchline"><div><strong>Umidade</strong><small>Umidade relativa atual.</small></div><input id="show-humidity" type="checkbox"></label>
-              <label class="switchline"><div><strong>Vento</strong><small>Velocidade a 10 metros.</small></div><input id="show-wind" type="checkbox"></label>
+              <label class="switchline"><div><strong>Umidade</strong><small>Dado adicional opcional.</small></div><input id="show-humidity" type="checkbox"></label>
+              <label class="switchline"><div><strong>Vento</strong><small>Dado adicional opcional.</small></div><input id="show-wind" type="checkbox"></label>
             </div>
-            <div class="field"><label>Escala</label><div class="weather-scale"><input id="scale-range" type="range" min="0.75" max="1.35" step="0.05"><output id="scale-output">100%</output></div></div>
           </section>
 
           <section id="section-style" class="editor-section">
-            <div class="fields-2">
-              <div class="field"><label for="color-primary">Cor principal</label><input id="color-primary" class="color-input" type="color"></div>
-              <div class="field"><label for="color-secondary">Ícone / contraste</label><input id="color-secondary" class="color-input" type="color"></div>
-              <div class="field"><label for="color-surface">Fundo</label><input id="color-surface" class="color-input" type="color"></div>
-              <div class="field"><label for="color-text">Texto</label><input id="color-text" class="color-input" type="color"></div>
-            </div>
+            <div class="fields-2"><div class="field"><label for="color-primary">Cor principal</label><input id="color-primary" class="color-input" type="color"></div><div class="field"><label for="color-secondary">Ícone / contraste</label><input id="color-secondary" class="color-input" type="color"></div><div class="field"><label for="color-surface">Fundo</label><input id="color-surface" class="color-input" type="color"></div><div class="field"><label for="color-text">Texto</label><input id="color-text" class="color-input" type="color"></div></div>
             <div class="field"><label for="font-select">Fonte</label><select id="font-select"><option value="Inter">Inter</option><option value="Arial">Arial</option><option value="Roboto">Roboto</option><option value="Montserrat">Montserrat</option></select></div>
-            <div class="weather-provider"><div><strong>Open-Meteo</strong><small>Fonte meteorológica do Weather v1</small></div><span class="provider-state">Conectado</span></div>
+            <div class="weather-provider"><div><strong>PontoView Weather Backend</strong><small>Open-Meteo → cache Supabase → overlay · atualização a cada 10 min</small></div><span class="provider-state">Ativo</span></div>
           </section>
         </article>
 
         <aside class="side-stack">
-          <section class="panel preset-card">
-            <h3>Presets</h3>
-            <div class="preset-toolbar"><button id="save-preset-btn" class="btn" type="button"><span class="material-symbols-rounded">bookmark_add</span>Salvar preset</button></div>
-            <div id="preset-list" class="preset-list"></div>
-          </section>
-          <section class="panel source-card">
-            <h3>URL do overlay</h3>
-            <div class="source-row"><input id="overlay-url" readonly><button id="copy-overlay-btn" class="btn primary" type="button"><span class="material-symbols-rounded">content_copy</span>Copiar</button></div>
-            <div class="source-help">Use como Browser Source em 1920 × 1080. O fundo é transparente e a URL é somente leitura.</div>
-          </section>
+          <section class="panel preset-card"><h3>Presets salvos</h3><div class="preset-toolbar"><button id="save-preset-btn" class="btn" type="button"><span class="material-symbols-rounded">bookmark_add</span>Salvar preset</button></div><div id="preset-list" class="preset-list"></div></section>
+          <section class="panel source-card"><h3>URL do overlay</h3><div class="source-row"><input id="overlay-url" readonly><button id="copy-overlay-btn" class="btn primary" type="button"><span class="material-symbols-rounded">content_copy</span>Copiar</button></div><div class="source-help">Use como Browser Source em 1920 × 1080. A URL é única da sessão, somente leitura e pode ser usada em OBS, vMix, Wirecast e soluções compatíveis.</div></section>
         </aside>
       </div>
     </section>
   </main>
 
   <div id="toast-host" class="toast-host"></div>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.min.js"></script>
   <script src="weather-config.js"></script>
   <script src="weather-studio.js"></script>
