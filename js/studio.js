@@ -2,8 +2,11 @@
   'use strict';
 
   const config = window.PV_CONFIG || {};
-  const NEWS_CONTROL_URL = './control.html';
   const CHECKOUT_URL = './checkout.html';
+  const PRODUCT_URLS = Object.freeze({
+    news_overlay: './control.html',
+    weather_overlay: './weather/control.html'
+  });
   const qs = (s, r = document) => r.querySelector(s);
   const qsa = (s, r = document) => [...r.querySelectorAll(s)];
   const fmtDate = value => value ? new Intl.DateTimeFormat('pt-BR', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(value)) : '—';
@@ -12,6 +15,7 @@
   let client = null;
   let currentUser = null;
   let accessActive = false;
+  let productAccess = new Map();
 
   const authScreen = qs('#authScreen');
   const studioShell = qs('#studioShell');
@@ -64,8 +68,15 @@
     });
   }
 
-  function applyAccess(active, subscription = null) {
-    accessActive = !!active;
+  function isValidSubscription(subscription) {
+    return !!(subscription?.active && (!subscription.expires_at || new Date(subscription.expires_at) > new Date()));
+  }
+
+  function applyAccess(subscriptions = []) {
+    const validSubscriptions = (Array.isArray(subscriptions) ? subscriptions : [subscriptions]).filter(isValidSubscription);
+    productAccess = new Map(validSubscriptions.map(subscription => [subscription.product, subscription]));
+    accessActive = productAccess.size > 0;
+
     const chip = qs('#subscriptionChip');
     if (chip) {
       chip.classList.remove('is-checking', 'is-active', 'is-locked');
@@ -77,6 +88,7 @@
     const paywall = qs('#paywallBanner');
     if (paywall) paywall.hidden = accessActive;
 
+    const billingSubscription = productAccess.get('news_overlay') || productAccess.get('weather_overlay') || validSubscriptions[0] || null;
     const billingStatus = qs('#billingStatus');
     if (billingStatus) {
       billingStatus.textContent = accessActive ? 'ATIVA' : 'INATIVA';
@@ -84,12 +96,16 @@
     }
     const started = qs('#billingStarted');
     const expires = qs('#billingExpires');
-    if (started) started.textContent = fmtDate(subscription?.started_at);
-    if (expires) expires.textContent = fmtDate(subscription?.expires_at);
+    if (started) started.textContent = fmtDate(billingSubscription?.started_at);
+    if (expires) expires.textContent = fmtDate(billingSubscription?.expires_at);
 
-    qsa('[data-product="news_overlay"]').forEach(card => card.classList.toggle('is-locked', !accessActive));
-    qsa('[data-open-product="news_overlay"]').forEach(btn => {
-      btn.textContent = accessActive ? 'Abrir overlay' : 'Assinar para usar';
+    qsa('[data-product]').forEach(card => {
+      const unlocked = productAccess.has(card.dataset.product);
+      card.classList.toggle('is-locked', !unlocked);
+    });
+    qsa('[data-open-product]').forEach(btn => {
+      const unlocked = productAccess.has(btn.dataset.openProduct);
+      btn.textContent = unlocked ? 'Abrir overlay' : 'Assinar para usar';
     });
     qsa('[data-action="subscribe"]').forEach(btn => {
       btn.textContent = accessActive ? 'Gerenciar assinatura' : 'Assinar';
@@ -134,28 +150,30 @@
     }));
 
     qsa('[data-open-product]').forEach(btn => btn.addEventListener('click', () => {
-      if (!accessActive) { location.href = CHECKOUT_URL; return; }
-      if (btn.dataset.openProduct === 'news_overlay') location.href = NEWS_CONTROL_URL;
+      const product = btn.dataset.openProduct;
+      if (!productAccess.has(product)) { location.href = CHECKOUT_URL; return; }
+      const target = PRODUCT_URLS[product];
+      if (target) location.href = target;
     }));
 
     qs('#logoutButton')?.addEventListener('click', async () => {
       if (client) await client.auth.signOut();
       currentUser = null;
       accessActive = false;
+      productAccess.clear();
       showAuth();
     });
   }
 
   async function loadAccount(user) {
-    const [{ data:profile }, { data:subscription, error:subscriptionError }] = await Promise.all([
+    const [{ data:profile }, { data:subscriptions, error:subscriptionError }] = await Promise.all([
       client.from('profiles').select('full_name,email,avatar_url').eq('id', user.id).maybeSingle(),
-      client.from('subscriptions').select('product,active,started_at,expires_at,created_at').eq('user_id', user.id).eq('product', config.product || 'news_overlay').eq('active', true).order('created_at', { ascending:false }).limit(1).maybeSingle()
+      client.from('subscriptions').select('product,active,started_at,expires_at,created_at').eq('user_id', user.id).eq('active', true).order('created_at', { ascending:false })
     ]);
 
     applyUser(user, profile || null);
-    if (subscriptionError) console.warn('Não foi possível consultar a assinatura:', subscriptionError.message);
-    const valid = !!(subscription?.active && (!subscription.expires_at || new Date(subscription.expires_at) > new Date()));
-    applyAccess(valid, valid ? subscription : null);
+    if (subscriptionError) console.warn('Não foi possível consultar as assinaturas:', subscriptionError.message);
+    applyAccess(subscriptions || []);
   }
 
   async function authenticate(email, password) {
