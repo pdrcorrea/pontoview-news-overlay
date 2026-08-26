@@ -26,6 +26,24 @@
 .pv-weather-condition{grid-column:1/-1;grid-row:2;display:flex;align-items:center;justify-content:center;background:#082b5b;color:#fff;font-size:9px;font-weight:800;letter-spacing:.05em}
 .pv-weather-cities{position:absolute;right:6%;bottom:20%;display:grid;gap:8px}.pv-weather-cities span{min-width:128px;padding:9px 12px;border-left:4px solid #87d7fc;background:rgba(255,255,255,.95);color:#10233a;font-size:9px;font-weight:900;letter-spacing:.04em;box-shadow:0 6px 18px rgba(0,0,0,.16)}
 
+/* Weather library showcase: strongly scoped so generic Studio rules cannot flatten the widget. */
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-preview{position:relative!important;display:block!important;min-height:300px!important;background:radial-gradient(circle at 70% 26%,rgba(101,212,241,.11),transparent 28%),linear-gradient(145deg,#07182b,#0b2239)!important;color:#fff!important;overflow:hidden!important;isolation:isolate}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-preview:before{content:""!important;position:absolute!important;inset:0!important;display:block!important;background:linear-gradient(90deg,rgba(101,212,241,.045) 1px,transparent 1px),linear-gradient(rgba(101,212,241,.045) 1px,transparent 1px)!important;background-size:42px 42px!important;opacity:.75!important;z-index:0!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-preview-label{position:absolute!important;left:7%!important;top:9%!important;z-index:2!important;display:block!important;color:#8edcff!important;font-size:9px!important;font-weight:900!important;letter-spacing:.18em!important;line-height:1!important;text-transform:uppercase!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-module{position:absolute!important;left:7%!important;bottom:17%!important;width:45%!important;min-width:0!important;height:48%!important;display:grid!important;grid-template-columns:36% 64%!important;grid-template-rows:minmax(0,1fr) 31px!important;background:#fff!important;color:#10243c!important;box-shadow:0 18px 40px rgba(0,0,0,.34)!important;overflow:hidden!important;z-index:2!important;animation:pvWeatherLibraryWipe .58s cubic-bezier(.2,.76,.2,1) both!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-module:before{content:""!important;position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:5px!important;background:#0a57aa!important;z-index:5!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-module:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 25%,rgba(255,255,255,.9) 49%,transparent 72%);transform:translateX(-120%);pointer-events:none;z-index:6;animation:pvWeatherLibraryFlash 4.2s ease-in-out 1.2s infinite}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-icon{grid-column:1!important;grid-row:1!important;display:grid!important;place-items:center!important;background:#0a57aa!important;color:#fff!important;padding:0!important;min-width:0!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-icon .material-symbols-rounded{display:block!important;color:#fff!important;font-size:clamp(34px,4vw,52px)!important;line-height:1!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-main{grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;min-width:0!important;padding:11px 14px!important;background:#fff!important;color:#10243c!important;line-height:1!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-main strong{display:block!important;margin:0!important;color:#10243c!important;font-family:Manrope,Inter,sans-serif!important;font-size:clamp(27px,3.3vw,43px)!important;font-weight:800!important;line-height:.86!important;letter-spacing:-.07em!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-main span{display:block!important;width:100%!important;margin:9px 0 0!important;color:#10243c!important;font-size:clamp(8px,.8vw,11px)!important;font-weight:900!important;letter-spacing:.065em!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-transform:uppercase!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-condition{grid-column:1/-1!important;grid-row:2!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;padding:0 12px!important;background:#082b5b!important;color:#fff!important;font-size:8px!important;font-weight:900!important;letter-spacing:.055em!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-transform:uppercase!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-cities{position:absolute!important;right:7%!important;bottom:17%!important;z-index:2!important;display:grid!important;gap:7px!important;width:31%!important}
+.pv-overlay-card[data-product="weather_overlay"] .pv-weather-cities span{display:block!important;min-width:0!important;width:100%!important;margin:0!important;padding:8px 10px!important;border:0!important;border-left:4px solid #65d4f1!important;background:rgba(255,255,255,.96)!important;color:#10243c!important;box-shadow:0 8px 20px rgba(0,0,0,.2)!important;font-size:8px!important;font-weight:900!important;letter-spacing:.04em!important;line-height:1.15!important;text-transform:uppercase!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+@keyframes pvWeatherLibraryWipe{from{clip-path:inset(0 100% 0 0);opacity:.2;transform:translateX(-7px)}to{clip-path:inset(0 0 0 0);opacity:1;transform:translateX(0)}}
+@keyframes pvWeatherLibraryFlash{0%,78%,100%{transform:translateX(-120%);opacity:0}82%{opacity:.7}88%{transform:translateX(120%);opacity:0}}
+
 @media(max-width:900px){
   .pv-main-clean{padding-top:24px}
   .pv-overlay-grid-library,.pv-overlay-grid-single{grid-template-columns:1fr}
@@ -40,5 +58,12 @@
   .pv-subscription-chip{padding:0 8px}
   .pv-user-button>div{display:none}
   .pv-overlay-card-body-clean{padding:17px}
-  .pv-weather-preview{min-height:230px}.pv-weather-module{width:53%;min-width:180px}.pv-weather-cities{display:none}
+  .pv-overlay-card[data-product="weather_overlay"] .pv-weather-preview{min-height:230px!important}
+  .pv-overlay-card[data-product="weather_overlay"] .pv-weather-module{width:58%!important;height:50%!important}
+  .pv-overlay-card[data-product="weather_overlay"] .pv-weather-cities{display:none!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pv-overlay-card[data-product="weather_overlay"] .pv-weather-module,
+  .pv-overlay-card[data-product="weather_overlay"] .pv-weather-module:after{animation:none!important}
 }
