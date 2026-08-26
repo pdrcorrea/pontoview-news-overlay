@@ -1,0 +1,158 @@
+/* PontoView Weather Visual v2
+   Loaded after the original Weather styles to preserve backward compatibility.
+*/
+
+:root{
+  --wx-compact-w:clamp(270px,21vw,410px);
+  --wx-compact-h:clamp(44px,5.8vh,66px);
+  --wx-card-w:clamp(178px,12.4vw,252px);
+  --wx-card-h:clamp(120px,15.2vh,174px);
+  --wx-detail-w:clamp(210px,14.8vw,300px);
+  --wx-detail-h:clamp(218px,27.6vh,318px);
+  --wx-panel-w:clamp(150px,10.4vw,212px);
+  --wx-panel-h:clamp(78px,9.6vh,110px);
+  --wx-cold:#22aeea;
+  --wx-hot:#cc2734;
+  --wx-navy:#082b5b;
+  --wx-ease:cubic-bezier(.2,.76,.2,1);
+}
+
+#weather-root .weather-card,
+.weather-stage .weather-card{
+  border-radius:2px;
+  background:var(--w-surface,#fff);
+  box-shadow:0 12px 28px rgba(0,0,0,.22);
+  isolation:isolate;
+}
+
+#weather-root .weather-card::after,
+.weather-stage .weather-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:8;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(8,43,91,.12);
+}
+
+#weather-root .weather-accent,
+.weather-stage .weather-accent{
+  width:clamp(3px,.28vw,6px);
+  background:var(--w-primary,#003366);
+  z-index:7;
+}
+
+#weather-root .weather-icon-box,
+.weather-stage .weather-icon-box{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--w-primary,#003366) 93%,#fff 7%),var(--w-primary,#003366));
+}
+
+#weather-root .weather-temp,
+.weather-stage .weather-temp{font-variant-numeric:tabular-nums}
+
+#weather-root .weather-flash,
+.weather-stage .weather-flash{
+  position:absolute;
+  inset:-2px;
+  z-index:12;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.18) 22%,rgba(255,255,255,.95) 48%,color-mix(in srgb,var(--w-primary,#003366) 35%,#fff 65%) 64%,transparent 100%);
+  mix-blend-mode:screen;
+}
+
+.weather-city-marquee{display:inline-block;min-width:max-content;white-space:nowrap;will-change:transform}
+.weather-city.is-marquee .weather-city-marquee{animation:weather-city-slide var(--marquee-duration,9s) var(--wx-ease) infinite}
+@keyframes weather-city-slide{0%,16%{transform:translateX(0)}68%,84%{transform:translateX(calc(-1 * var(--city-shift,0px)))}100%{transform:translateX(0)}}
+
+/* Compacto */
+#weather-root .weather-card.template-compact{width:var(--wx-compact-w)!important;height:var(--wx-compact-h)!important;min-width:0!important;min-height:0!important}
+#weather-root .weather-card.template-compact .weather-city-content{display:grid!important;grid-template-columns:minmax(0,1fr) clamp(52px,4.3vw,82px) clamp(70px,5.4vw,104px);grid-template-rows:100%;width:100%;height:100%;overflow:hidden}
+#weather-root .weather-card.template-compact .weather-top,#weather-root .weather-card.template-compact .weather-main{display:contents!important}
+#weather-root .weather-card.template-compact .weather-icon-box{grid-column:2;grid-row:1;width:auto!important;min-width:0!important;padding:0!important;color:var(--w-secondary,#fff)}
+#weather-root .weather-card.template-compact .weather-icon-box svg{width:48%;height:62%;min-width:0;min-height:0}
+#weather-root .weather-card.template-compact .weather-temp{grid-column:3;grid-row:1;display:flex;align-items:center;justify-content:center;padding:0 clamp(8px,.62vw,12px);background:color-mix(in srgb,var(--w-surface,#fff) 80%,#94a3b8 20%);color:var(--w-text,#111827);font-size:clamp(23px,1.9vw,37px)!important;line-height:1}
+#weather-root .weather-card.template-compact .weather-city{grid-column:1;grid-row:1;margin:0!important;display:flex;align-items:center;min-width:0;overflow:hidden!important;padding:0 clamp(12px,1vw,20px);background:var(--w-surface,#fff);color:var(--w-text,#111827);font-size:clamp(12px,.92vw,18px)!important;font-weight:900;letter-spacing:.025em!important}
+#weather-root .weather-card.template-compact .weather-support,#weather-root .weather-card.template-compact .weather-condition-inline{display:none!important}
+
+/* Card */
+#weather-root .weather-card.template-informative{width:var(--wx-card-w)!important;height:var(--wx-card-h)!important;min-width:0!important;min-height:0!important}
+#weather-root .weather-card.template-informative .weather-city-content{display:grid!important;grid-template-columns:48% 52%;grid-template-rows:minmax(0,1fr) clamp(29px,3.8vh,43px) clamp(24px,3vh,34px);width:100%;height:100%}
+#weather-root .weather-card.template-informative .weather-top,#weather-root .weather-card.template-informative .weather-main{display:contents!important}
+#weather-root .weather-card.template-informative .weather-icon-box{grid-column:1;grid-row:1;width:auto!important;min-width:0!important;padding:0!important;color:var(--w-secondary,#fff)}
+#weather-root .weather-card.template-informative .weather-icon-box svg{width:58%;height:58%;min-width:0;min-height:0}
+#weather-root .weather-card.template-informative .weather-temp{grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:center;padding:0!important;background:color-mix(in srgb,var(--w-surface,#fff) 77%,#94a3b8 23%);color:var(--w-text,#111827);font-size:clamp(31px,2.5vw,48px)!important}
+#weather-root .weather-card.template-informative .weather-city{grid-column:1/-1;grid-row:2;margin:0!important;display:flex;align-items:center;overflow:hidden;padding:0 clamp(10px,.78vw,15px);background:color-mix(in srgb,var(--w-surface,#fff) 68%,#94a3b8 32%);color:var(--w-text,#111827);font-size:clamp(13px,1.02vw,19px)!important;font-weight:950;letter-spacing:.02em!important}
+#weather-root .weather-card.template-informative .weather-support{grid-column:1/-1;grid-row:3;height:auto!important;min-height:0!important;display:flex!important;padding:0 clamp(10px,.78vw,15px);justify-content:flex-start;background:var(--wx-navy);color:#fff;font-size:clamp(8px,.6vw,11px)!important;letter-spacing:.06em}
+#weather-root .weather-card.template-informative .weather-condition-inline{display:none!important}
+
+/* Detalhado */
+#weather-root .weather-card.template-complete{width:var(--wx-detail-w)!important;height:var(--wx-detail-h)!important;min-width:0!important;min-height:0!important}
+#weather-root .weather-card.template-complete .weather-city-content{display:grid!important;grid-template-columns:50% 50%;grid-template-rows:clamp(44px,5.5vh,64px) clamp(27px,3.4vh,39px) minmax(0,1fr) clamp(36px,4.6vh,52px);width:100%;height:100%}
+#weather-root .weather-card.template-complete .weather-top,#weather-root .weather-card.template-complete .weather-main{display:contents!important}
+#weather-root .weather-card.template-complete .weather-city{grid-column:1/-1;grid-row:1;margin:0!important;display:flex;align-items:center;padding:0 clamp(12px,.9vw,18px);overflow:hidden;background:color-mix(in srgb,var(--w-surface,#fff) 72%,#94a3b8 28%);color:var(--w-text,#111827);font-size:clamp(14px,1.12vw,21px)!important;font-weight:950;letter-spacing:.018em!important}
+#weather-root .weather-card.template-complete .weather-condition-inline{grid-column:1/-1;grid-row:2;margin:0!important;display:flex!important;align-items:center;padding:0 clamp(12px,.9vw,18px);background:color-mix(in srgb,var(--w-surface,#fff) 84%,#94a3b8 16%);color:var(--w-muted,#667585);font-size:clamp(9px,.67vw,12px)!important;font-weight:800;text-transform:uppercase;letter-spacing:.055em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#weather-root .weather-card.template-complete .weather-icon-box{grid-column:1;grid-row:3;width:auto!important;min-width:0!important;padding:0!important;color:var(--w-secondary,#fff)}
+#weather-root .weather-card.template-complete .weather-icon-box svg{width:55%;height:55%;min-width:0;min-height:0}
+#weather-root .weather-card.template-complete .weather-temp{grid-column:2;grid-row:3;display:flex;align-items:center;justify-content:center;padding:0!important;background:color-mix(in srgb,var(--w-surface,#fff) 76%,#94a3b8 24%);color:var(--w-text,#111827);font-size:clamp(38px,3vw,58px)!important}
+#weather-root .weather-card.template-complete .weather-support{grid-column:1/-1;grid-row:4;height:auto!important;min-height:0!important;padding:0!important;display:flex!important;background:var(--wx-navy)!important}
+#weather-root .weather-card.template-complete .weather-minmax{height:100%;gap:0!important;display:grid!important;grid-auto-flow:column;grid-auto-columns:1fr}
+#weather-root .weather-card.template-complete .weather-minmax span{min-width:0;display:flex!important;align-items:center;justify-content:center;gap:4px!important;padding:0 7px;color:#fff;font-size:clamp(10px,.78vw,14px);overflow:hidden;white-space:nowrap}
+#weather-root .weather-card.template-complete .weather-minmax span:nth-child(1){background:var(--wx-cold)}
+#weather-root .weather-card.template-complete .weather-minmax span:nth-child(2){background:var(--wx-hot)}
+#weather-root .weather-card.template-complete .weather-minmax span:nth-child(n+3){background:var(--wx-navy);font-size:.85em}
+
+/* Multi-cidades */
+#weather-root .weather-panel{display:flex!important;flex-direction:row!important;align-items:flex-start!important;gap:clamp(2px,.16vw,4px)!important;max-width:calc(100vw - (var(--safe-x)*2))!important}
+#weather-root .weather-panel .weather-card{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;flex:0 0 var(--wx-panel-w)!important;width:var(--wx-panel-w)!important;height:var(--wx-panel-h)!important;min-width:0!important;min-height:0!important;transform:none!important}
+#weather-root .weather-panel .weather-city-content{display:grid!important;grid-template-columns:38% 62%;grid-template-rows:minmax(0,1fr) clamp(23px,2.9vh,33px);width:100%;height:100%}
+#weather-root .weather-panel .weather-top,#weather-root .weather-panel .weather-main{display:contents!important}
+#weather-root .weather-panel .weather-icon-box{grid-column:1;grid-row:1;width:auto!important;min-width:0!important;padding:0!important}
+#weather-root .weather-panel .weather-icon-box svg{width:48%;height:48%;min-width:0;min-height:0}
+#weather-root .weather-panel .weather-temp{grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:flex-start;padding:0 clamp(8px,.55vw,11px)!important;background:color-mix(in srgb,var(--w-surface,#fff) 80%,#94a3b8 20%);font-size:clamp(23px,1.75vw,34px)!important}
+#weather-root .weather-panel .weather-city{grid-column:1/-1;grid-row:2;margin:0!important;display:flex;align-items:center;padding:0 clamp(8px,.55vw,11px);overflow:hidden;background:var(--w-surface,#fff);color:var(--w-text,#111827);font-size:clamp(9px,.66vw,12px)!important;font-weight:950;letter-spacing:.02em!important}
+#weather-root .weather-panel .weather-support,#weather-root .weather-panel .weather-condition-inline{display:none!important}
+
+/* Studio monitor */
+.weather-stage .weather-card{min-width:0!important;min-height:0!important}
+.weather-stage .weather-card.template-compact{width:34cqw!important;height:9.5cqh!important}
+.weather-stage .weather-card.template-compact .weather-city-content{display:grid!important;grid-template-columns:minmax(0,1fr) 22% 27%;width:100%;height:100%}
+.weather-stage .weather-card.template-compact .weather-top,.weather-stage .weather-card.template-compact .weather-main{display:contents!important}
+.weather-stage .weather-card.template-compact .weather-icon-box{grid-column:2;width:auto!important;padding:0!important}
+.weather-stage .weather-card.template-compact .weather-temp{grid-column:3;display:flex;align-items:center;justify-content:center;padding:0!important;background:color-mix(in srgb,var(--w-surface,#fff) 80%,#94a3b8 20%);font-size:clamp(11px,2.2cqw,25px)!important}
+.weather-stage .weather-card.template-compact .weather-city{grid-column:1;grid-row:1;margin:0!important;display:flex;align-items:center;padding:0 1.15cqw;overflow:hidden!important;background:var(--w-surface,#fff);font-size:clamp(6px,.95cqw,11px)!important}
+.weather-stage .weather-card.template-compact .weather-support,.weather-stage .weather-card.template-compact .weather-condition-inline{display:none!important}
+
+.weather-stage .weather-card.template-informative{width:20cqw!important;height:25cqh!important}
+.weather-stage .weather-card.template-informative .weather-city-content{display:grid!important;grid-template-columns:48% 52%;grid-template-rows:minmax(0,1fr) 26% 21%;width:100%;height:100%}
+.weather-stage .weather-card.template-informative .weather-top,.weather-stage .weather-card.template-informative .weather-main{display:contents!important}
+.weather-stage .weather-card.template-informative .weather-icon-box{grid-column:1;grid-row:1;width:auto!important;padding:0!important}
+.weather-stage .weather-card.template-informative .weather-temp{grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:center;padding:0!important;background:color-mix(in srgb,var(--w-surface,#fff) 77%,#94a3b8 23%);font-size:clamp(13px,3.2cqw,32px)!important}
+.weather-stage .weather-card.template-informative .weather-city{grid-column:1/-1;grid-row:2;margin:0!important;display:flex;align-items:center;padding:0 1cqw;overflow:hidden;background:color-mix(in srgb,var(--w-surface,#fff) 68%,#94a3b8 32%);font-size:clamp(6px,1.05cqw,12px)!important}
+.weather-stage .weather-card.template-informative .weather-support{grid-column:1/-1;grid-row:3;height:auto!important;min-height:0!important;display:flex!important;justify-content:flex-start;padding:0 1cqw;background:var(--wx-navy);font-size:clamp(5px,.65cqw,8px)!important}
+.weather-stage .weather-card.template-informative .weather-condition-inline{display:none!important}
+
+.weather-stage .weather-card.template-complete{width:23cqw!important;height:43cqh!important}
+.weather-stage .weather-card.template-complete .weather-city-content{display:grid!important;grid-template-columns:50% 50%;grid-template-rows:20% 13% minmax(0,1fr) 18%;width:100%;height:100%}
+.weather-stage .weather-card.template-complete .weather-top,.weather-stage .weather-card.template-complete .weather-main{display:contents!important}
+.weather-stage .weather-card.template-complete .weather-city{grid-column:1/-1;grid-row:1;margin:0!important;display:flex;align-items:center;padding:0 1.1cqw;overflow:hidden;background:color-mix(in srgb,var(--w-surface,#fff) 72%,#94a3b8 28%);font-size:clamp(7px,1.18cqw,13px)!important}
+.weather-stage .weather-card.template-complete .weather-condition-inline{grid-column:1/-1;grid-row:2;margin:0!important;display:flex!important;align-items:center;padding:0 1.1cqw;background:color-mix(in srgb,var(--w-surface,#fff) 84%,#94a3b8 16%);font-size:clamp(5px,.65cqw,8px)!important}
+.weather-stage .weather-card.template-complete .weather-icon-box{grid-column:1;grid-row:3;width:auto!important;padding:0!important}
+.weather-stage .weather-card.template-complete .weather-temp{grid-column:2;grid-row:3;display:flex;align-items:center;justify-content:center;padding:0!important;background:color-mix(in srgb,var(--w-surface,#fff) 76%,#94a3b8 24%);font-size:clamp(16px,4cqw,38px)!important}
+.weather-stage .weather-card.template-complete .weather-support{grid-column:1/-1;grid-row:4;height:auto!important;min-height:0!important;padding:0!important;display:flex!important;background:var(--wx-navy)!important}
+.weather-stage .weather-card.template-complete .weather-minmax{height:100%;display:grid!important;grid-auto-flow:column;grid-auto-columns:1fr;gap:0!important}
+.weather-stage .weather-card.template-complete .weather-minmax span{display:flex!important;align-items:center;justify-content:center;padding:0 .5cqw;font-size:clamp(5px,.72cqw,8px)}
+.weather-stage .weather-card.template-complete .weather-minmax span:nth-child(1){background:var(--wx-cold)}
+.weather-stage .weather-card.template-complete .weather-minmax span:nth-child(2){background:var(--wx-hot)}
+.weather-stage .weather-card.template-complete .weather-minmax span:nth-child(n+3){background:var(--wx-navy)}
+
+.weather-stage .weather-panel{display:flex!important;flex-direction:row!important;gap:.25cqw!important;max-width:90%!important}
+.weather-stage .weather-panel .weather-card{position:relative!important;flex:0 0 17.4cqw!important;width:17.4cqw!important;height:15cqh!important;transform:none!important}
+.weather-stage .weather-panel .weather-city-content{display:grid!important;grid-template-columns:38% 62%;grid-template-rows:minmax(0,1fr) 28%;width:100%;height:100%}
+.weather-stage .weather-panel .weather-top,.weather-stage .weather-panel .weather-main{display:contents!important}
+.weather-stage .weather-panel .weather-icon-box{grid-column:1;grid-row:1;width:auto!important;padding:0!important}
+.weather-stage .weather-panel .weather-temp{grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:flex-start;padding:0 .8cqw!important;background:color-mix(in srgb,var(--w-surface,#fff) 80%,#94a3b8 20%);font-size:clamp(10px,2.2cqw,24px)!important}
+.weather-stage .weather-panel .weather-city{grid-column:1/-1;grid-row:2;margin:0!important;display:flex;align-items:center;padding:0 .8cqw;overflow:hidden;background:var(--w-surface,#fff);font-size:clamp(5px,.72cqw,8px)!important}
+.weather-stage .weather-panel .weather-support,.weather-stage .weather-panel .weather-condition-inline{display:none!important}
+
+@media (prefers-reduced-motion:reduce){.weather-city.is-marquee .weather-city-marquee{animation:none}}

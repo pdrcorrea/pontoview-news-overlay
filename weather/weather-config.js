@@ -40,3 +40,24 @@ window.PV_WEATHER_CONFIG = Object.freeze({
     }
   }
 });
+
+(() => {
+  const script = document.currentScript;
+  const base = script?.src ? new URL('.', script.src) : new URL('./', location.href);
+
+  if (!document.querySelector('link[data-pv-weather-visual-v2]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = new URL('weather-visual-v2.css', base).href;
+    link.dataset.pvWeatherVisualV2 = 'true';
+    document.head.appendChild(link);
+  }
+
+  if (!document.querySelector('script[data-pv-weather-effects]')) {
+    const effects = document.createElement('script');
+    effects.src = new URL('weather-visual-effects.js', base).href;
+    effects.async = false;
+    effects.dataset.pvWeatherEffects = 'true';
+    document.head.appendChild(effects);
+  }
+})();
