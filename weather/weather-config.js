@@ -3,14 +3,12 @@ window.PV_WEATHER_CONFIG = Object.freeze({
   supabaseKey: 'sb_publishable_hd9GQaTeJ18o3pwMIZevJQ_EgVIOVOp',
   product: 'weather_overlay',
   supabaseJsVersion: '2.112.3',
-  openMeteo: {
-    geocodingUrl: 'https://geocoding-api.open-meteo.com/v1/search',
-    forecastUrl: 'https://api.open-meteo.com/v1/forecast',
-    refreshMs: 10 * 60 * 1000
-  },
+  weatherApiUrl: 'https://fpdojntvnhiszagczfqr.supabase.co/functions/v1/weather-api',
+  refreshMs: 10 * 60 * 1000,
   defaultState: {
     product: 'weather_overlay',
     template: 'informative',
+    mode: 'carousel',
     locations: [],
     rotation: {
       enabled: true,
@@ -24,7 +22,9 @@ window.PV_WEATHER_CONFIG = Object.freeze({
       text: '#111827',
       muted: '#667585',
       font: 'Inter',
-      position: 'top-left',
+      position: 'bottom-left',
+      offsetX: 0,
+      offsetY: 0,
       animation: 'wipe',
       scale: 1
     },
