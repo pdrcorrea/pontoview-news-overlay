@@ -70,6 +70,15 @@
     else cityEl.textContent = abbreviateCity(original);
   }
 
+  function markDetailSegments(card) {
+    card.querySelectorAll('.weather-minmax span').forEach((span) => {
+      const text = cleanName(span.textContent);
+      span.classList.toggle('wx-min', text.startsWith('↓'));
+      span.classList.toggle('wx-max', text.startsWith('↑'));
+      span.classList.toggle('wx-meta', !text.startsWith('↓') && !text.startsWith('↑'));
+    });
+  }
+
   function ensureFlash(card) {
     let flash = card.querySelector(':scope > .weather-flash');
     if (!flash) {
@@ -106,10 +115,31 @@
     ], { duration: 260, easing: 'cubic-bezier(.2,.76,.2,1)' });
   }
 
+  function wipeStageContent(card) {
+    if (!(card instanceof HTMLElement) || reduceMotion?.matches) return;
+    const content = card.querySelector('.weather-city-content');
+    if (!content) return;
+
+    if (window.gsap) {
+      window.gsap.killTweensOf(content);
+      window.gsap.fromTo(content,
+        { clipPath: 'inset(0 100% 0 0)', opacity: .15, x: -7 },
+        { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, duration: .34, ease: 'power3.out' }
+      );
+      return;
+    }
+
+    content.animate([
+      { clipPath: 'inset(0 100% 0 0)', opacity: .15, transform: 'translateX(-7px)' },
+      { clipPath: 'inset(0 0% 0 0)', opacity: 1, transform: 'translateX(0)' }
+    ], { duration: 340, easing: 'cubic-bezier(.2,.76,.2,1)' });
+  }
+
   function processCard(card) {
     if (!(card instanceof HTMLElement)) return;
     const cities = [...card.querySelectorAll('.weather-city')];
     cities.forEach(processCity);
+    markDetailSegments(card);
 
     const primary = cities[0]?.dataset.cityOriginal || '';
     const previous = cardCity.get(card);
@@ -130,7 +160,10 @@
     const previous = stageCity.get(stage.id);
     if (previous && previous !== city) {
       const card = stage.querySelector('.weather-card');
-      if (card) flashCard(card);
+      if (card) {
+        flashCard(card);
+        wipeStageContent(card);
+      }
     }
     stageCity.set(stage.id, city);
   }
