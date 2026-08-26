@@ -9,10 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
-  <link rel="stylesheet" href="../studio.css">
-  <link rel="stylesheet" href="weather-studio.css">
+  <link rel="stylesheet" href="../studio.css?v=20260826-4">
+  <link rel="stylesheet" href="weather-studio.css?v=20260826-4">
+  <link rel="stylesheet" href="weather-visual-v2.css?v=20260826-4">
 </head>
-<body>
+<body data-weather-build="v2.1">
   <header class="topbar">
     <div class="brand">
       <img src="../assets/logo-pontoview.png" alt="PontoView">
@@ -101,11 +102,11 @@
           <div class="weather-actions"><button id="on-air-btn" class="air-btn on" type="button">ON AIR</button><button id="take-btn" class="take-btn" type="button">TAKE</button><button id="off-air-btn" class="air-btn off" type="button">OFF AIR</button></div>
           <div class="weather-pvw-actions"><button id="pvw-show-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility</span>PVW ON</button><button id="pvw-hide-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility_off</span>PVW OFF</button></div>
           <section class="panel quick-bank">
-            <h3>Presets de comportamento</h3>
+            <h3>Layouts Weather</h3>
             <div class="layout-bank">
               <button class="btn layout-btn" data-preset="compact" type="button">Compacto</button>
-              <button class="btn layout-btn" data-preset="informative" type="button">Informativo</button>
-              <button class="btn layout-btn" data-preset="complete" type="button">Completo</button>
+              <button class="btn layout-btn" data-preset="informative" type="button">Card</button>
+              <button class="btn layout-btn" data-preset="complete" type="button">Detalhado</button>
               <button class="btn layout-btn" data-preset="multi" type="button">Multi-cidades</button>
             </div>
           </section>
@@ -136,8 +137,8 @@
 
           <section id="section-display" class="editor-section">
             <div class="fields-2">
-              <div class="field"><label for="template-select">Conteúdo do módulo</label><select id="template-select"><option value="compact">Compacto · cidade + temperatura</option><option value="informative">Informativo · + condição</option><option value="complete">Completo · + mínima/máxima</option></select></div>
-              <div class="field"><label>Tamanho</label><div class="fixed-size-note"><span class="material-symbols-rounded">aspect_ratio</span><div><strong>Módulo lateral PontoView</strong><small>Mesmo footprint visual do módulo lateral do News.</small></div></div></div>
+              <div class="field"><label for="template-select">Conteúdo do módulo</label><select id="template-select"><option value="compact">Compacto · faixa horizontal com nome completo</option><option value="informative">Card · ícone + temperatura + cidade + condição</option><option value="complete">Detalhado · cidade + condição + atual + mínima/máxima</option></select></div>
+              <div class="field"><label>Tamanho</label><div class="fixed-size-note"><span class="material-symbols-rounded">aspect_ratio</span><div><strong>Proporção automática por layout</strong><small>Compacto, Card e Detalhado usam tamanhos próprios e consistentes.</small></div></div></div>
             </div>
 
             <div class="field"><label>Posição na tela</label><div id="position-grid" class="position-grid" role="group" aria-label="Posição do widget">
@@ -172,7 +173,8 @@
 
   <div id="toast-host" class="toast-host"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.min.js"></script>
-  <script src="weather-config.js"></script>
-  <script src="weather-studio.js"></script>
+  <script src="weather-config.js?v=20260826-4"></script>
+  <script src="weather-studio.js?v=20260826-4"></script>
+  <script src="weather-visual-effects.js?v=20260826-4"></script>
 </body>
 </html>
