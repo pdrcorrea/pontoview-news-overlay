@@ -5,7 +5,6 @@
   const sb = supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
   });
-
   const root = document.getElementById('weather-root');
   const token = new URLSearchParams(location.search).get('token');
   const POLL_MS = 1200;
@@ -20,12 +19,18 @@
   let refreshTimer = null;
   let refreshInFlight = false;
   let weatherInFlight = false;
+  let lastWeatherFetch = 0;
   let cityIndex = 0;
   let nextRotationAt = 0;
   const weather = new Map();
 
-  const clone = (value) => JSON.parse(JSON.stringify(value));
+  const clone = (v) => JSON.parse(JSON.stringify(v));
   const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+  const keyFor = (loc) => `${Number(loc.latitude).toFixed(4)},${Number(loc.longitude).toFixed(4)}`;
+
+  function escapeHtml(value = '') {
+    return String(value).replace(/[&<>'"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
+  }
 
   function normalize(raw) {
     const base = clone(cfg.defaultState);
@@ -33,32 +38,36 @@
       base.visibility.widget = false;
       return base;
     }
+    const legacyMulti = raw.template === 'multi';
+    const template = legacyMulti ? 'compact' : (['compact', 'informative', 'complete'].includes(raw.template) ? raw.template : base.template);
+    const positions = ['top-left','top-center','top-right','middle-left','middle-center','middle-right','bottom-left','bottom-center','bottom-right'];
+    const locations = Array.isArray(raw.locations) ? raw.locations.slice(0, 5).map((loc) => ({
+      id: String(loc.id || `${loc.latitude},${loc.longitude}`),
+      name: String(loc.name || 'Cidade'),
+      admin1: String(loc.admin1 || ''),
+      country: String(loc.country || ''),
+      countryCode: String(loc.countryCode || ''),
+      latitude: Number(loc.latitude),
+      longitude: Number(loc.longitude),
+      timezone: String(loc.timezone || 'auto')
+    })).filter((loc) => Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude)) : [];
     return {
       product: cfg.product,
-      template: ['compact', 'informative', 'complete', 'multi'].includes(raw.template) ? raw.template : base.template,
-      locations: Array.isArray(raw.locations) ? raw.locations.slice(0, 5).map((loc) => ({
-        id: String(loc.id || `${loc.latitude},${loc.longitude}`),
-        name: String(loc.name || 'Cidade'),
-        admin1: String(loc.admin1 || ''),
-        country: String(loc.country || ''),
-        countryCode: String(loc.countryCode || ''),
-        latitude: Number(loc.latitude),
-        longitude: Number(loc.longitude),
-        timezone: String(loc.timezone || 'auto')
-      })).filter((loc) => Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude)) : [],
+      template,
+      mode: legacyMulti ? 'panel' : (raw.mode === 'panel' ? 'panel' : 'carousel'),
+      locations,
       rotation: { ...base.rotation, ...(raw.rotation || {}) },
-      style: { ...base.style, ...(raw.style || {}) },
+      style: {
+        ...base.style,
+        ...(raw.style || {}),
+        position: positions.includes(raw.style?.position) ? raw.style.position : base.style.position,
+        offsetX: clamp(Number(raw.style?.offsetX || 0), -300, 300),
+        offsetY: clamp(Number(raw.style?.offsetY || 0), -220, 220),
+        scale: 1
+      },
       display: { ...base.display, ...(raw.display || {}) },
       visibility: { ...base.visibility, ...(raw.visibility || {}) }
     };
-  }
-
-  function weatherKey(loc) {
-    return `${Number(loc.latitude).toFixed(4)},${Number(loc.longitude).toFixed(4)}`;
-  }
-
-  function escapeHtml(value = '') {
-    return String(value).replace(/[&<>'"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
   }
 
   function conditionLabel(code) {
@@ -67,13 +76,13 @@
     if (code === 1) return 'Predomínio de sol';
     if (code === 2) return 'Parcialmente nublado';
     if (code === 3) return 'Nublado';
-    if ([45, 48].includes(code)) return 'Neblina';
-    if ([51, 53, 55, 56, 57].includes(code)) return 'Garoa';
-    if ([61, 63, 65, 66, 67].includes(code)) return 'Chuva';
-    if ([71, 73, 75, 77].includes(code)) return 'Neve';
-    if ([80, 81, 82].includes(code)) return 'Pancadas de chuva';
-    if ([85, 86].includes(code)) return 'Pancadas de neve';
-    if ([95, 96, 99].includes(code)) return 'Trovoadas';
+    if ([45,48].includes(code)) return 'Neblina';
+    if ([51,53,55,56,57].includes(code)) return 'Garoa';
+    if ([61,63,65,66,67].includes(code)) return 'Chuva';
+    if ([71,73,75,77].includes(code)) return 'Neve';
+    if ([80,81,82].includes(code)) return 'Pancadas de chuva';
+    if ([85,86].includes(code)) return 'Pancadas de neve';
+    if ([95,96,99].includes(code)) return 'Trovoadas';
     return 'Tempo variável';
   }
 
@@ -84,16 +93,67 @@
     const cloud = `<path d="M20 45h27c7 0 12-5 12-11 0-7-6-12-13-12h-2C41 14 35 10 27 11c-9 1-15 8-15 17-5 1-8 5-8 9 0 5 4 8 9 8h7Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
     let body = '';
     if (code === 0 || code === 1) body = isDay ? sun : moon;
-    else if ([2, 3, 45, 48].includes(code)) body = cloud;
-    else if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) body = `${cloud}<path d="M22 50l-4 7M34 50l-4 7M46 50l-4 7" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`;
-    else if ([71, 73, 75, 77, 85, 86].includes(code)) body = `${cloud}<path d="M22 52h0M34 52h0M46 52h0" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>`;
-    else if ([95, 96, 99].includes(code)) body = `${cloud}<path d="M36 48l-7 10h7l-4 8 13-14h-8l4-4" fill="currentColor"/>`;
+    else if ([2,3,45,48].includes(code)) body = cloud;
+    else if ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)) body = `${cloud}<path d="M22 50l-4 7M34 50l-4 7M46 50l-4 7" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`;
+    else if ([71,73,75,77,85,86].includes(code)) body = `${cloud}<path d="M22 52h0M34 52h0M46 52h0" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>`;
+    else if ([95,96,99].includes(code)) body = `${cloud}<path d="M36 48l-7 10h7l-4 8 13-14h-8l4-4" fill="currentColor"/>`;
     else body = cloud;
     return `<svg viewBox="0 0 64 64" aria-hidden="true">${body}</svg>`;
   }
 
-  function formatTemp(value) {
-    return Number.isFinite(Number(value)) ? `${Math.round(Number(value))}` : '—';
+  const temp = (v) => Number.isFinite(Number(v)) ? `${Math.round(Number(v))}` : '—';
+
+  async function fetchWeather(force = false) {
+    if (weatherInFlight || !currentState?.locations?.length || !token) return;
+    if (!force && Date.now() - lastWeatherFetch < cfg.refreshMs) return;
+    weatherInFlight = true;
+    try {
+      const response = await fetch(cfg.weatherApiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: cfg.supabaseKey },
+        body: JSON.stringify({ mode: 'overlay', token })
+      });
+      if (!response.ok) throw new Error(`Weather backend ${response.status}`);
+      const json = await response.json();
+      (json.data || []).forEach((row) => weather.set(row.locationKey, row));
+      lastWeatherFetch = Date.now();
+      refreshVisibleWeather();
+    } catch (error) {
+      console.warn('PontoView Weather backend:', error);
+    } finally {
+      weatherInFlight = false;
+    }
+  }
+
+  function supportHtml(state, w) {
+    if (state.template === 'compact') return '';
+    if (state.template === 'complete') {
+      const pieces = [];
+      if (state.display.showMinMax !== false) pieces.push(`<span>↓ <b>${temp(w.min)}°</b></span><span>↑ <b>${temp(w.max)}°</b></span>`);
+      if (state.display.showHumidity && Number.isFinite(Number(w.humidity))) pieces.push(`<span>UR <b>${Math.round(w.humidity)}%</b></span>`);
+      if (state.display.showWind && Number.isFinite(Number(w.wind))) pieces.push(`<span>V <b>${Math.round(w.wind)}</b></span>`);
+      return `<div class="weather-support"><div class="weather-minmax">${pieces.join('')}</div></div>`;
+    }
+    return `<div class="weather-support"><span class="condition">${escapeHtml(conditionLabel(w.code))}</span></div>`;
+  }
+
+  function cityContentHtml(state, index) {
+    const loc = state.locations[clamp(index, 0, Math.max(0, state.locations.length - 1))];
+    if (!loc) return '';
+    const w = weather.get(keyFor(loc)) || {};
+    const conditionInline = state.template === 'complete' && state.display.showCondition !== false
+      ? `<div class="weather-condition-inline">${escapeHtml(conditionLabel(w.code))}</div>` : '';
+    return `<div class="weather-top"><div class="weather-icon-box">${weatherIconSvg(w.code, w.isDay)}</div><div class="weather-main"><div class="weather-temp">${temp(w.temperature)}<sup>°C</sup></div><div class="weather-city">${escapeHtml(loc.name)}</div>${conditionInline}</div></div>${supportHtml(state, w)}`;
+  }
+
+  function cardHtml(state, index) {
+    return `<div class="weather-card template-${state.template}"><div class="weather-accent"></div><div class="weather-city-content">${cityContentHtml(state, index)}</div></div>`;
+  }
+
+  function anchorClass(position) {
+    if (position.endsWith('left')) return 'anchor-left';
+    if (position.endsWith('center')) return 'anchor-center';
+    return 'anchor-right';
   }
 
   function applyTheme(state) {
@@ -105,64 +165,6 @@
     root.style.fontFamily = state.style.font || 'Inter';
   }
 
-  async function fetchWeather(state = currentState, force = false) {
-    if (weatherInFlight || !state?.locations?.length) return;
-    const locations = state.locations;
-    const allCached = locations.every((loc) => weather.has(weatherKey(loc)));
-    if (!force && allCached) return;
-    weatherInFlight = true;
-    try {
-      const url = new URL(cfg.openMeteo.forecastUrl);
-      url.searchParams.set('latitude', locations.map((l) => l.latitude).join(','));
-      url.searchParams.set('longitude', locations.map((l) => l.longitude).join(','));
-      url.searchParams.set('current', 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m');
-      url.searchParams.set('daily', 'weather_code,temperature_2m_max,temperature_2m_min');
-      url.searchParams.set('timezone', 'auto');
-      url.searchParams.set('forecast_days', '1');
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Open-Meteo ${response.status}`);
-      const json = await response.json();
-      const rows = Array.isArray(json) ? json : [json];
-      rows.forEach((row, index) => {
-        const loc = locations[index];
-        if (!loc) return;
-        weather.set(weatherKey(loc), {
-          temperature: row.current?.temperature_2m,
-          apparent: row.current?.apparent_temperature,
-          humidity: row.current?.relative_humidity_2m,
-          wind: row.current?.wind_speed_10m,
-          code: row.current?.weather_code ?? row.daily?.weather_code?.[0],
-          isDay: row.current?.is_day !== 0,
-          min: row.daily?.temperature_2m_min?.[0],
-          max: row.daily?.temperature_2m_max?.[0],
-          updatedAt: row.current?.time || new Date().toISOString()
-        });
-      });
-      if (currentState === state && state.visibility.widget) refreshVisibleWeather();
-    } catch (error) {
-      console.warn('PontoView Weather data:', error);
-    } finally {
-      weatherInFlight = false;
-    }
-  }
-
-  function cityContentHtml(state, index) {
-    const loc = state.locations[clamp(index, 0, state.locations.length - 1)];
-    const w = weather.get(weatherKey(loc)) || {};
-    const extras = [];
-    if (state.display.showMinMax) extras.push(`<div class="weather-extra-row"><span>Mín / Máx</span><strong>${formatTemp(w.min)}° / ${formatTemp(w.max)}°</strong></div>`);
-    if (state.display.showHumidity) extras.push(`<div class="weather-extra-row"><span>Umidade</span><strong>${Number.isFinite(Number(w.humidity)) ? `${Math.round(w.humidity)}%` : '—'}</strong></div>`);
-    if (state.display.showWind) extras.push(`<div class="weather-extra-row"><span>Vento</span><strong>${Number.isFinite(Number(w.wind)) ? `${Math.round(w.wind)} km/h` : '—'}</strong></div>`);
-    return `<div class="weather-icon-box">${weatherIconSvg(w.code, w.isDay)}</div><div class="weather-main"><div class="weather-temp">${formatTemp(w.temperature)}<sup>°C</sup></div><div class="weather-copy"><div class="weather-city">${escapeHtml(loc.name)}</div>${state.display.showCondition ? `<div class="weather-condition">${escapeHtml(conditionLabel(w.code))}</div>` : ''}</div></div>${extras.length ? `<div class="weather-extra">${extras.join('')}</div>` : ''}`;
-  }
-
-  function multiHtml(state) {
-    return state.locations.map((loc) => {
-      const w = weather.get(weatherKey(loc)) || {};
-      return `<div class="weather-multi-item"><div class="weather-multi-city">${escapeHtml(loc.name)}</div><div class="weather-multi-data">${weatherIconSvg(w.code, w.isDay)}<span class="weather-multi-temp">${formatTemp(w.temperature)}°</span></div>${state.display.showCondition ? `<div class="weather-multi-cond">${escapeHtml(conditionLabel(w.code))}</div>` : ''}</div>`;
-    }).join('');
-  }
-
   function renderWidget(state, instant = false) {
     root.replaceChildren();
     if (!state.visibility.widget || !state.locations.length) return;
@@ -171,29 +173,28 @@
     const layer = document.createElement('div');
     layer.className = 'weather-layer';
     const widget = document.createElement('div');
-    widget.className = `weather-widget pos-${state.style.position || 'top-left'}`;
-    widget.style.scale = String(clamp(Number(state.style.scale || 1), .75, 1.35));
+    const position = state.style.position || 'bottom-left';
+    widget.className = `weather-widget pos-${position} ${anchorClass(position)}`;
+    widget.style.setProperty('--offset-x', `${Number(state.style.offsetX || 0)}px`);
+    widget.style.setProperty('--offset-y', `${Number(state.style.offsetY || 0)}px`);
 
-    if (state.template === 'multi') {
-      widget.innerHTML = `<div class="weather-multi">${multiHtml(state)}</div><div class="weather-credit">Dados: Open-Meteo</div>`;
+    if (state.mode === 'panel') {
+      widget.innerHTML = `<div class="weather-panel">${state.locations.map((_, i) => cardHtml(state, i)).join('')}</div><div class="weather-credit">Dados: Open-Meteo</div>`;
     } else {
-      widget.innerHTML = `<div class="weather-card template-${state.template}"><div class="weather-accent"></div><div class="weather-city-content">${cityContentHtml(state, cityIndex)}</div></div><div class="weather-credit">Dados: Open-Meteo</div>`;
+      widget.innerHTML = `${cardHtml(state, cityIndex)}<div class="weather-credit">Dados: Open-Meteo</div>`;
     }
     layer.appendChild(widget);
     root.appendChild(layer);
 
-    if (instant) {
-      gsap.set(widget, { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, y: 0 });
-    } else {
-      gsap.fromTo(widget, { clipPath: 'inset(0 100% 0 0)', opacity: 0, x: -22 }, { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, duration: .5, ease: 'power3.out', overwrite: true });
-    }
+    if (instant) gsap.set(widget, { clipPath: 'inset(0 0% 0 0)', opacity: 1 });
+    else gsap.fromTo(widget, { clipPath: 'inset(0 100% 0 0)', opacity: 0 }, { clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: .52, ease: 'power3.out', overwrite: true });
   }
 
   function animateOut(done) {
     const widget = root.querySelector('.weather-widget');
     if (!widget) return done();
     gsap.killTweensOf(widget);
-    gsap.to(widget, { clipPath: 'inset(0 100% 0 0)', opacity: 0, x: -18, duration: .22, ease: 'power2.in', overwrite: true, onComplete: done });
+    gsap.to(widget, { clipPath: 'inset(0 100% 0 0)', opacity: 0, duration: .22, ease: 'power2.in', overwrite: true, onComplete: done });
   }
 
   async function applyState(raw, instant = false) {
@@ -201,15 +202,14 @@
     currentState = next;
     cityIndex = clamp(Number(next.rotation.activeIndex || 0), 0, Math.max(0, next.locations.length - 1));
     nextRotationAt = Date.now() + Math.max(3, Number(next.rotation.interval || 8)) * 1000;
-    if (next.locations.length) await fetchWeather(next, false);
+    await fetchWeather(true);
     const commit = () => renderWidget(next, instant);
-    if (instant || !root.querySelector('.weather-widget')) commit();
-    else animateOut(commit);
+    if (instant || !root.querySelector('.weather-widget')) commit(); else animateOut(commit);
   }
 
   function rotateCity() {
     const state = currentState;
-    if (!state || !state.visibility.widget || state.template === 'multi' || !state.rotation.enabled || state.locations.length < 2) return;
+    if (!state || !state.visibility.widget || state.mode !== 'carousel' || !state.rotation.enabled || state.locations.length < 2) return;
     if (Date.now() < nextRotationAt) return;
     nextRotationAt = Date.now() + Math.max(3, Number(state.rotation.interval || 8)) * 1000;
     cityIndex = (cityIndex + 1) % state.locations.length;
@@ -217,33 +217,24 @@
     if (!content) return renderWidget(state, true);
     gsap.killTweensOf(content);
     gsap.to(content, {
-      clipPath: 'inset(0 0 0 100%)',
-      opacity: 0,
-      x: 18,
-      duration: .2,
-      ease: 'power2.in',
+      clipPath: 'inset(0 0 0 100%)', opacity: 0, x: 12, duration: .18, ease: 'power2.in',
       onComplete: () => {
         content.innerHTML = cityContentHtml(state, cityIndex);
-        gsap.set(content, { clipPath: 'inset(0 100% 0 0)', opacity: 0, x: -14 });
-        gsap.to(content, { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, duration: .34, ease: 'power3.out' });
+        gsap.set(content, { clipPath: 'inset(0 100% 0 0)', opacity: 0, x: -10 });
+        gsap.to(content, { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, duration: .3, ease: 'power3.out' });
       }
     });
   }
 
   function refreshVisibleWeather() {
     if (!currentState?.visibility.widget || !currentState.locations.length) return;
-    if (currentState.template === 'multi') {
-      const multi = root.querySelector('.weather-multi');
-      if (multi) multi.innerHTML = multiHtml(currentState);
+    if (currentState.mode === 'panel') {
+      const panel = root.querySelector('.weather-panel');
+      if (panel) panel.innerHTML = currentState.locations.map((_, i) => cardHtml(currentState, i)).join('');
       return;
     }
     const content = root.querySelector('.weather-city-content');
     if (content) content.innerHTML = cityContentHtml(currentState, cityIndex);
-  }
-
-  async function refreshWeatherNow() {
-    if (!currentState?.locations?.length) return;
-    await fetchWeather(currentState, true);
   }
 
   async function refreshProgram({ instant = false, force = false } = {}) {
@@ -251,10 +242,7 @@
     refreshInFlight = true;
     try {
       const { data, error } = await sb.rpc('get_overlay_state', { p_token: token });
-      if (error) {
-        console.error('PontoView Weather state:', error);
-        return;
-      }
+      if (error) return console.error('PontoView Weather state:', error);
       const row = Array.isArray(data) ? data[0] : data;
       if (!row?.program_state) {
         currentStatus = 'ended';
@@ -284,29 +272,20 @@
       console.error('PontoView Weather: token inválido.');
       return;
     }
-
     await refreshProgram({ instant: true, force: true });
-
     channel = sb.channel(`overlay:${token}`, { config: { private: false } })
-      .on('broadcast', { event: 'program' }, () => scheduleCanonicalRefresh(35))
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') scheduleCanonicalRefresh(0);
-        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') console.warn('PontoView Weather Realtime:', status, 'Polling permanece ativo.');
-      });
-
+      .on('broadcast', { event: 'program' }, () => scheduleCanonicalRefresh(40))
+      .subscribe((status) => { if (status === 'SUBSCRIBED') scheduleCanonicalRefresh(0); });
     pollTimer = setInterval(() => refreshProgram(), POLL_MS);
-    weatherTimer = setInterval(refreshWeatherNow, cfg.openMeteo.refreshMs);
     rotationTimer = setInterval(rotateCity, 250);
+    weatherTimer = setInterval(() => fetchWeather(false), 60 * 1000);
   }
 
-  window.addEventListener('online', () => { scheduleCanonicalRefresh(0); refreshWeatherNow(); });
+  window.addEventListener('online', () => { scheduleCanonicalRefresh(0); fetchWeather(true); });
   window.addEventListener('focus', () => scheduleCanonicalRefresh(0));
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) { scheduleCanonicalRefresh(0); refreshWeatherNow(); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleCanonicalRefresh(0); });
   window.addEventListener('beforeunload', () => {
-    clearTimeout(refreshTimer);
-    clearInterval(pollTimer);
-    clearInterval(weatherTimer);
-    clearInterval(rotationTimer);
+    clearTimeout(refreshTimer); clearInterval(pollTimer); clearInterval(rotationTimer); clearInterval(weatherTimer);
     if (channel) sb.removeChannel(channel);
   });
 
