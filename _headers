@@ -1,0 +1,8 @@
+/weather/*
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/studio
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/studio.html
+  Cache-Control: no-cache, no-store, must-revalidate
