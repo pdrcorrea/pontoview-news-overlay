@@ -20,13 +20,17 @@
     weather: new Map(),
     previewCityIndex: 0,
     programCityIndex: 0,
+    previewNextRotationAt: 0,
+    programNextRotationAt: 0,
     lastWeatherAt: 0
   };
 
   const $ = (id) => document.getElementById(id);
-  const clone = (value) => JSON.parse(JSON.stringify(value));
+  const clone = (v) => JSON.parse(JSON.stringify(v));
   const unwrap = (data) => Array.isArray(data) ? data[0] : data;
   const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+  const keyFor = (loc) => `${Number(loc.latitude).toFixed(4)},${Number(loc.longitude).toFixed(4)}`;
+  const POSITIONS = ['top-left','top-center','top-right','middle-left','middle-center','middle-right','bottom-left','bottom-center','bottom-right'];
 
   function escapeHtml(value = '') {
     return String(value).replace(/[&<>'"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
@@ -40,21 +44,37 @@
   function normalizeState(raw) {
     const base = clone(cfg.defaultState);
     if (!raw || typeof raw !== 'object' || raw.product !== cfg.product) return base;
+    const legacyMulti = raw.template === 'multi';
+    const locations = Array.isArray(raw.locations) ? raw.locations.slice(0, 5).map((loc) => ({
+      id: String(loc.id || `${loc.latitude},${loc.longitude}`),
+      name: String(loc.name || 'Cidade'),
+      admin1: String(loc.admin1 || ''),
+      admin2: String(loc.admin2 || ''),
+      country: String(loc.country || ''),
+      countryCode: String(loc.countryCode || loc.country_code || ''),
+      latitude: Number(loc.latitude),
+      longitude: Number(loc.longitude),
+      timezone: String(loc.timezone || 'auto')
+    })).filter((loc) => Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude)) : [];
     return {
       product: cfg.product,
-      template: ['compact', 'informative', 'complete', 'multi'].includes(raw.template) ? raw.template : base.template,
-      locations: Array.isArray(raw.locations) ? raw.locations.slice(0, 5).map((loc) => ({
-        id: String(loc.id || `${loc.latitude},${loc.longitude}`),
-        name: String(loc.name || 'Cidade'),
-        admin1: String(loc.admin1 || ''),
-        country: String(loc.country || ''),
-        countryCode: String(loc.countryCode || ''),
-        latitude: Number(loc.latitude),
-        longitude: Number(loc.longitude),
-        timezone: String(loc.timezone || 'auto')
-      })).filter((loc) => Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude)) : [],
-      rotation: { ...base.rotation, ...(raw.rotation || {}) },
-      style: { ...base.style, ...(raw.style || {}) },
+      template: legacyMulti ? 'compact' : (['compact','informative','complete'].includes(raw.template) ? raw.template : base.template),
+      mode: legacyMulti ? 'panel' : (raw.mode === 'panel' ? 'panel' : 'carousel'),
+      locations,
+      rotation: {
+        ...base.rotation,
+        ...(raw.rotation || {}),
+        interval: [5,8,10,15,20].includes(Number(raw.rotation?.interval)) ? Number(raw.rotation.interval) : base.rotation.interval,
+        activeIndex: clamp(Number(raw.rotation?.activeIndex || 0), 0, Math.max(0, locations.length - 1))
+      },
+      style: {
+        ...base.style,
+        ...(raw.style || {}),
+        position: POSITIONS.includes(raw.style?.position) ? raw.style.position : base.style.position,
+        offsetX: clamp(Number(raw.style?.offsetX || 0), -300, 300),
+        offsetY: clamp(Number(raw.style?.offsetY || 0), -220, 220),
+        scale: 1
+      },
       display: { ...base.display, ...(raw.display || {}) },
       visibility: { ...base.visibility, ...(raw.visibility || {}) }
     };
@@ -71,15 +91,15 @@
   }
 
   function showView(name) {
-    ['auth-view', 'selector-view', 'studio-view'].forEach((id) => $(id)?.classList.add('hidden'));
+    ['auth-view','selector-view','studio-view'].forEach((id) => $(id)?.classList.add('hidden'));
     $(`${name}-view`)?.classList.remove('hidden');
   }
 
-  function setAuthMessage(message = '', error = false) {
+  function setAuthMessage(message = '', isError = false) {
     const el = $('auth-msg');
     if (!el) return;
     el.textContent = message;
-    el.classList.toggle('error', error);
+    el.classList.toggle('error', isError);
   }
 
   function setConnection(status) {
@@ -153,11 +173,8 @@
   async function loadChannels() {
     const list = $('channel-list');
     list.innerHTML = '<div class="inline-msg">Carregando canais...</div>';
-    const { data, error } = await sb.from('workspaces')
-      .select('id,name,slug,product,created_at')
-      .eq('user_id', ctx.user.id)
-      .eq('product', cfg.product)
-      .order('created_at');
+    const { data, error } = await sb.from('workspaces').select('id,name,slug,product,created_at')
+      .eq('user_id', ctx.user.id).eq('product', cfg.product).order('created_at');
     if (error) return list.innerHTML = `<div class="inline-msg error">${escapeHtml(error.message)}</div>`;
     if (!data?.length) return list.innerHTML = '<div class="inline-msg">Nenhum canal Weather. Crie o primeiro abaixo.</div>';
     list.innerHTML = data.map((ch) => `<div class="entity" data-channel="${ch.id}"><div><strong>${escapeHtml(ch.name)}</strong><small>/${escapeHtml(ch.slug)}</small></div><span class="material-symbols-rounded">chevron_right</span></div>`).join('');
@@ -170,10 +187,8 @@
     if (!name || !slug) return toast('Informe nome e slug do canal.', 'error');
     const { data, error } = await sb.from('workspaces').insert({ user_id: ctx.user.id, product: cfg.product, name, slug }).select().single();
     if (error) return toast(error.message.includes('duplicate') ? 'Esse slug já está em uso.' : error.message, 'error');
-    $('new-channel-name').value = '';
-    $('new-channel-slug').value = '';
-    await loadChannels();
-    await selectChannel(data);
+    $('new-channel-name').value = ''; $('new-channel-slug').value = '';
+    await loadChannels(); await selectChannel(data);
   }
 
   async function selectChannel(channel) {
@@ -202,18 +217,10 @@
     const name = $('new-program-name').value.trim();
     const slug = slugify($('new-program-slug').value || name);
     if (!name || !slug) return toast('Informe o nome do programa.', 'error');
-    const { data, error } = await sb.from('programs').insert({
-      workspace_id: ctx.channel.id,
-      name,
-      slug,
-      default_template: 'weather_informative',
-      settings: { product: cfg.product }
-    }).select().single();
+    const { data, error } = await sb.from('programs').insert({ workspace_id: ctx.channel.id, name, slug, default_template: 'weather_informative', settings: { product: cfg.product } }).select().single();
     if (error) return toast(error.message, 'error');
-    $('new-program-name').value = '';
-    $('new-program-slug').value = '';
-    await loadPrograms();
-    await selectProgram(data);
+    $('new-program-name').value = ''; $('new-program-slug').value = '';
+    await loadPrograms(); await selectProgram(data);
   }
 
   async function selectProgram(program) {
@@ -252,17 +259,16 @@
     const { data, error } = await sb.from('session_state').select('*').eq('session_id', session.id).single();
     if (error) return toast(error.message, 'error');
     ctx.state = data;
-
-    const previewIsWeather = data.preview_state?.product === cfg.product;
-    if (isNew || !previewIsWeather) {
+    if (isNew || data.preview_state?.product !== cfg.product) {
       const saved = await savePreviewState(clone(cfg.defaultState), data.revision, true);
       if (!saved) return;
       ctx.state = saved;
     }
-
     ctx.draft = normalizeState(ctx.state.preview_state);
-    ctx.previewCityIndex = 0;
-    ctx.programCityIndex = 0;
+    ctx.previewCityIndex = ctx.draft.rotation.activeIndex || 0;
+    const program = normalizeState(ctx.state.program_state);
+    ctx.programCityIndex = program.rotation.activeIndex || 0;
+    resetRotationClocks();
     showStudio();
     await subscribeRealtime();
     await loadPresets();
@@ -297,9 +303,14 @@
         ctx.state = incoming;
         if (!ctx.savePromise) {
           ctx.draft = normalizeState(incoming.preview_state);
+          ctx.previewCityIndex = ctx.draft.rotation.activeIndex || 0;
           fillForm(ctx.draft);
         }
+        const pgm = normalizeState(incoming.program_state);
+        ctx.programCityIndex = clamp(ctx.programCityIndex, 0, Math.max(0, pgm.locations.length - 1));
+        resetRotationClocks();
         renderAll();
+        refreshWeather(true);
       })
       .subscribe((status) => setConnection(status));
   }
@@ -311,21 +322,12 @@
   }
 
   async function savePreviewState(state, expectedRevision, quiet = false) {
-    const { data, error } = await sb.rpc('update_session_preview', {
-      p_session_id: ctx.session.id,
-      p_preview_state: state,
-      p_expected_revision: expectedRevision
-    });
+    const { data, error } = await sb.rpc('update_session_preview', { p_session_id: ctx.session.id, p_preview_state: state, p_expected_revision: expectedRevision });
     const saved = unwrap(data);
     if (error || !saved) {
       if (String(error?.message || '').includes('STATE_CONFLICT')) {
         const { data: canonical } = await sb.from('session_state').select('*').eq('session_id', ctx.session.id).single();
-        if (canonical) {
-          ctx.state = canonical;
-          ctx.draft = normalizeState(canonical.preview_state);
-          fillForm(ctx.draft);
-          renderAll();
-        }
+        if (canonical) { ctx.state = canonical; ctx.draft = normalizeState(canonical.preview_state); fillForm(ctx.draft); renderAll(); }
         if (!quiet) toast('O Preview mudou em outro dispositivo. Recarreguei o estado mais recente.', 'error');
       } else if (!quiet) toast(error?.message || 'Falha ao salvar Preview.', 'error');
       return null;
@@ -344,8 +346,8 @@
     if (!ctx.state || !ctx.session) return false;
     if (ctx.savePromise) return ctx.savePromise;
     const operation = (async () => {
-      const expected = ctx.state.revision;
-      const saved = await savePreviewState(ctx.draft, expected, !force);
+      ctx.draft.rotation.activeIndex = clamp(ctx.previewCityIndex, 0, Math.max(0, ctx.draft.locations.length - 1));
+      const saved = await savePreviewState(ctx.draft, ctx.state.revision, !force);
       if (!saved) return false;
       if (!ctx.state || Number(saved.revision) >= Number(ctx.state.revision)) ctx.state = saved;
       $('preview-meta').textContent = `r${saved.revision} · salvo ${new Date(saved.updated_at).toLocaleTimeString('pt-BR')}`;
@@ -358,177 +360,157 @@
 
   async function take() {
     if (!ctx.session || !ctx.state) return;
-    await savePreview(true);
-    if (!ctx.state) return;
+    const savedPreview = await savePreview(true);
+    if (!savedPreview || !ctx.state) return;
     $('take-btn').disabled = true;
     try {
       const { data, error } = await sb.rpc('take_session', { p_session_id: ctx.session.id, p_expected_revision: ctx.state.revision });
       const saved = unwrap(data);
       if (error || !saved) throw error || new Error('TAKE falhou.');
       ctx.state = saved;
+      const program = normalizeState(saved.program_state);
+      ctx.programCityIndex = program.rotation.activeIndex || 0;
       if (ctx.session.status !== 'live') {
         const { data: liveData } = await sb.rpc('set_session_status', { p_session_id: ctx.session.id, p_status: 'live' });
-        const live = unwrap(liveData);
-        if (live) ctx.session = live;
+        const live = unwrap(liveData); if (live) ctx.session = live;
       }
-      renderAll();
-      updateHeader();
-      toast('TAKE executado.', 'ok');
+      resetRotationClocks();
+      await refreshWeather(true);
+      renderAll(); updateHeader(); toast('TAKE executado.', 'ok');
     } catch (error) {
       if (String(error?.message || '').includes('STATE_CONFLICT')) {
         const { data } = await sb.from('session_state').select('*').eq('session_id', ctx.session.id).single();
         if (data) { ctx.state = data; ctx.draft = normalizeState(data.preview_state); fillForm(ctx.draft); renderAll(); }
         toast('Estado atualizado por outro dispositivo. Revise o Preview e tente novamente.', 'error');
       } else toast(error?.message || 'Não foi possível executar o TAKE.', 'error');
-    } finally {
-      $('take-btn').disabled = false;
-    }
+    } finally { $('take-btn').disabled = false; }
   }
 
   async function quickAir(visible) {
-    if (!ctx.session || !ctx.state) return;
+    if (!ctx.draft) return;
     ctx.draft.visibility.widget = visible;
     fillForm(ctx.draft);
-    const ok = await savePreview(true);
-    if (!ok) return;
-    await take();
+    if (await savePreview(true)) await take();
   }
 
   function setPreviewVisibility(visible) {
+    if (!ctx.draft) return;
     ctx.draft.visibility.widget = visible;
     scheduleSave(0);
   }
 
-  function setTemplate(template) {
-    ctx.draft.template = template;
-    $('template-select').value = template;
-    document.querySelectorAll('.layout-btn').forEach((b) => b.classList.toggle('active', b.dataset.template === template));
-    renderMonitor('preview', ctx.draft, ctx.previewCityIndex);
-    scheduleSave(0);
+  async function apiRequest(payload) {
+    const { data: sessionData } = await sb.auth.getSession();
+    const token = sessionData.session?.access_token;
+    const response = await fetch(cfg.weatherApiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: cfg.supabaseKey, ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: JSON.stringify(payload)
+    });
+    const json = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(json.error || `Weather backend ${response.status}`);
+    return json;
   }
 
   async function searchCities() {
     const query = $('city-search-input').value.trim();
     if (query.length < 2) return toast('Digite pelo menos 2 caracteres.', 'error');
     $('city-search-btn').disabled = true;
-    $('city-search-results').innerHTML = '<div class="inline-msg">Buscando...</div>';
+    $('city-search-results').innerHTML = '<div class="inline-msg">Buscando localidades...</div>';
     try {
-      const url = new URL(cfg.openMeteo.geocodingUrl);
-      url.searchParams.set('name', query);
-      url.searchParams.set('count', '8');
-      url.searchParams.set('language', 'pt');
-      url.searchParams.set('format', 'json');
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Geocoding ${response.status}`);
-      const json = await response.json();
+      const json = await apiRequest({ mode: 'geocode', query });
       const results = json.results || [];
       if (!results.length) {
-        $('city-search-results').innerHTML = '<div class="inline-msg">Nenhuma cidade encontrada.</div>';
+        $('city-search-results').innerHTML = '<div class="inline-msg">Nenhuma cidade encontrada. Tente incluir estado ou país, por exemplo “Springfield, Illinois”.</div>';
         return;
       }
-      $('city-search-results').innerHTML = results.map((r, i) => `<button class="search-result" data-result="${i}" type="button"><span><strong>${escapeHtml(r.name)}</strong><small>${escapeHtml([r.admin1, r.country].filter(Boolean).join(' · '))}</small></span><span class="material-symbols-rounded">add_circle</span></button>`).join('');
+      $('city-search-results').innerHTML = results.map((r, i) => {
+        const where = [r.admin2, r.admin1, r.country].filter(Boolean).join(' · ');
+        const pop = Number.isFinite(Number(r.population)) ? `${Number(r.population).toLocaleString('pt-BR')} hab.` : 'população n/d';
+        const coord = `${Number(r.latitude).toFixed(3)}, ${Number(r.longitude).toFixed(3)}`;
+        return `<button class="search-result" data-result="${i}" type="button"><span><strong>${escapeHtml(r.name)}${r.countryCode ? ` · ${escapeHtml(r.countryCode)}` : ''}</strong><small>${escapeHtml(where)}</small><span class="search-result-meta"><span class="search-chip">${escapeHtml(pop)}</span><span class="search-chip">${escapeHtml(coord)}</span></span></span><span class="search-add"><span class="material-symbols-rounded">add_circle</span></span></button>`;
+      }).join('');
       $('city-search-results').querySelectorAll('[data-result]').forEach((el) => el.addEventListener('click', () => addCity(results[Number(el.dataset.result)])));
     } catch (error) {
-      $('city-search-results').innerHTML = '<div class="inline-msg error">Falha ao consultar cidades.</div>';
+      $('city-search-results').innerHTML = '<div class="inline-msg error">Falha ao consultar localidades.</div>';
       toast(error.message || 'Falha ao buscar cidade.', 'error');
-    } finally {
-      $('city-search-btn').disabled = false;
-    }
+    } finally { $('city-search-btn').disabled = false; }
   }
 
   async function addCity(result) {
     if (ctx.draft.locations.length >= 5) return toast('O Weather aceita até 5 cidades.', 'error');
     const duplicate = ctx.draft.locations.some((l) => Math.abs(l.latitude - result.latitude) < .001 && Math.abs(l.longitude - result.longitude) < .001);
-    if (duplicate) return toast('Essa cidade já está na lista.', 'error');
+    if (duplicate) return toast('Essa localização já está na lista.', 'error');
     ctx.draft.locations.push({
-      id: String(result.id || `${result.latitude},${result.longitude}`),
-      name: result.name,
-      admin1: result.admin1 || '',
-      country: result.country || '',
-      countryCode: result.country_code || '',
-      latitude: Number(result.latitude),
-      longitude: Number(result.longitude),
-      timezone: result.timezone || 'auto'
+      id: String(result.id || `${result.latitude},${result.longitude}`), name: result.name, admin1: result.admin1 || '', admin2: result.admin2 || '', country: result.country || '', countryCode: result.countryCode || '', latitude: Number(result.latitude), longitude: Number(result.longitude), timezone: result.timezone || 'auto'
     });
-    $('city-search-input').value = '';
-    $('city-search-results').innerHTML = '';
-    renderCityList();
-    await refreshWeather(true);
-    scheduleSave(0);
+    $('city-search-input').value = ''; $('city-search-results').innerHTML = '';
+    if (ctx.draft.locations.length === 1) ctx.previewCityIndex = 0;
+    ctx.draft.rotation.activeIndex = ctx.previewCityIndex;
+    renderCityList(); renderManualCityBank();
+    await refreshWeather(true); scheduleSave(0);
   }
 
   function moveCity(index, delta) {
     const target = index + delta;
     if (target < 0 || target >= ctx.draft.locations.length) return;
-    const [item] = ctx.draft.locations.splice(index, 1);
-    ctx.draft.locations.splice(target, 0, item);
-    ctx.previewCityIndex = clamp(ctx.previewCityIndex, 0, Math.max(0, ctx.draft.locations.length - 1));
-    renderCityList();
-    scheduleSave(0);
+    const selectedId = ctx.draft.locations[ctx.previewCityIndex]?.id;
+    const [item] = ctx.draft.locations.splice(index, 1); ctx.draft.locations.splice(target, 0, item);
+    ctx.previewCityIndex = Math.max(0, ctx.draft.locations.findIndex((l) => l.id === selectedId));
+    ctx.draft.rotation.activeIndex = ctx.previewCityIndex;
+    renderCityList(); renderManualCityBank(); scheduleSave(0);
   }
 
   function removeCity(index) {
     ctx.draft.locations.splice(index, 1);
     ctx.previewCityIndex = clamp(ctx.previewCityIndex, 0, Math.max(0, ctx.draft.locations.length - 1));
-    renderCityList();
-    scheduleSave(0);
+    ctx.draft.rotation.activeIndex = ctx.previewCityIndex;
+    renderCityList(); renderManualCityBank(); scheduleSave(0); refreshWeather(true);
+  }
+
+  function selectPreviewCity(index) {
+    if (!ctx.draft?.locations[index] || ctx.draft.mode === 'panel') return;
+    ctx.previewCityIndex = index;
+    ctx.draft.rotation.activeIndex = index;
+    ctx.previewNextRotationAt = Date.now() + Number(ctx.draft.rotation.interval || 8) * 1000;
+    renderCityList(); renderManualCityBank(); renderMonitor('preview', ctx.draft, index); scheduleSave(0);
   }
 
   function renderCityList() {
     const list = $('city-list');
     const locations = ctx.draft?.locations || [];
-    if (!locations.length) list.innerHTML = '<div class="inline-msg">Adicione de 1 a 5 cidades para montar o widget.</div>';
-    else list.innerHTML = locations.map((loc, i) => `<div class="city-row"><span class="city-index">${i + 1}</span><div><strong>${escapeHtml(loc.name)}</strong><small>${escapeHtml([loc.admin1, loc.country].filter(Boolean).join(' · '))}</small></div><div class="city-row-actions"><button class="icon-btn" data-up="${i}" type="button" title="Subir"><span class="material-symbols-rounded">arrow_upward</span></button><button class="icon-btn" data-down="${i}" type="button" title="Descer"><span class="material-symbols-rounded">arrow_downward</span></button><button class="icon-btn" data-remove="${i}" type="button" title="Remover"><span class="material-symbols-rounded">delete</span></button></div></div>`).join('');
+    if (!locations.length) list.innerHTML = '<div class="inline-msg">Adicione de 1 a 5 cidades. O texto digitado nunca é salvo como localização sem seleção.</div>';
+    else list.innerHTML = locations.map((loc, i) => `<div class="city-row ${i === ctx.previewCityIndex && ctx.draft.mode === 'carousel' ? 'selected' : ''}"><button class="city-index" data-select-city="${i}" type="button" title="Selecionar no Preview">${i + 1}</button><div><strong>${escapeHtml(loc.name)}</strong><small>${escapeHtml([loc.admin2, loc.admin1, loc.country].filter(Boolean).join(' · '))} · ${loc.latitude.toFixed(3)}, ${loc.longitude.toFixed(3)}</small></div><div class="city-row-actions"><button class="icon-btn" data-up="${i}" type="button" title="Subir"><span class="material-symbols-rounded">arrow_upward</span></button><button class="icon-btn" data-down="${i}" type="button" title="Descer"><span class="material-symbols-rounded">arrow_downward</span></button><button class="icon-btn" data-remove="${i}" type="button" title="Remover"><span class="material-symbols-rounded">delete</span></button></div></div>`).join('');
     $('city-limit').textContent = `${locations.length} / 5 cidades`;
+    list.querySelectorAll('[data-select-city]').forEach((b) => b.addEventListener('click', () => selectPreviewCity(Number(b.dataset.selectCity))));
     list.querySelectorAll('[data-up]').forEach((b) => b.addEventListener('click', () => moveCity(Number(b.dataset.up), -1)));
     list.querySelectorAll('[data-down]').forEach((b) => b.addEventListener('click', () => moveCity(Number(b.dataset.down), 1)));
     list.querySelectorAll('[data-remove]').forEach((b) => b.addEventListener('click', () => removeCity(Number(b.dataset.remove))));
   }
 
-  function weatherKey(loc) {
-    return `${Number(loc.latitude).toFixed(4)},${Number(loc.longitude).toFixed(4)}`;
+  function renderManualCityBank() {
+    const bank = $('manual-city-bank');
+    if (!bank || !ctx.draft) return;
+    if (!ctx.draft.locations.length) { bank.innerHTML = '<span class="inline-msg">Nenhuma cidade cadastrada.</span>'; return; }
+    bank.innerHTML = ctx.draft.locations.map((loc, i) => `<button class="manual-city-btn ${i === ctx.previewCityIndex ? 'active' : ''}" data-manual-city="${i}" type="button" ${ctx.draft.mode === 'panel' ? 'disabled' : ''}>${i + 1}. ${escapeHtml(loc.name)}</button>`).join('');
+    bank.querySelectorAll('[data-manual-city]').forEach((b) => b.addEventListener('click', () => selectPreviewCity(Number(b.dataset.manualCity))));
   }
 
   async function refreshWeather(force = false) {
-    const states = [ctx.draft, normalizeState(ctx.state?.program_state)];
-    const unique = new Map();
-    states.flatMap((s) => s?.locations || []).forEach((loc) => unique.set(weatherKey(loc), loc));
+    if (!ctx.draft || !ctx.state) return;
+    if (!force && Date.now() - ctx.lastWeatherAt < cfg.refreshMs) return;
+    const preview = ctx.draft.locations || [];
+    const program = normalizeState(ctx.state.program_state).locations || [];
+    const unique = new Map(); [...preview, ...program].forEach((loc) => unique.set(keyFor(loc), loc));
     const locations = [...unique.values()];
-    if (!locations.length) {
-      ctx.weather.clear();
-      renderAll();
-      return;
-    }
-    if (!force && Date.now() - ctx.lastWeatherAt < cfg.openMeteo.refreshMs) return;
+    if (!locations.length) { ctx.weather.clear(); renderAll(); return; }
     try {
-      const url = new URL(cfg.openMeteo.forecastUrl);
-      url.searchParams.set('latitude', locations.map((l) => l.latitude).join(','));
-      url.searchParams.set('longitude', locations.map((l) => l.longitude).join(','));
-      url.searchParams.set('current', 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m');
-      url.searchParams.set('daily', 'weather_code,temperature_2m_max,temperature_2m_min');
-      url.searchParams.set('timezone', 'auto');
-      url.searchParams.set('forecast_days', '1');
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Open-Meteo ${response.status}`);
-      const json = await response.json();
-      const rows = Array.isArray(json) ? json : [json];
-      rows.forEach((row, index) => {
-        const loc = locations[index];
-        if (!loc) return;
-        ctx.weather.set(weatherKey(loc), {
-          temperature: row.current?.temperature_2m,
-          apparent: row.current?.apparent_temperature,
-          humidity: row.current?.relative_humidity_2m,
-          wind: row.current?.wind_speed_10m,
-          code: row.current?.weather_code ?? row.daily?.weather_code?.[0],
-          isDay: row.current?.is_day !== 0,
-          min: row.daily?.temperature_2m_min?.[0],
-          max: row.daily?.temperature_2m_max?.[0],
-          updatedAt: row.current?.time || new Date().toISOString()
-        });
-      });
+      const chunks = [];
+      for (let i = 0; i < locations.length; i += 5) chunks.push(locations.slice(i, i + 5));
+      const responses = await Promise.all(chunks.map((chunk) => apiRequest({ mode: 'preview', locations: chunk })));
+      responses.flatMap((r) => r.data || []).forEach((row) => ctx.weather.set(row.locationKey, row));
       ctx.lastWeatherAt = Date.now();
-      const label = `Atualizado ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+      const label = `Backend · ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
       if ($('preview-weather-meta')) $('preview-weather-meta').textContent = label;
       renderAll();
     } catch (error) {
@@ -539,17 +521,9 @@
 
   function conditionLabel(code) {
     code = Number(code);
-    if (code === 0) return 'Céu limpo';
-    if (code === 1) return 'Predomínio de sol';
-    if (code === 2) return 'Parcialmente nublado';
-    if (code === 3) return 'Nublado';
-    if ([45, 48].includes(code)) return 'Neblina';
-    if ([51, 53, 55, 56, 57].includes(code)) return 'Garoa';
-    if ([61, 63, 65, 66, 67].includes(code)) return 'Chuva';
-    if ([71, 73, 75, 77].includes(code)) return 'Neve';
-    if ([80, 81, 82].includes(code)) return 'Pancadas de chuva';
-    if ([85, 86].includes(code)) return 'Pancadas de neve';
-    if ([95, 96, 99].includes(code)) return 'Trovoadas';
+    if (code === 0) return 'Céu limpo'; if (code === 1) return 'Predomínio de sol'; if (code === 2) return 'Parcialmente nublado'; if (code === 3) return 'Nublado';
+    if ([45,48].includes(code)) return 'Neblina'; if ([51,53,55,56,57].includes(code)) return 'Garoa'; if ([61,63,65,66,67].includes(code)) return 'Chuva';
+    if ([71,73,75,77].includes(code)) return 'Neve'; if ([80,81,82].includes(code)) return 'Pancadas de chuva'; if ([85,86].includes(code)) return 'Pancadas de neve'; if ([95,96,99].includes(code)) return 'Trovoadas';
     return 'Tempo variável';
   }
 
@@ -559,210 +533,187 @@
     const moon = `<path d="M43 43c-14 3-25-9-22-22 2-8 8-13 15-15-3 10 4 21 15 23-1 6-4 11-8 14Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>`;
     const cloud = `<path d="M20 45h27c7 0 12-5 12-11 0-7-6-12-13-12h-2C41 14 35 10 27 11c-9 1-15 8-15 17-5 1-8 5-8 9 0 5 4 8 9 8h7Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
     let body = '';
-    if (code === 0 || code === 1) body = isDay ? sun : moon;
-    else if ([2, 3, 45, 48].includes(code)) body = cloud;
-    else if ([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)) body = `${cloud}<path d="M22 50l-4 7M34 50l-4 7M46 50l-4 7" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`;
-    else if ([71, 73, 75, 77, 85, 86].includes(code)) body = `${cloud}<path d="M22 52h0M34 52h0M46 52h0" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>`;
-    else if ([95, 96, 99].includes(code)) body = `${cloud}<path d="M36 48l-7 10h7l-4 8 13-14h-8l4-4" fill="currentColor"/>`;
-    else body = cloud;
+    if (code === 0 || code === 1) body = isDay ? sun : moon; else if ([2,3,45,48].includes(code)) body = cloud;
+    else if ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)) body = `${cloud}<path d="M22 50l-4 7M34 50l-4 7M46 50l-4 7" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`;
+    else if ([71,73,75,77,85,86].includes(code)) body = `${cloud}<path d="M22 52h0M34 52h0M46 52h0" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>`;
+    else if ([95,96,99].includes(code)) body = `${cloud}<path d="M36 48l-7 10h7l-4 8 13-14h-8l4-4" fill="currentColor"/>`; else body = cloud;
     return `<svg viewBox="0 0 64 64" aria-hidden="true">${body}</svg>`;
   }
 
-  function formatTemp(value) {
-    return Number.isFinite(Number(value)) ? `${Math.round(Number(value))}` : '—';
+  const formatTemp = (v) => Number.isFinite(Number(v)) ? `${Math.round(Number(v))}` : '—';
+
+  function cardContent(state, loc) {
+    const w = ctx.weather.get(keyFor(loc)) || {};
+    const inline = state.template === 'complete' && state.display.showCondition !== false ? `<div class="weather-condition-inline">${escapeHtml(conditionLabel(w.code))}</div>` : '';
+    let support = '';
+    if (state.template === 'informative') support = `<div class="weather-support"><span class="condition">${escapeHtml(conditionLabel(w.code))}</span></div>`;
+    if (state.template === 'complete') {
+      const bits = [];
+      if (state.display.showMinMax !== false) bits.push(`<span>↓ <b>${formatTemp(w.min)}°</b></span><span>↑ <b>${formatTemp(w.max)}°</b></span>`);
+      if (state.display.showHumidity && Number.isFinite(Number(w.humidity))) bits.push(`<span>UR <b>${Math.round(w.humidity)}%</b></span>`);
+      if (state.display.showWind && Number.isFinite(Number(w.wind))) bits.push(`<span>V <b>${Math.round(w.wind)}</b></span>`);
+      support = `<div class="weather-support"><div class="weather-minmax">${bits.join('')}</div></div>`;
+    }
+    return `<div class="weather-accent"></div><div class="weather-city-content"><div class="weather-top"><div class="weather-icon-box">${weatherIconSvg(w.code, w.isDay)}</div><div class="weather-main"><div class="weather-temp">${formatTemp(w.temperature)}<sup>°C</sup></div><div class="weather-city">${escapeHtml(loc.name)}</div>${inline}</div></div>${support}</div>`;
+  }
+
+  function monitorCard(state, loc) {
+    return `<div class="weather-card template-${state.template}">${cardContent(state, loc)}</div>`;
   }
 
   function applyStageTheme(stage, state) {
-    stage.style.setProperty('--w-primary', state.style.primary);
-    stage.style.setProperty('--w-secondary', state.style.secondary);
-    stage.style.setProperty('--w-surface', state.style.surface);
-    stage.style.setProperty('--w-text', state.style.text);
-    stage.style.setProperty('--w-muted', state.style.muted || '#667585');
-    stage.style.fontFamily = state.style.font || 'Inter';
+    stage.style.setProperty('--w-primary', state.style.primary); stage.style.setProperty('--w-secondary', state.style.secondary); stage.style.setProperty('--w-surface', state.style.surface); stage.style.setProperty('--w-text', state.style.text); stage.style.setProperty('--w-muted', state.style.muted || '#667585'); stage.style.fontFamily = state.style.font || 'Inter';
   }
 
   function renderMonitor(kind, raw, index = 0) {
-    const stage = $(`${kind}-stage`);
-    if (!stage) return;
-    const state = normalizeState(raw);
-    applyStageTheme(stage, state);
-    if (!state.visibility.widget) {
-      stage.innerHTML = '<div class="weather-empty"><span><span class="material-symbols-rounded">visibility_off</span>Widget oculto</span></div>';
-      return;
+    const stage = $(`${kind}-stage`); if (!stage) return;
+    const state = normalizeState(raw); applyStageTheme(stage, state);
+    if (!state.visibility.widget) { stage.innerHTML = '<div class="weather-empty"><span><span class="material-symbols-rounded">visibility_off</span>Widget oculto</span></div>'; return; }
+    if (!state.locations.length) { stage.innerHTML = '<div class="weather-empty"><span><span class="material-symbols-rounded">add_location_alt</span>Adicione uma cidade</span></div>'; return; }
+    const pos = state.style.position || 'bottom-left';
+    const ox = Math.round(Number(state.style.offsetX || 0) * .16); const oy = Math.round(Number(state.style.offsetY || 0) * .16);
+    if (state.mode === 'panel') {
+      stage.innerHTML = `<div class="weather-panel pos-${pos}" style="--offset-x:${ox}px;--offset-y:${oy}px">${state.locations.map((loc) => monitorCard(state, loc)).join('')}</div>`;
+    } else {
+      const loc = state.locations[clamp(index, 0, state.locations.length - 1)];
+      stage.innerHTML = `<div class="weather-card template-${state.template} pos-${pos}" style="--offset-x:${ox}px;--offset-y:${oy}px">${cardContent(state, loc)}</div>`;
     }
-    if (!state.locations.length) {
-      stage.innerHTML = '<div class="weather-empty"><span><span class="material-symbols-rounded">add_location_alt</span>Adicione uma cidade</span></div>';
-      return;
-    }
-
-    const scale = clamp(Number(state.style.scale || 1), .75, 1.35);
-    const position = state.style.position || 'top-left';
-    if (state.template === 'multi') {
-      const items = state.locations.map((loc) => {
-        const w = ctx.weather.get(weatherKey(loc)) || {};
-        return `<div class="weather-multi-item"><div class="weather-multi-city">${escapeHtml(loc.name)}</div><div class="weather-multi-data">${weatherIconSvg(w.code, w.isDay)}<span class="weather-multi-temp">${formatTemp(w.temperature)}°</span></div>${state.display.showCondition ? `<div class="weather-multi-cond">${escapeHtml(conditionLabel(w.code))}</div>` : ''}</div>`;
-      }).join('');
-      stage.innerHTML = `<div class="weather-multi pos-${position}" style="transform:scale(${scale})">${items}</div>`;
-      return;
-    }
-
-    const safeIndex = state.locations.length ? index % state.locations.length : 0;
-    const loc = state.locations[safeIndex];
-    const w = ctx.weather.get(weatherKey(loc)) || {};
-    const extras = [];
-    if (state.display.showMinMax) extras.push(`<div class="weather-extra-row"><span>Mín / Máx</span><strong>${formatTemp(w.min)}° / ${formatTemp(w.max)}°</strong></div>`);
-    if (state.display.showHumidity) extras.push(`<div class="weather-extra-row"><span>Umidade</span><strong>${Number.isFinite(Number(w.humidity)) ? `${Math.round(w.humidity)}%` : '—'}</strong></div>`);
-    if (state.display.showWind) extras.push(`<div class="weather-extra-row"><span>Vento</span><strong>${Number.isFinite(Number(w.wind)) ? `${Math.round(w.wind)} km/h` : '—'}</strong></div>`);
-    stage.innerHTML = `<div class="weather-card template-${state.template} pos-${position}" style="transform:scale(${scale})"><div class="weather-accent"></div><div class="weather-icon-box">${weatherIconSvg(w.code, w.isDay)}</div><div class="weather-main"><div class="weather-temp">${formatTemp(w.temperature)}<sup>°C</sup></div><div class="weather-copy"><div class="weather-city">${escapeHtml(loc.name)}</div>${state.display.showCondition ? `<div class="weather-condition">${escapeHtml(conditionLabel(w.code))}</div>` : ''}</div></div>${extras.length ? `<div class="weather-extra">${extras.join('')}</div>` : ''}</div>`;
   }
 
   function renderAll() {
     if (!ctx.state || !ctx.draft) return;
     renderMonitor('preview', ctx.draft, ctx.previewCityIndex);
-    renderMonitor('program', ctx.state.program_state, ctx.programCityIndex);
     const program = normalizeState(ctx.state.program_state);
+    renderMonitor('program', program, ctx.programCityIndex);
     $('program-meta').textContent = program.visibility.widget && program.locations.length ? `r${ctx.state.revision} · no ar` : `r${ctx.state.revision} · fora do ar`;
-    document.querySelectorAll('.layout-btn').forEach((b) => b.classList.toggle('active', b.dataset.template === ctx.draft.template));
+    updatePresetButtons();
+  }
+
+  function updatePresetButtons() {
+    document.querySelectorAll('.layout-btn').forEach((b) => {
+      const p = b.dataset.preset;
+      const active = p === 'multi' ? ctx.draft?.mode === 'panel' : ctx.draft?.mode === 'carousel' && ctx.draft?.template === p;
+      b.classList.toggle('active', !!active);
+    });
   }
 
   function fillForm(state) {
     if (!state) return;
+    $('mode-select').value = state.mode;
     $('rotation-enabled').checked = !!state.rotation.enabled;
+    $('rotation-enabled').disabled = state.mode === 'panel';
     $('rotation-interval').value = String(state.rotation.interval || 8);
-    $('position-select').value = state.style.position;
+    $('rotation-interval').disabled = state.mode === 'panel';
     $('template-select').value = state.template;
     $('show-condition').checked = !!state.display.showCondition;
     $('show-minmax').checked = !!state.display.showMinMax;
     $('show-humidity').checked = !!state.display.showHumidity;
     $('show-wind').checked = !!state.display.showWind;
-    $('scale-range').value = String(state.style.scale || 1);
-    $('scale-output').textContent = `${Math.round(Number(state.style.scale || 1) * 100)}%`;
-    $('color-primary').value = state.style.primary;
-    $('color-secondary').value = state.style.secondary;
-    $('color-surface').value = state.style.surface;
-    $('color-text').value = state.style.text;
-    $('font-select').value = state.style.font;
-    renderCityList();
-    document.querySelectorAll('.layout-btn').forEach((b) => b.classList.toggle('active', b.dataset.template === state.template));
+    $('offset-x').value = String(state.style.offsetX || 0); $('offset-x-output').textContent = `${state.style.offsetX || 0} px`;
+    $('offset-y').value = String(state.style.offsetY || 0); $('offset-y-output').textContent = `${state.style.offsetY || 0} px`;
+    $('color-primary').value = state.style.primary; $('color-secondary').value = state.style.secondary; $('color-surface').value = state.style.surface; $('color-text').value = state.style.text; $('font-select').value = state.style.font;
+    document.querySelectorAll('[data-position]').forEach((b) => b.classList.toggle('active', b.dataset.position === state.style.position));
+    renderCityList(); renderManualCityBank(); updatePresetButtons();
+  }
+
+  function applyBehaviorPreset(name) {
+    if (!ctx.draft) return;
+    if (name === 'multi') {
+      ctx.draft.mode = 'panel'; ctx.draft.template = 'compact'; ctx.draft.rotation.enabled = false; ctx.draft.display.showCondition = false; ctx.draft.display.showMinMax = false;
+    } else {
+      ctx.draft.mode = 'carousel'; ctx.draft.template = name; ctx.draft.rotation.enabled = true;
+      ctx.draft.display.showCondition = name !== 'compact'; ctx.draft.display.showMinMax = name === 'complete';
+    }
+    fillForm(ctx.draft); renderMonitor('preview', ctx.draft, ctx.previewCityIndex); scheduleSave(0);
   }
 
   function bindDraftInputs() {
     const bindings = [
-      ['rotation-enabled', 'change', (e) => { ctx.draft.rotation.enabled = e.target.checked; }],
-      ['rotation-interval', 'change', (e) => { ctx.draft.rotation.interval = Number(e.target.value); }],
-      ['position-select', 'change', (e) => { ctx.draft.style.position = e.target.value; }],
-      ['template-select', 'change', (e) => { ctx.draft.template = e.target.value; }],
-      ['show-condition', 'change', (e) => { ctx.draft.display.showCondition = e.target.checked; }],
-      ['show-minmax', 'change', (e) => { ctx.draft.display.showMinMax = e.target.checked; }],
-      ['show-humidity', 'change', (e) => { ctx.draft.display.showHumidity = e.target.checked; }],
-      ['show-wind', 'change', (e) => { ctx.draft.display.showWind = e.target.checked; }],
-      ['scale-range', 'input', (e) => { ctx.draft.style.scale = Number(e.target.value); $('scale-output').textContent = `${Math.round(Number(e.target.value) * 100)}%`; }],
-      ['color-primary', 'input', (e) => { ctx.draft.style.primary = e.target.value; }],
-      ['color-secondary', 'input', (e) => { ctx.draft.style.secondary = e.target.value; }],
-      ['color-surface', 'input', (e) => { ctx.draft.style.surface = e.target.value; }],
-      ['color-text', 'input', (e) => { ctx.draft.style.text = e.target.value; }],
-      ['font-select', 'change', (e) => { ctx.draft.style.font = e.target.value; }]
+      ['mode-select','change',(e) => { ctx.draft.mode = e.target.value === 'panel' ? 'panel' : 'carousel'; if (ctx.draft.mode === 'panel') ctx.draft.rotation.enabled = false; }],
+      ['rotation-enabled','change',(e) => { ctx.draft.rotation.enabled = e.target.checked; }],
+      ['rotation-interval','change',(e) => { ctx.draft.rotation.interval = Number(e.target.value); resetRotationClocks(); }],
+      ['template-select','change',(e) => { ctx.draft.template = e.target.value; }],
+      ['show-condition','change',(e) => { ctx.draft.display.showCondition = e.target.checked; }],
+      ['show-minmax','change',(e) => { ctx.draft.display.showMinMax = e.target.checked; }],
+      ['show-humidity','change',(e) => { ctx.draft.display.showHumidity = e.target.checked; }],
+      ['show-wind','change',(e) => { ctx.draft.display.showWind = e.target.checked; }],
+      ['offset-x','input',(e) => { ctx.draft.style.offsetX = Number(e.target.value); }],
+      ['offset-y','input',(e) => { ctx.draft.style.offsetY = Number(e.target.value); }],
+      ['color-primary','input',(e) => { ctx.draft.style.primary = e.target.value; }],
+      ['color-secondary','input',(e) => { ctx.draft.style.secondary = e.target.value; }],
+      ['color-surface','input',(e) => { ctx.draft.style.surface = e.target.value; }],
+      ['color-text','input',(e) => { ctx.draft.style.text = e.target.value; }],
+      ['font-select','change',(e) => { ctx.draft.style.font = e.target.value; }]
     ];
-    bindings.forEach(([id, event, fn]) => $(id).addEventListener(event, (e) => { if (!ctx.draft) return; fn(e); fillForm(ctx.draft); scheduleSave(); }));
+    bindings.forEach(([id,event,fn]) => $(id).addEventListener(event, (e) => { if (!ctx.draft) return; fn(e); fillForm(ctx.draft); scheduleSave(); }));
+    document.querySelectorAll('[data-position]').forEach((b) => b.addEventListener('click', () => { if (!ctx.draft) return; ctx.draft.style.position = b.dataset.position; fillForm(ctx.draft); scheduleSave(0); }));
   }
 
   async function savePreset() {
     if (!ctx.channel || !ctx.program || !ctx.draft) return;
-    const name = window.prompt('Nome do preset:');
-    if (!name?.trim()) return;
-    const { error } = await sb.from('presets').insert({
-      workspace_id: ctx.channel.id,
-      program_id: ctx.program.id,
-      name: name.trim(),
-      template_key: `weather_${ctx.draft.template}`,
-      state: ctx.draft
-    });
+    const name = window.prompt('Nome do preset:'); if (!name?.trim()) return;
+    const { error } = await sb.from('presets').insert({ workspace_id: ctx.channel.id, program_id: ctx.program.id, name: name.trim(), template_key: `weather_${ctx.draft.mode}_${ctx.draft.template}`, state: ctx.draft });
     if (error) return toast(error.message, 'error');
-    toast('Preset salvo.', 'ok');
-    await loadPresets();
+    toast('Preset salvo.', 'ok'); await loadPresets();
   }
 
   async function loadPresets() {
-    const list = $('preset-list');
-    if (!ctx.program) return;
-    const { data, error } = await sb.from('presets').select('id,name,template_key,state,updated_at').eq('workspace_id', ctx.channel.id).eq('program_id', ctx.program.id).like('template_key', 'weather_%').order('updated_at', { ascending: false });
+    const list = $('preset-list'); if (!ctx.program) return;
+    const { data, error } = await sb.from('presets').select('id,name,template_key,state,updated_at').eq('workspace_id', ctx.channel.id).eq('program_id', ctx.program.id).like('template_key','weather_%').order('updated_at',{ ascending:false });
     if (error) return list.innerHTML = `<div class="inline-msg error">${escapeHtml(error.message)}</div>`;
     if (!data?.length) return list.innerHTML = '<div class="inline-msg">Nenhum preset Weather salvo.</div>';
-    list.innerHTML = data.map((p) => `<div class="preset-item"><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.template_key.replace('weather_', ''))}</small></div><div class="preset-item-actions"><button class="icon-btn" data-load-preset="${p.id}" title="Carregar"><span class="material-symbols-rounded">play_arrow</span></button><button class="icon-btn" data-delete-preset="${p.id}" title="Excluir"><span class="material-symbols-rounded">delete</span></button></div></div>`).join('');
-    list.querySelectorAll('[data-load-preset]').forEach((b) => b.addEventListener('click', async () => {
-      const preset = data.find((p) => p.id === b.dataset.loadPreset);
-      ctx.draft = normalizeState(preset.state);
-      ctx.previewCityIndex = 0;
-      fillForm(ctx.draft);
-      await refreshWeather(true);
-      scheduleSave(0);
-      toast('Preset carregado no Preview.', 'ok');
-    }));
-    list.querySelectorAll('[data-delete-preset]').forEach((b) => b.addEventListener('click', async () => {
-      const { error: deleteError } = await sb.from('presets').delete().eq('id', b.dataset.deletePreset);
-      if (deleteError) return toast(deleteError.message, 'error');
-      await loadPresets();
-    }));
+    list.innerHTML = data.map((p) => `<div class="preset-item"><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.template_key.replaceAll('_',' '))}</small></div><div class="preset-item-actions"><button class="icon-btn" data-load-preset="${p.id}" title="Carregar"><span class="material-symbols-rounded">play_arrow</span></button><button class="icon-btn" data-delete-preset="${p.id}" title="Excluir"><span class="material-symbols-rounded">delete</span></button></div></div>`).join('');
+    list.querySelectorAll('[data-load-preset]').forEach((b) => b.addEventListener('click', async () => { const p = data.find((x) => x.id === b.dataset.loadPreset); ctx.draft = normalizeState(p.state); ctx.previewCityIndex = ctx.draft.rotation.activeIndex || 0; fillForm(ctx.draft); await refreshWeather(true); scheduleSave(0); toast('Preset carregado no Preview.', 'ok'); }));
+    list.querySelectorAll('[data-delete-preset]').forEach((b) => b.addEventListener('click', async () => { const { error: e } = await sb.from('presets').delete().eq('id', b.dataset.deletePreset); if (e) return toast(e.message,'error'); await loadPresets(); }));
+  }
+
+  function resetRotationClocks() {
+    const now = Date.now();
+    ctx.previewNextRotationAt = now + Math.max(3, Number(ctx.draft?.rotation?.interval || 8)) * 1000;
+    const pgm = normalizeState(ctx.state?.program_state);
+    ctx.programNextRotationAt = now + Math.max(3, Number(pgm.rotation.interval || 8)) * 1000;
   }
 
   function rotateMonitors() {
     if (!ctx.state || !ctx.draft) return;
     const now = Date.now();
-    const previewInterval = Math.max(3, Number(ctx.draft.rotation.interval || 8)) * 1000;
-    const program = normalizeState(ctx.state.program_state);
-    const programInterval = Math.max(3, Number(program.rotation.interval || 8)) * 1000;
-    if (ctx.draft.template !== 'multi' && ctx.draft.rotation.enabled && ctx.draft.locations.length > 1) ctx.previewCityIndex = Math.floor(now / previewInterval) % ctx.draft.locations.length;
-    else ctx.previewCityIndex = clamp(Number(ctx.draft.rotation.activeIndex || 0), 0, Math.max(0, ctx.draft.locations.length - 1));
-    if (program.template !== 'multi' && program.rotation.enabled && program.locations.length > 1) ctx.programCityIndex = Math.floor(now / programInterval) % program.locations.length;
-    else ctx.programCityIndex = clamp(Number(program.rotation.activeIndex || 0), 0, Math.max(0, program.locations.length - 1));
-    renderMonitor('preview', ctx.draft, ctx.previewCityIndex);
-    renderMonitor('program', program, ctx.programCityIndex);
+    if (ctx.draft.mode === 'carousel' && ctx.draft.rotation.enabled && ctx.draft.locations.length > 1 && now >= ctx.previewNextRotationAt) {
+      ctx.previewCityIndex = (ctx.previewCityIndex + 1) % ctx.draft.locations.length;
+      ctx.previewNextRotationAt = now + Math.max(3, Number(ctx.draft.rotation.interval || 8)) * 1000;
+      renderMonitor('preview', ctx.draft, ctx.previewCityIndex); renderCityList(); renderManualCityBank();
+    }
+    const pgm = normalizeState(ctx.state.program_state);
+    if (pgm.mode === 'carousel' && pgm.rotation.enabled && pgm.locations.length > 1 && now >= ctx.programNextRotationAt) {
+      ctx.programCityIndex = (ctx.programCityIndex + 1) % pgm.locations.length;
+      ctx.programNextRotationAt = now + Math.max(3, Number(pgm.rotation.interval || 8)) * 1000;
+      renderMonitor('program', pgm, ctx.programCityIndex);
+    }
   }
 
   function bindUi() {
-    $('auth-tab-login').addEventListener('click', () => switchAuth('login'));
-    $('auth-tab-signup').addEventListener('click', () => switchAuth('signup'));
-    $('auth-submit').addEventListener('click', doAuth);
-    $('auth-password').addEventListener('keydown', (e) => { if (e.key === 'Enter') doAuth(); });
-    $('logout-btn').addEventListener('click', logout);
-    $('create-channel-btn').addEventListener('click', createChannel);
-    $('create-program-btn').addEventListener('click', createProgram);
-    $('create-session-btn').addEventListener('click', createSession);
+    $('auth-tab-login').addEventListener('click', () => switchAuth('login')); $('auth-tab-signup').addEventListener('click', () => switchAuth('signup')); $('auth-submit').addEventListener('click', doAuth); $('auth-password').addEventListener('keydown', (e) => { if (e.key === 'Enter') doAuth(); }); $('logout-btn').addEventListener('click', logout);
+    $('create-channel-btn').addEventListener('click', createChannel); $('create-program-btn').addEventListener('click', createProgram); $('create-session-btn').addEventListener('click', createSession);
     $('back-btn').addEventListener('click', async () => { await unsubscribeRealtime(); showView('selector'); await loadSessions(); });
-    $('refresh-weather-btn').addEventListener('click', () => refreshWeather(true));
-    $('city-search-btn').addEventListener('click', searchCities);
-    $('city-search-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') searchCities(); });
-    $('take-btn').addEventListener('click', take);
-    $('on-air-btn').addEventListener('click', () => quickAir(true));
-    $('off-air-btn').addEventListener('click', () => quickAir(false));
-    $('pvw-show-btn').addEventListener('click', () => setPreviewVisibility(true));
-    $('pvw-hide-btn').addEventListener('click', () => setPreviewVisibility(false));
-    document.querySelectorAll('.layout-btn').forEach((b) => b.addEventListener('click', () => setTemplate(b.dataset.template)));
-    document.querySelectorAll('.editor-tab').forEach((tab) => tab.addEventListener('click', () => {
-      document.querySelectorAll('.editor-tab').forEach((t) => t.classList.toggle('active', t === tab));
-      document.querySelectorAll('.editor-section').forEach((s) => s.classList.remove('active'));
-      $(`section-${tab.dataset.section}`).classList.add('active');
-    }));
-    $('copy-overlay-btn').addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText($('overlay-url').value); toast('URL do overlay copiada.', 'ok'); }
-      catch (_) { $('overlay-url').select(); document.execCommand('copy'); toast('URL do overlay copiada.', 'ok'); }
-    });
-    $('save-preset-btn').addEventListener('click', savePreset);
+    $('take-btn').addEventListener('click', take); $('on-air-btn').addEventListener('click', () => quickAir(true)); $('off-air-btn').addEventListener('click', () => quickAir(false)); $('pvw-show-btn').addEventListener('click', () => setPreviewVisibility(true)); $('pvw-hide-btn').addEventListener('click', () => setPreviewVisibility(false));
+    $('city-search-btn').addEventListener('click', searchCities); $('city-search-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') searchCities(); });
+    $('refresh-weather-btn').addEventListener('click', () => refreshWeather(true)); $('save-preset-btn').addEventListener('click', savePreset);
+    $('copy-overlay-btn').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('overlay-url').value); toast('URL do overlay copiada.', 'ok'); } catch { $('overlay-url').select(); document.execCommand('copy'); toast('URL copiada.', 'ok'); } });
+    document.querySelectorAll('.layout-btn').forEach((b) => b.addEventListener('click', () => applyBehaviorPreset(b.dataset.preset)));
+    document.querySelectorAll('.editor-tab').forEach((tab) => tab.addEventListener('click', () => { document.querySelectorAll('.editor-tab').forEach((t) => t.classList.toggle('active', t === tab)); document.querySelectorAll('.editor-section').forEach((s) => s.classList.toggle('active', s.id === `section-${tab.dataset.section}`)); }));
     bindDraftInputs();
   }
 
   async function bootstrap() {
     bindUi();
     const { data } = await sb.auth.getSession();
-    if (data.session?.user) await afterLogin(data.session.user);
-    else showView('auth');
+    if (data.session?.user) await afterLogin(data.session.user); else showView('auth');
     sb.auth.onAuthStateChange((_event, session) => {
       if (session?.user && session.user.id !== ctx.user?.id) setTimeout(() => afterLogin(session.user), 0);
       if (!session?.user && ctx.user) setTimeout(() => logout(), 0);
     });
-    setInterval(rotateMonitors, 1000);
+    setInterval(rotateMonitors, 500);
     setInterval(() => { if (ctx.session) refreshWeather(false); }, 60 * 1000);
-    window.addEventListener('online', () => { setConnection('SUBSCRIBED'); if (ctx.session) refreshWeather(true); });
+    window.addEventListener('online', () => { if (ctx.session) refreshWeather(true); });
     window.addEventListener('offline', () => setConnection('CHANNEL_ERROR'));
   }
 
