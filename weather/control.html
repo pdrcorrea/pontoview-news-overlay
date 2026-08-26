@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0a0d11">
+  <title>PontoView Weather · Studio</title>
+  <link rel="icon" href="../assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="../studio.css">
+  <link rel="stylesheet" href="weather-studio.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="../assets/logo-pontoview.png" alt="PontoView">
+      <div class="brand-copy"><strong>PONTOVIEW STUDIO</strong><span>Weather Overlay</span></div>
+      <span class="weather-brand-mark"><span class="material-symbols-rounded">partly_cloudy_day</span> Weather</span>
+    </div>
+    <div class="status-cluster">
+      <span class="pill"><span id="conn-dot" class="conn-dot"></span><span id="conn-label">Offline</span></span>
+      <span id="live-pill" class="pill">SEM SESSÃO</span>
+      <span id="user-email" class="pill"></span>
+      <button id="logout-btn" class="btn ghost hidden" type="button"><span class="material-symbols-rounded">logout</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section id="auth-view" class="auth-wrap">
+      <div class="panel auth-card">
+        <div class="auth-info">
+          <span class="weather-brand-mark"><span class="material-symbols-rounded">partly_cloudy_day</span> PontoView Weather</span>
+          <h1>Clima com linguagem de broadcast.</h1>
+          <p>Prepare até cinco cidades em Preview, confira os dados meteorológicos e coloque o widget no ar apenas quando estiver pronto.</p>
+          <div class="feature-list">
+            <div class="feature"><span class="material-symbols-rounded">compare_arrows</span><div><strong>Preview / Program</strong><br><small>Edite sem alterar o que está no ar.</small></div></div>
+            <div class="feature"><span class="material-symbols-rounded">location_city</span><div><strong>Até 5 cidades</strong><br><small>Rotação automática ou painel multi-cidades.</small></div></div>
+            <div class="feature"><span class="material-symbols-rounded">cloud_sync</span><div><strong>Open-Meteo</strong><br><small>Dados atuais, mínima, máxima, umidade e vento.</small></div></div>
+          </div>
+        </div>
+        <div class="auth-form">
+          <div class="auth-tabs"><button id="auth-tab-login" class="auth-tab active" type="button">Entrar</button><button id="auth-tab-signup" class="auth-tab" type="button">Criar conta</button></div>
+          <div class="form-grid">
+            <div class="field"><label for="auth-email">E-mail</label><input id="auth-email" type="email" autocomplete="email"></div>
+            <div class="field"><label for="auth-password">Senha</label><input id="auth-password" type="password" minlength="6" autocomplete="current-password"></div>
+            <button id="auth-submit" class="btn primary full" type="button">Entrar</button>
+            <div id="auth-msg" class="auth-msg"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="selector-view" class="shell hidden">
+      <div class="selector-wrap">
+        <article class="panel selector-panel">
+          <h2>Canal</h2><p>Use um canal exclusivo do produto Weather.</p>
+          <div id="channel-list" class="entity-list"></div>
+          <div class="form-grid">
+            <div class="field"><label for="new-channel-name">Novo canal</label><input id="new-channel-name" placeholder="Ex.: PontoView TV"></div>
+            <div class="field"><label for="new-channel-slug">Slug</label><input id="new-channel-slug" placeholder="pontoview-tv"></div>
+            <button id="create-channel-btn" class="btn" type="button"><span class="material-symbols-rounded">add</span>Criar canal</button>
+          </div>
+        </article>
+
+        <div class="side-stack">
+          <article id="program-panel" class="panel selector-panel hidden">
+            <h2>Programa</h2><p id="selected-channel">Selecione um canal</p>
+            <div id="program-list" class="entity-list"></div>
+            <div class="fields-2">
+              <div class="field"><label for="new-program-name">Programa</label><input id="new-program-name" placeholder="Ex.: Jornal da Tarde"></div>
+              <div class="field"><label for="new-program-slug">Slug</label><input id="new-program-slug" placeholder="jornal-da-tarde"></div>
+            </div>
+            <button id="create-program-btn" class="btn" type="button"><span class="material-symbols-rounded">add</span>Criar programa</button>
+          </article>
+
+          <article id="session-panel" class="panel selector-panel hidden">
+            <h2>Sessão ao vivo</h2><p id="selected-program">Selecione um programa</p>
+            <div id="session-list" class="entity-list"></div>
+            <div class="field"><label for="new-session-name">Nome da sessão</label><input id="new-session-name" placeholder="Ex.: Edição 26/08"></div>
+            <button id="create-session-btn" class="btn primary" type="button"><span class="material-symbols-rounded">add_circle</span>Nova sessão</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="studio-view" class="shell hidden">
+      <div class="panel contextbar">
+        <div class="breadcrumbs"><span class="crumb">Canal</span><strong id="crumb-channel">—</strong><span>›</span><span class="crumb">Programa</span><strong id="crumb-program">—</strong><span>›</span><span class="crumb">Sessão</span><strong id="crumb-session">—</strong></div>
+        <div class="context-actions"><button id="back-btn" class="btn ghost" type="button"><span class="material-symbols-rounded">arrow_back</span>Trocar sessão</button><button id="refresh-weather-btn" class="btn" type="button"><span class="material-symbols-rounded">refresh</span>Atualizar clima</button></div>
+      </div>
+
+      <div class="console-grid">
+        <article class="panel monitor preview">
+          <div class="monitor-head"><div class="monitor-title"><span class="material-symbols-rounded">visibility</span>Preview</div><span class="monitor-badge">PVW</span></div>
+          <div class="weather-monitor-screen"><div class="weather-safe"></div><div id="preview-stage" class="weather-stage"></div></div>
+          <div class="monitor-meta"><span id="preview-meta">Pronto para editar</span><span id="preview-weather-meta">Dados locais</span></div>
+        </article>
+
+        <article class="panel monitor program">
+          <div class="monitor-head"><div class="monitor-title"><span class="material-symbols-rounded">sensors</span>Program</div><span class="monitor-badge">PGM</span></div>
+          <div class="weather-monitor-screen"><div class="weather-safe"></div><div id="program-stage" class="weather-stage"></div></div>
+          <div class="monitor-meta"><span id="program-meta">Fora do ar</span><span id="session-status-label">READY</span></div>
+        </article>
+
+        <aside class="take-stack">
+          <div class="weather-actions">
+            <button id="on-air-btn" class="air-btn on" type="button">ON AIR</button>
+            <button id="take-btn" class="take-btn" type="button">TAKE</button>
+            <button id="off-air-btn" class="air-btn off" type="button">OFF AIR</button>
+          </div>
+          <div class="weather-pvw-actions">
+            <button id="pvw-show-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility</span>PVW ON</button>
+            <button id="pvw-hide-btn" class="btn" type="button"><span class="material-symbols-rounded">visibility_off</span>PVW OFF</button>
+          </div>
+          <section class="panel quick-bank">
+            <h3>Layouts</h3>
+            <div class="layout-bank">
+              <button class="btn layout-btn" data-template="compact" type="button">Compacto</button>
+              <button class="btn layout-btn" data-template="informative" type="button">Informativo</button>
+              <button class="btn layout-btn" data-template="complete" type="button">Completo</button>
+              <button class="btn layout-btn" data-template="multi" type="button">Multi</button>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <div class="lower-grid">
+        <article class="panel editor-card">
+          <div class="editor-tabs">
+            <button class="editor-tab active" data-section="cities" type="button">Cidades</button>
+            <button class="editor-tab" data-section="display" type="button">Exibição</button>
+            <button class="editor-tab" data-section="style" type="button">Estilo</button>
+          </div>
+
+          <section id="section-cities" class="editor-section active">
+            <div class="field"><label>Adicionar cidade</label><div class="city-search"><input id="city-search-input" placeholder="Digite cidade, estado ou CEP"><button id="city-search-btn" class="btn" type="button"><span class="material-symbols-rounded">search</span>Buscar</button></div><div id="city-search-results" class="search-results"></div></div>
+            <div id="city-list" class="city-list"></div><div id="city-limit" class="city-limit">0 / 5 cidades</div>
+            <div class="fields-2">
+              <label class="switchline"><div><strong>Rotação automática</strong><small>Alterna as cidades no layout individual.</small></div><input id="rotation-enabled" type="checkbox"></label>
+              <div class="field"><label for="rotation-interval">Tempo por cidade</label><select id="rotation-interval"><option value="5">5 segundos</option><option value="8">8 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option><option value="20">20 segundos</option></select></div>
+            </div>
+          </section>
+
+          <section id="section-display" class="editor-section">
+            <div class="fields-2">
+              <div class="field"><label for="position-select">Posição</label><select id="position-select"><option value="top-left">Superior esquerda</option><option value="top-right">Superior direita</option><option value="bottom-left">Inferior esquerda</option><option value="bottom-right">Inferior direita</option></select></div>
+              <div class="field"><label for="template-select">Layout</label><select id="template-select"><option value="compact">Compacto</option><option value="informative">Informativo</option><option value="complete">Completo</option><option value="multi">Multi-cidades</option></select></div>
+            </div>
+            <div class="fields-2">
+              <label class="switchline"><div><strong>Condição</strong><small>Ex.: Parcialmente nublado</small></div><input id="show-condition" type="checkbox"></label>
+              <label class="switchline"><div><strong>Mínima / máxima</strong><small>Temperaturas previstas para hoje.</small></div><input id="show-minmax" type="checkbox"></label>
+              <label class="switchline"><div><strong>Umidade</strong><small>Umidade relativa atual.</small></div><input id="show-humidity" type="checkbox"></label>
+              <label class="switchline"><div><strong>Vento</strong><small>Velocidade a 10 metros.</small></div><input id="show-wind" type="checkbox"></label>
+            </div>
+            <div class="field"><label>Escala</label><div class="weather-scale"><input id="scale-range" type="range" min="0.75" max="1.35" step="0.05"><output id="scale-output">100%</output></div></div>
+          </section>
+
+          <section id="section-style" class="editor-section">
+            <div class="fields-2">
+              <div class="field"><label for="color-primary">Cor principal</label><input id="color-primary" class="color-input" type="color"></div>
+              <div class="field"><label for="color-secondary">Ícone / contraste</label><input id="color-secondary" class="color-input" type="color"></div>
+              <div class="field"><label for="color-surface">Fundo</label><input id="color-surface" class="color-input" type="color"></div>
+              <div class="field"><label for="color-text">Texto</label><input id="color-text" class="color-input" type="color"></div>
+            </div>
+            <div class="field"><label for="font-select">Fonte</label><select id="font-select"><option value="Inter">Inter</option><option value="Arial">Arial</option><option value="Roboto">Roboto</option><option value="Montserrat">Montserrat</option></select></div>
+            <div class="weather-provider"><div><strong>Open-Meteo</strong><small>Fonte meteorológica do Weather v1</small></div><span class="provider-state">Conectado</span></div>
+          </section>
+        </article>
+
+        <aside class="side-stack">
+          <section class="panel preset-card">
+            <h3>Presets</h3>
+            <div class="preset-toolbar"><button id="save-preset-btn" class="btn" type="button"><span class="material-symbols-rounded">bookmark_add</span>Salvar preset</button></div>
+            <div id="preset-list" class="preset-list"></div>
+          </section>
+          <section class="panel source-card">
+            <h3>URL do overlay</h3>
+            <div class="source-row"><input id="overlay-url" readonly><button id="copy-overlay-btn" class="btn primary" type="button"><span class="material-symbols-rounded">content_copy</span>Copiar</button></div>
+            <div class="source-help">Use como Browser Source em 1920 × 1080. O fundo é transparente e a URL é somente leitura.</div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast-host" class="toast-host"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.min.js"></script>
+  <script src="weather-config.js"></script>
+  <script src="weather-studio.js"></script>
+</body>
+</html>
