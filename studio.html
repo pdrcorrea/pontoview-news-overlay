@@ -62,11 +62,11 @@
         <section class="pv-view active" data-view-panel="library">
           <div class="pv-page-heading pv-page-heading-clean"><span class="pv-kicker">OVERLAYS</span><h1 id="welcomeTitle">Seus overlays.</h1><p>Escolha o que deseja operar.</p></div>
           <div id="paywallBanner" class="pv-paywall-banner pv-paywall-compact" hidden>
-            <div class="pv-paywall-copy"><span class="pv-paywall-icon material-symbols-rounded" aria-hidden="true">lock</span><div><strong>Assine para liberar o Studio.</strong><p>Acesso ao PontoView News por R$ 59/mês.</p></div></div>
+            <div class="pv-paywall-copy"><span class="pv-paywall-icon material-symbols-rounded" aria-hidden="true">lock</span><div><strong>Assine para liberar o Studio.</strong><p>Acesse os produtos disponíveis na biblioteca PontoView Studio.</p></div></div>
             <button class="pv-button pv-button-primary" data-action="subscribe" type="button">Assinar</button>
           </div>
 
-          <div class="pv-overlay-grid pv-overlay-grid-library pv-overlay-grid-single">
+          <div class="pv-overlay-grid pv-overlay-grid-library">
             <article class="pv-overlay-card pv-overlay-card-featured" data-product="news_overlay">
               <div class="pv-overlay-preview pv-news-preview compact">
                 <div class="pv-preview-live">AO VIVO</div><div class="pv-preview-brand">PONTOVIEW<br>NEWS</div>
@@ -78,6 +78,24 @@
                 <div class="pv-overlay-card-heading"><div><span class="pv-product-state">DISPONÍVEL</span><h3>PontoView News</h3></div><span class="pv-version">NEWS</span></div>
                 <p>GCs, identificação, editorias, destaques, ticker e operação Preview / Program / TAKE.</p>
                 <div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="news_overlay" type="button">Abrir overlay</button><a class="pv-button pv-button-secondary" href="./news.html">Detalhes</a></div>
+              </div>
+            </article>
+
+            <article class="pv-overlay-card pv-overlay-card-featured" data-product="weather_overlay">
+              <div class="pv-overlay-preview pv-weather-preview compact">
+                <div class="pv-weather-preview-label">CLIMA</div>
+                <div class="pv-weather-module">
+                  <div class="pv-weather-icon"><span class="material-symbols-rounded" aria-hidden="true">partly_cloudy_day</span></div>
+                  <div class="pv-weather-main"><strong>23°</strong><span>SÃO PAULO</span></div>
+                  <div class="pv-weather-condition">PARCIALMENTE NUBLADO</div>
+                </div>
+                <div class="pv-weather-cities"><span>RIO 27°</span><span>CURITIBA 17°</span><span>RECIFE 29°</span></div>
+                <div class="pv-overlay-lock" data-lock-overlay><span class="material-symbols-rounded" aria-hidden="true">lock</span><strong>Assinatura necessária</strong></div>
+              </div>
+              <div class="pv-overlay-card-body pv-overlay-card-body-clean">
+                <div class="pv-overlay-card-heading"><div><span class="pv-product-state">DISPONÍVEL</span><h3>PontoView Weather</h3></div><span class="pv-version">WEATHER</span></div>
+                <p>Clima atual para 1 a 5 cidades, carrossel ou painel, busca segura de localidades e operação Preview / Program / TAKE.</p>
+                <div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="weather_overlay" type="button">Abrir overlay</button><a class="pv-button pv-button-secondary" href="./weather/">Abrir direto</a></div>
               </div>
             </article>
           </div>
