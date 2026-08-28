@@ -5,8 +5,10 @@
   const CHECKOUT_URL = './checkout.html';
   const PRODUCT_URLS = Object.freeze({
     news_overlay: './control.html',
-    weather_overlay: './weather/control.html'
+    weather_overlay: './weather/control.html',
+    free_lower_thirds: './lower-thirds/control.html'
   });
+  const FREE_PRODUCTS = new Set(['free_lower_thirds']);
   const qs = (s, r = document) => r.querySelector(s);
   const qsa = (s, r = document) => [...r.querySelectorAll(s)];
   const fmtDate = value => value ? new Intl.DateTimeFormat('pt-BR', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(value)) : '—';
@@ -72,6 +74,10 @@
     return !!(subscription?.active && (!subscription.expires_at || new Date(subscription.expires_at) > new Date()));
   }
 
+  function hasProductAccess(product) {
+    return FREE_PRODUCTS.has(product) || productAccess.has(product);
+  }
+
   function applyAccess(subscriptions = []) {
     const validSubscriptions = (Array.isArray(subscriptions) ? subscriptions : [subscriptions]).filter(isValidSubscription);
     productAccess = new Map(validSubscriptions.map(subscription => [subscription.product, subscription]));
@@ -82,7 +88,7 @@
       chip.classList.remove('is-checking', 'is-active', 'is-locked');
       chip.classList.add(accessActive ? 'is-active' : 'is-locked');
       const label = chip.querySelector('span');
-      if (label) label.textContent = accessActive ? 'Studio ativo' : 'Assinatura necessária';
+      if (label) label.textContent = accessActive ? 'Studio ativo' : 'Plano gratuito';
     }
 
     const paywall = qs('#paywallBanner');
@@ -100,11 +106,12 @@
     if (expires) expires.textContent = fmtDate(billingSubscription?.expires_at);
 
     qsa('[data-product]').forEach(card => {
-      const unlocked = productAccess.has(card.dataset.product);
+      const unlocked = hasProductAccess(card.dataset.product);
       card.classList.toggle('is-locked', !unlocked);
     });
     qsa('[data-open-product]').forEach(btn => {
-      const unlocked = productAccess.has(btn.dataset.openProduct);
+      const product = btn.dataset.openProduct;
+      const unlocked = hasProductAccess(product);
       btn.textContent = unlocked ? 'Abrir overlay' : 'Assinar para usar';
     });
     qsa('[data-action="subscribe"]').forEach(btn => {
@@ -151,7 +158,7 @@
 
     qsa('[data-open-product]').forEach(btn => btn.addEventListener('click', () => {
       const product = btn.dataset.openProduct;
-      if (!productAccess.has(product)) { location.href = CHECKOUT_URL; return; }
+      if (!hasProductAccess(product)) { location.href = CHECKOUT_URL; return; }
       const target = PRODUCT_URLS[product];
       if (target) location.href = target;
     }));
