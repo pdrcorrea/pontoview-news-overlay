@@ -1,44 +1,259 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PontoView News · Canais e programas</title>
-<style>
-:root{color-scheme:dark;--bg:#0b0f14;--panel:#151c25;--panel2:#19222d;--line:#2a3543;--line2:#354354;--text:#edf3f8;--muted:#8190a3;--brand:#003e8d;--accent:#87d7fc;--danger:#ff8996}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif}.top{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#111820}.brand{display:flex;align-items:center;gap:12px}.brand img{width:132px;max-height:30px;object-fit:contain}.brand span{padding-left:12px;border-left:1px solid var(--line);font-size:11px;color:var(--muted);font-weight:700}.back{border:1px solid var(--line2);background:var(--panel);color:var(--text);height:34px;padding:0 12px;border-radius:4px;cursor:pointer}.wrap{width:min(1100px,calc(100% - 28px));margin:34px auto}.hero{margin-bottom:24px}.kicker{font-size:10px;color:var(--accent);font-weight:900;letter-spacing:.12em}.hero h1{margin:7px 0 6px;font-size:28px}.hero p{margin:0;color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);background:var(--panel)}.head{height:48px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--panel2);display:flex;align-items:center;justify-content:space-between}.head strong{font-size:12px}.head small{font-size:9px;color:var(--muted)}.body{padding:12px}.list{display:grid;gap:6px;min-height:80px}.entity{width:100%;border:1px solid var(--line);background:#10161e;color:var(--text);padding:10px 11px;display:flex;align-items:center;justify-content:space-between;text-align:left;cursor:pointer}.entity:hover,.entity.active{border-color:#337ec1;background:#10283b}.entity b{display:block;font-size:11px}.entity small{display:block;margin-top:3px;color:var(--muted);font-size:9px}.entity span{color:var(--accent);font-size:10px;font-weight:900}.empty{border:1px dashed var(--line2);padding:14px;color:var(--muted);font-size:10px}.form{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:7px}.input{height:36px;border:1px solid var(--line2);background:#101720;color:var(--text);padding:0 9px;border-radius:3px;outline:none}.input:focus{border-color:#337ec1}.btn{height:36px;border:1px solid #2575be;background:var(--brand);color:#fff;padding:0 12px;border-radius:3px;font-size:9px;font-weight:850;cursor:pointer}.btn:disabled{opacity:.4;cursor:not-allowed}.open{margin-top:16px;display:flex;justify-content:flex-end}.open .btn{height:42px;padding:0 18px}.msg{min-height:20px;margin-top:10px;color:var(--muted);font-size:10px}.msg.error{color:var(--danger)}@media(max-width:760px){.grid{grid-template-columns:1fr}.form{grid-template-columns:1fr}.wrap{margin-top:22px}.hero h1{font-size:23px}.top{padding:0 12px}.brand span{display:none}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0a0d11">
+  <title>PontoView News · Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="./studio.css?v=20260828-news-selector-2">
+  <style>
+    .news-brand-mark{display:inline-flex;align-items:center;gap:7px;color:#8ed5ff;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.news-brand-mark .material-symbols-rounded{font-size:17px;color:var(--accent)}
+    .selector-wrap{align-items:start}.selector-panel{min-height:0}.selector-panel.channel-panel{min-height:520px}.selector-panel .form-grid{margin-top:10px}.session-help{margin:-6px 0 12px;color:var(--muted);font-size:9px;line-height:1.45}.entity.active{border-color:var(--accent);background:#102533}.entity .entity-arrow{color:#8ed5ff}.entity .badge.live{border-color:#6d2d38;color:#ff9ca8;background:#251116}.entity .badge.ready{border-color:#5a4c20;color:#f0ce72;background:#211d10}.entity .badge.ended{opacity:.65}.selector-actions{display:flex;justify-content:flex-end;margin-top:10px}.topbar-back{white-space:nowrap}.inline-msg{padding:4px 0}.session-panel .entity-list{max-height:260px}.build-mark{display:none}
+    @media(max-width:760px){.selector-panel.channel-panel{min-height:0}.news-brand-mark{display:none}.topbar-back span:last-child{display:none}}
+  </style>
 </head>
-<body>
-<header class="top"><div class="brand"><img src="./assets/PontoViewBranco.png" alt="PontoView"><span>NEWS · CANAIS E PROGRAMAS</span></div><button class="back" type="button" onclick="location.href='./studio.html'">Voltar ao Studio</button></header>
-<main class="wrap">
-<section class="hero"><span class="kicker">PONTOVIEW NEWS</span><h1>Escolha o canal e o programa.</h1><p>Cada combinação opera sua própria sessão e possui uma URL de saída exclusiva.</p></section>
-<div class="grid">
-<section class="panel"><div class="head"><strong>Canais / Workspaces</strong><small>isolados por conta</small></div><div class="body"><div id="workspaceList" class="list"></div><div class="form"><input id="workspaceName" class="input" placeholder="Nome do canal"><input id="workspaceSlug" class="input" placeholder="slug-do-canal"><button id="createWorkspace" class="btn" type="button">CRIAR</button></div></div></section>
-<section class="panel"><div class="head"><strong>Programas</strong><small id="selectedWorkspaceLabel">selecione um canal</small></div><div class="body"><div id="programList" class="list"><div class="empty">Selecione um canal para carregar os programas.</div></div><div class="form"><input id="programName" class="input" placeholder="Nome do programa"><input id="programSlug" class="input" placeholder="slug-do-programa"><button id="createProgram" class="btn" type="button" disabled>CRIAR</button></div></div></section>
-</div>
-<div id="message" class="msg"></div><div class="open"><button id="openControl" class="btn" type="button" disabled>ABRIR CONTROLE</button></div>
-</main>
-<script src="./app-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"></script>
-<script>
-(() => {
-'use strict';
-const cfg=window.PV_CONFIG||{}, $=id=>document.getElementById(id), qs=new URLSearchParams(location.search);
-let sb=null,user=null,workspaces=[],programs=[],workspace=null,program=null;
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const slug=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,48);
-function msg(text='',error=false){$('message').textContent=text;$('message').classList.toggle('error',error)}
-function renderWorkspaces(){const host=$('workspaceList');host.innerHTML=workspaces.length?workspaces.map(w=>`<button class="entity${workspace?.id===w.id?' active':''}" data-id="${w.id}" type="button"><div><b>${esc(w.name)}</b><small>/${esc(w.slug)}</small></div><span>${workspace?.id===w.id?'SELECIONADO':'SELECIONAR'}</span></button>`).join(''):'<div class="empty">Nenhum canal News criado. Crie o primeiro abaixo.</div>';host.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>selectWorkspace(workspaces.find(w=>w.id===el.dataset.id)));}
-function renderPrograms(){const host=$('programList');$('selectedWorkspaceLabel').textContent=workspace?workspace.name:'selecione um canal';$('createProgram').disabled=!workspace;if(!workspace){host.innerHTML='<div class="empty">Selecione um canal para carregar os programas.</div>';syncOpen();return;}host.innerHTML=programs.length?programs.map(p=>`<button class="entity${program?.id===p.id?' active':''}" data-id="${p.id}" type="button"><div><b>${esc(p.name)}</b><small>/${esc(p.slug)}</small></div><span>${program?.id===p.id?'SELECIONADO':'SELECIONAR'}</span></button>`).join(''):'<div class="empty">Nenhum programa neste canal. Crie o primeiro abaixo.</div>';host.querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>{program=programs.find(p=>p.id===el.dataset.id);renderPrograms();syncOpen();});syncOpen();}
-function syncOpen(){$('openControl').disabled=!(workspace&&program)}
-async function loadWorkspaces(){const {data,error}=await sb.from('workspaces').select('id,name,slug,created_at').eq('user_id',user.id).eq('product','news_overlay').order('created_at');if(error)throw error;workspaces=data||[];renderWorkspaces();const requested=qs.get('workspace');if(requested){const found=workspaces.find(w=>w.id===requested);if(found)await selectWorkspace(found);}}
-async function selectWorkspace(w){workspace=w;program=null;programs=[];renderWorkspaces();renderPrograms();const {data,error}=await sb.from('programs').select('id,name,slug,created_at').eq('workspace_id',w.id).order('created_at');if(error)return msg(error.message,true);programs=data||[];const requested=qs.get('program');program=requested?programs.find(p=>p.id===requested):null;renderPrograms();}
-async function createWorkspace(){const name=$('workspaceName').value.trim(), desired=slug($('workspaceSlug').value||name);if(!name||!desired)return msg('Informe nome e slug do canal.',true);const {data,error}=await sb.from('workspaces').insert({user_id:user.id,product:'news_overlay',name,slug:desired}).select('id,name,slug,created_at').single();if(error)return msg(error.message,true);$('workspaceName').value='';$('workspaceSlug').value='';workspaces.push(data);await selectWorkspace(data);msg('Canal criado. Agora escolha ou crie um programa.');}
-async function createProgram(){if(!workspace)return;const name=$('programName').value.trim(), desired=slug($('programSlug').value||name);if(!name||!desired)return msg('Informe o nome do programa.',true);const {data,error}=await sb.from('programs').insert({workspace_id:workspace.id,name,slug:desired,default_template:'lower_third',settings:{product:'news_overlay'}}).select('id,name,slug,created_at').single();if(error)return msg(error.message,true);$('programName').value='';$('programSlug').value='';programs.push(data);program=data;renderPrograms();msg('Programa criado e selecionado.');}
-$('workspaceName').addEventListener('input',()=>{if(!$('workspaceSlug').dataset.edited)$('workspaceSlug').value=slug($('workspaceName').value)});$('workspaceSlug').addEventListener('input',()=>{$('workspaceSlug').dataset.edited='1'});$('programName').addEventListener('input',()=>{if(!$('programSlug').dataset.edited)$('programSlug').value=slug($('programName').value)});$('programSlug').addEventListener('input',()=>{$('programSlug').dataset.edited='1'});
-$('createWorkspace').onclick=createWorkspace;$('createProgram').onclick=createProgram;$('openControl').onclick=()=>{if(workspace&&program)location.href=`./control.html?workspace=${encodeURIComponent(workspace.id)}&program=${encodeURIComponent(program.id)}`;};
-(async()=>{try{if(!window.supabase?.createClient||!cfg.supabaseUrl||!cfg.supabaseKey)throw new Error('Configuração do Supabase indisponível.');sb=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const {data:{session}}=await sb.auth.getSession();if(!session?.user){location.replace('./studio.html');return;}user=session.user;await loadWorkspaces();}catch(e){msg(e?.message||String(e),true);}})();
-})();
-</script>
+<body data-news-build="selector-v2">
+  <header class="topbar">
+    <div class="brand">
+      <img src="./assets/logo-pontoview.png" alt="PontoView">
+      <div class="brand-copy"><strong>PONTOVIEW STUDIO</strong><span>News Overlay</span></div>
+      <span class="news-brand-mark"><span class="material-symbols-rounded">newsmode</span> News</span>
+    </div>
+    <div class="status-cluster">
+      <span class="pill"><span id="conn-dot" class="conn-dot"></span><span id="conn-label">Offline</span></span>
+      <span id="live-pill" class="pill">SEM SESSÃO</span>
+      <span id="user-email" class="pill"></span>
+      <button id="back-studio-btn" class="btn ghost topbar-back" type="button" title="Voltar ao Studio"><span class="material-symbols-rounded">grid_view</span><span>Studio</span></button>
+      <button id="logout-btn" class="btn ghost" type="button" title="Sair"><span class="material-symbols-rounded">logout</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="shell">
+      <div class="selector-wrap">
+        <article class="panel selector-panel channel-panel">
+          <h2>Canal</h2>
+          <p>Use um canal exclusivo do produto News.</p>
+          <div id="channel-list" class="entity-list"><div class="inline-msg">Carregando canais...</div></div>
+          <div class="form-grid">
+            <div class="field"><label for="new-channel-name">Novo canal</label><input id="new-channel-name" placeholder="Ex.: PontoView TV"></div>
+            <div class="field"><label for="new-channel-slug">Slug</label><input id="new-channel-slug" placeholder="pontoview-tv"></div>
+            <button id="create-channel-btn" class="btn" type="button"><span class="material-symbols-rounded">add</span>Criar canal</button>
+          </div>
+        </article>
+
+        <div class="side-stack">
+          <article id="program-panel" class="panel selector-panel hidden">
+            <h2>Programa</h2>
+            <p id="selected-channel">Selecione um canal</p>
+            <div id="program-list" class="entity-list"></div>
+            <div class="fields-2">
+              <div class="field"><label for="new-program-name">Programa</label><input id="new-program-name" placeholder="Ex.: Jornal da Tarde"></div>
+              <div class="field"><label for="new-program-slug">Slug</label><input id="new-program-slug" placeholder="jornal-da-tarde"></div>
+            </div>
+            <button id="create-program-btn" class="btn" type="button"><span class="material-symbols-rounded">add</span>Criar programa</button>
+          </article>
+
+          <article id="session-panel" class="panel selector-panel session-panel hidden">
+            <h2>Sessão ao vivo</h2>
+            <p id="selected-program">Selecione um programa</p>
+            <div class="session-help">Cada sessão mantém Preview, Program e URL de saída próprios.</div>
+            <div id="session-list" class="entity-list"></div>
+            <div class="field"><label for="new-session-name">Nome da sessão</label><input id="new-session-name" placeholder="Ex.: Edição 28/08"></div>
+            <button id="create-session-btn" class="btn primary" type="button"><span class="material-symbols-rounded">add_circle</span>Nova sessão</button>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast-host" class="toast-host"></div>
+  <script src="./app-config.js?v=20260828-news-session-2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"></script>
+  <script>
+  (() => {
+    'use strict';
+
+    const cfg = window.PV_CONFIG || {};
+    const params = new URLSearchParams(location.search);
+    const ctx = { user:null, channel:null, program:null, sessions:[] };
+    const $ = id => document.getElementById(id);
+    const unwrap = data => Array.isArray(data) ? data[0] : data;
+    const escapeHtml = (value='') => String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    const slugify = (value='') => value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,48);
+    const sb = window.supabase?.createClient(cfg.supabaseUrl, cfg.supabaseKey, { auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true} });
+
+    function toast(message, type='') {
+      const host = $('toast-host');
+      if (!host) return;
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.textContent = message;
+      host.appendChild(el);
+      setTimeout(() => el.remove(), 3600);
+    }
+
+    function setOnline(online) {
+      $('conn-dot')?.classList.toggle('online', !!online);
+      if ($('conn-label')) $('conn-label').textContent = online ? 'Online' : 'Offline';
+    }
+
+    function updateHeader() {
+      if ($('user-email')) $('user-email').textContent = ctx.user?.email || '';
+      if ($('live-pill')) $('live-pill').textContent = 'SEM SESSÃO';
+    }
+
+    function sessionUrl(session) {
+      const url = new URL('./control.html', location.href);
+      url.search = '';
+      url.searchParams.set('workspace', ctx.channel.id);
+      url.searchParams.set('program', ctx.program.id);
+      url.searchParams.set('session', session.id);
+      return url.toString();
+    }
+
+    async function loadChannels() {
+      const list = $('channel-list');
+      list.innerHTML = '<div class="inline-msg">Carregando canais...</div>';
+      const { data, error } = await sb.from('workspaces').select('id,name,slug,product,created_at').eq('user_id', ctx.user.id).eq('product','news_overlay').order('created_at');
+      if (error) { list.innerHTML = `<div class="inline-msg error">${escapeHtml(error.message)}</div>`; return; }
+      if (!data?.length) { list.innerHTML = '<div class="inline-msg">Nenhum canal News. Crie o primeiro abaixo.</div>'; return; }
+      list.innerHTML = data.map(ch => `<div class="entity${ctx.channel?.id===ch.id?' active':''}" data-channel="${ch.id}"><div><strong>${escapeHtml(ch.name)}</strong><small>/${escapeHtml(ch.slug)}</small></div><span class="material-symbols-rounded entity-arrow">chevron_right</span></div>`).join('');
+      list.querySelectorAll('[data-channel]').forEach(el => el.addEventListener('click', () => selectChannel(data.find(x => x.id === el.dataset.channel))));
+      const requested = params.get('workspace');
+      if (requested && !ctx.channel) {
+        const found = data.find(ch => ch.id === requested);
+        if (found) await selectChannel(found);
+      }
+    }
+
+    async function createChannel() {
+      const name = $('new-channel-name').value.trim();
+      const slug = slugify($('new-channel-slug').value || name);
+      if (!name || !slug) return toast('Informe nome e slug do canal.', 'error');
+      const btn = $('create-channel-btn'); btn.disabled = true;
+      try {
+        const { data, error } = await sb.from('workspaces').insert({user_id:ctx.user.id,product:'news_overlay',name,slug}).select('id,name,slug,product,created_at').single();
+        if (error) throw error;
+        $('new-channel-name').value=''; $('new-channel-slug').value='';
+        await loadChannels();
+        await selectChannel(data);
+        toast('Canal criado.', 'ok');
+      } catch (error) { toast(error.message || 'Não foi possível criar o canal.', 'error'); }
+      finally { btn.disabled = false; }
+    }
+
+    async function selectChannel(channel) {
+      ctx.channel = channel;
+      ctx.program = null;
+      ctx.sessions = [];
+      $('selected-channel').textContent = channel.name;
+      $('program-panel').classList.remove('hidden');
+      $('session-panel').classList.add('hidden');
+      await loadChannels();
+      await loadPrograms();
+    }
+
+    async function loadPrograms() {
+      const list = $('program-list');
+      list.innerHTML = '<div class="inline-msg">Carregando programas...</div>';
+      const { data, error } = await sb.from('programs').select('id,name,slug,settings,created_at').eq('workspace_id',ctx.channel.id).order('created_at');
+      if (error) { list.innerHTML = `<div class="inline-msg error">${escapeHtml(error.message)}</div>`; return; }
+      if (!data?.length) list.innerHTML = '<div class="inline-msg">Nenhum programa neste canal.</div>';
+      else {
+        list.innerHTML = data.map(p => `<div class="entity${ctx.program?.id===p.id?' active':''}" data-program="${p.id}"><div><strong>${escapeHtml(p.name)}</strong><small>News · ${escapeHtml(p.slug)}</small></div><span class="material-symbols-rounded entity-arrow">chevron_right</span></div>`).join('');
+        list.querySelectorAll('[data-program]').forEach(el => el.addEventListener('click', () => selectProgram(data.find(x => x.id === el.dataset.program))));
+      }
+      const requested = params.get('program');
+      if (requested && !ctx.program) {
+        const found = data?.find(p => p.id === requested);
+        if (found) await selectProgram(found);
+      }
+    }
+
+    async function createProgram() {
+      if (!ctx.channel) return toast('Selecione um canal primeiro.', 'error');
+      const name = $('new-program-name').value.trim();
+      const slug = slugify($('new-program-slug').value || name);
+      if (!name || !slug) return toast('Informe o nome do programa.', 'error');
+      const btn = $('create-program-btn'); btn.disabled = true;
+      try {
+        const { data, error } = await sb.from('programs').insert({workspace_id:ctx.channel.id,name,slug,default_template:'lower_third',settings:{product:'news_overlay'}}).select('id,name,slug,settings,created_at').single();
+        if (error) throw error;
+        $('new-program-name').value=''; $('new-program-slug').value='';
+        await loadPrograms();
+        await selectProgram(data);
+        toast('Programa criado.', 'ok');
+      } catch (error) { toast(error.message || 'Não foi possível criar o programa.', 'error'); }
+      finally { btn.disabled = false; }
+    }
+
+    async function selectProgram(program) {
+      ctx.program = program;
+      ctx.sessions = [];
+      $('selected-program').textContent = program.name;
+      $('session-panel').classList.remove('hidden');
+      await loadPrograms();
+      await loadSessions();
+    }
+
+    async function loadSessions() {
+      const list = $('session-list');
+      list.innerHTML = '<div class="inline-msg">Carregando sessões...</div>';
+      const { data, error } = await sb.from('live_sessions').select('id,workspace_id,program_id,name,status,public_token,created_at,updated_at').eq('workspace_id',ctx.channel.id).eq('program_id',ctx.program.id).order('created_at',{ascending:false}).limit(12);
+      if (error) { list.innerHTML = `<div class="inline-msg error">${escapeHtml(error.message)}</div>`; return; }
+      ctx.sessions = data || [];
+      if (!ctx.sessions.length) { list.innerHTML = '<div class="inline-msg">Nenhuma sessão. Crie uma para começar.</div>'; return; }
+      list.innerHTML = ctx.sessions.map(s => `<div class="entity" data-session="${s.id}"><div><strong>${escapeHtml(s.name)}</strong><small>${new Date(s.created_at).toLocaleString('pt-BR')}</small></div><span class="badge ${escapeHtml(s.status)}">${escapeHtml(s.status)}</span></div>`).join('');
+      list.querySelectorAll('[data-session]').forEach(el => el.addEventListener('click', () => {
+        const selected = ctx.sessions.find(s => s.id === el.dataset.session);
+        if (selected) location.href = sessionUrl(selected);
+      }));
+    }
+
+    async function createSession() {
+      if (!ctx.program) return toast('Selecione um programa.', 'error');
+      const name = $('new-session-name').value.trim() || `${ctx.program.name} · ${new Date().toLocaleDateString('pt-BR')}`;
+      const btn = $('create-session-btn'); btn.disabled = true;
+      try {
+        const { data, error } = await sb.rpc('create_live_session',{p_program_id:ctx.program.id,p_name:name});
+        const session = unwrap(data);
+        if (error || !session) throw error || new Error('Não foi possível criar a sessão.');
+        $('new-session-name').value='';
+        location.href = sessionUrl(session);
+      } catch (error) { toast(error.message || 'Não foi possível criar a sessão.', 'error'); btn.disabled = false; }
+    }
+
+    function bindUI() {
+      $('back-studio-btn').addEventListener('click', () => location.href='./studio.html');
+      $('logout-btn').addEventListener('click', async () => { await sb.auth.signOut(); location.href='./studio.html'; });
+      $('create-channel-btn').addEventListener('click', createChannel);
+      $('create-program-btn').addEventListener('click', createProgram);
+      $('create-session-btn').addEventListener('click', createSession);
+      $('new-channel-name').addEventListener('input', () => { if (!$('new-channel-slug').dataset.edited) $('new-channel-slug').value=slugify($('new-channel-name').value); });
+      $('new-channel-slug').addEventListener('input', () => $('new-channel-slug').dataset.edited='1');
+      $('new-program-name').addEventListener('input', () => { if (!$('new-program-slug').dataset.edited) $('new-program-slug').value=slugify($('new-program-name').value); });
+      $('new-program-slug').addEventListener('input', () => $('new-program-slug').dataset.edited='1');
+    }
+
+    async function boot() {
+      if (!sb) { toast('Configuração do Supabase indisponível.', 'error'); return; }
+      bindUI();
+      const { data:{session} } = await sb.auth.getSession();
+      if (!session?.user) { location.replace('./studio.html'); return; }
+      ctx.user = session.user;
+      updateHeader();
+      setOnline(navigator.onLine);
+      window.addEventListener('online', () => setOnline(true));
+      window.addEventListener('offline', () => setOnline(false));
+      await loadChannels();
+    }
+
+    boot().catch(error => toast(error?.message || String(error), 'error'));
+  })();
+  </script>
 </body>
 </html>
