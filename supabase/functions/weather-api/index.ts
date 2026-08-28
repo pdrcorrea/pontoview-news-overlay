@@ -85,8 +85,17 @@ async function locationsFromOverlayToken(token: string) {
   if (error) return { error: "OVERLAY_STATE_ERROR", locations: [] };
   const row = Array.isArray(data) ? data[0] : data;
   const state = row?.program_state;
-  if (!state || state.product !== "weather_overlay") return { error: "WEATHER_STATE_NOT_FOUND", locations: [] };
-  return { error: null, locations: cleanLocations(state.locations) };
+  if (!state) return { error: "WEATHER_STATE_NOT_FOUND", locations: [] };
+
+  if (state.product === "weather_overlay") {
+    return { error: null, locations: cleanLocations(state.locations) };
+  }
+
+  if (state.product === "news_overlay") {
+    return { error: null, locations: cleanLocations(state.weather?.locations) };
+  }
+
+  return { error: "WEATHER_STATE_NOT_FOUND", locations: [] };
 }
 
 async function fetchProvider(locations: any[]) {
