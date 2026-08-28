@@ -11,6 +11,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
   <link rel="stylesheet" href="./studio-app.css" />
   <link rel="stylesheet" href="./studio-clean.css" />
+  <style>
+    .pv-free-lt-preview{position:relative;overflow:hidden;background:linear-gradient(145deg,#10151d,#202938);min-height:210px}
+    .pv-free-lt-preview::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 76% 24%,rgba(47,107,255,.18),transparent 34%)}
+    .pv-free-lt-badge{position:absolute;z-index:8;top:14px;left:14px;background:#1fa971;color:#fff;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900;letter-spacing:.08em}
+    .pv-free-lt-stage{position:absolute;inset:0}
+    .pv-free-lt-slide{position:absolute;left:7%;right:7%;bottom:18%;opacity:0;transform:translateY(8px);animation:pvLtShowcase 16s ease-in-out infinite}
+    .pv-free-lt-slide:nth-child(1){animation-delay:0s}.pv-free-lt-slide:nth-child(2){animation-delay:4s}.pv-free-lt-slide:nth-child(3){animation-delay:8s}.pv-free-lt-slide:nth-child(4){animation-delay:12s}
+    .pv-free-lt-label{display:block;margin:0 0 8px;color:rgba(255,255,255,.5);font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+    .pv-lt-classic{display:flex;align-items:stretch;width:77%;min-height:58px}.pv-lt-classic .accent{width:38px;background:#2f6bff;border-radius:7px 0 0 7px}.pv-lt-classic .body{flex:1;background:#11161e;border:1px solid rgba(255,255,255,.1);border-left:0;border-radius:0 7px 7px 0;padding:10px 13px;color:#fff;box-shadow:0 10px 25px rgba(0,0,0,.16)}
+    .pv-free-lt-slide b{display:block;font-size:12px;line-height:1.15}.pv-free-lt-slide small{display:block;margin-top:5px;font-size:10px;color:rgba(255,255,255,.56)}
+    .pv-lt-accent{width:72%;background:#f5f7fb;color:#10151d;border-radius:7px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.16)}.pv-lt-accent .line{height:4px;background:#2f6bff}.pv-lt-accent .body{padding:11px 14px}.pv-lt-accent small{color:#667181}
+    .pv-lt-tag{display:flex;align-items:stretch;width:79%;min-height:56px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.16))}.pv-lt-tag .tag{display:flex;align-items:center;background:#2f6bff;color:#fff;padding:0 11px;border-radius:7px 0 0 7px;font-size:9px;font-weight:900;letter-spacing:.06em}.pv-lt-tag .body{flex:1;background:#fff;color:#10151d;padding:10px 13px;border-radius:0 7px 7px 0}.pv-lt-tag small{color:#6b7481}
+    .pv-lt-pill{display:inline-flex;align-items:center;gap:11px;max-width:77%;background:#11161e;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:9px 15px 9px 9px;color:#fff;box-shadow:0 10px 25px rgba(0,0,0,.15)}.pv-lt-pill .dot{width:34px;height:34px;border-radius:50%;background:#2f6bff;flex:none}.pv-lt-pill .copy{min-width:0}.pv-lt-pill small{margin-top:3px}
+    @keyframes pvLtShowcase{0%{opacity:0;transform:translateY(8px)}5%,20%{opacity:1;transform:translateY(0)}25%,100%{opacity:0;transform:translateY(-5px)}}
+    @media (prefers-reduced-motion:reduce){.pv-free-lt-slide{animation:none;opacity:0;transform:none}.pv-free-lt-slide:first-child{opacity:1}}
+  </style>
 </head>
 <body class="pv-app-body">
   <div id="authScreen" class="pv-auth-screen">
@@ -95,20 +111,20 @@
               </div>
             </article>
 
-            <article class="pv-overlay-card pv-overlay-card-featured" data-product="free_lower_thirds">
-              <div class="pv-overlay-preview compact" style="position:relative;overflow:hidden;background:linear-gradient(145deg,#10151d,#202938);min-height:210px">
-                <div style="position:absolute;inset:0;background:radial-gradient(circle at 76% 24%,rgba(47,107,255,.18),transparent 34%)"></div>
-                <div style="position:absolute;left:7%;right:7%;bottom:16%;display:grid;gap:13px">
-                  <div style="display:flex;align-items:stretch;width:76%;filter:drop-shadow(0 9px 14px rgba(0,0,0,.18))"><span style="width:38px;background:#2f6bff;border-radius:7px 0 0 7px"></span><span style="flex:1;background:#11161e;border:1px solid rgba(255,255,255,.1);border-left:0;border-radius:0 7px 7px 0;padding:10px 13px;color:white"><b style="display:block;font-size:12px">TEXTO PRINCIPAL</b><small style="opacity:.58">Informação secundária</small></span></div>
-                  <div style="width:58%;height:36px;border-top:4px solid #2f6bff;background:#f5f7fb;border-radius:0 0 7px 7px;box-shadow:0 8px 18px rgba(0,0,0,.16)"></div>
-                  <div style="width:48%;height:27px;border-radius:999px;background:#11161e;border:1px solid rgba(255,255,255,.12)"></div>
+            <article class="pv-overlay-card pv-overlay-card-featured" data-free-product="free_lower_thirds">
+              <div class="pv-overlay-preview compact pv-free-lt-preview">
+                <span class="pv-free-lt-badge">GRÁTIS</span>
+                <div class="pv-free-lt-stage" aria-label="Prévia dos quatro estilos de lower thirds">
+                  <div class="pv-free-lt-slide"><span class="pv-free-lt-label">Classic Bar</span><div class="pv-lt-classic"><span class="accent"></span><span class="body"><b>TEXTO PRINCIPAL</b><small>Informação secundária</small></span></div></div>
+                  <div class="pv-free-lt-slide"><span class="pv-free-lt-label">Accent Line</span><div class="pv-lt-accent"><div class="line"></div><div class="body"><b>TEXTO PRINCIPAL</b><small>Informação secundária</small></div></div></div>
+                  <div class="pv-free-lt-slide"><span class="pv-free-lt-label">Tag Plate</span><div class="pv-lt-tag"><span class="tag">AO VIVO</span><span class="body"><b>TEXTO PRINCIPAL</b><small>Informação secundária</small></span></div></div>
+                  <div class="pv-free-lt-slide"><span class="pv-free-lt-label">Minimal Pill</span><div class="pv-lt-pill"><span class="dot"></span><span class="copy"><b>TEXTO PRINCIPAL</b><small>Informação secundária</small></span></div></div>
                 </div>
-                <span style="position:absolute;top:14px;left:14px;background:#1fa971;color:white;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900;letter-spacing:.08em">GRÁTIS</span>
               </div>
               <div class="pv-overlay-card-body pv-overlay-card-body-clean">
                 <div class="pv-overlay-card-heading"><div><span class="pv-product-state">GRÁTIS</span><h3>PontoView Lower Thirds</h3></div><span class="pv-version">FREE</span></div>
                 <p>Crie, edite, duplique e organize vários lower thirds. Quatro estilos, cores, posição, escala e animações configuráveis.</p>
-                <div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="free_lower_thirds" type="button">Abrir overlay</button></div>
+                <div class="pv-overlay-actions"><a class="pv-button pv-button-primary" href="./lower-thirds/control.html">Abrir overlay grátis</a></div>
               </div>
             </article>
           </div>
@@ -133,6 +149,6 @@
 
   <script src="./app-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"></script>
-  <script src="./js/studio.js"></script>
+  <script src="./js/studio.js?v=20260828-free-lt"></script>
 </body>
 </html>
