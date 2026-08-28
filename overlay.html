@@ -4,15 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>PontoView Overlay</title>
+<link rel="stylesheet" href="./weather/weather-overlay.css?v=20260828-1">
+<link rel="stylesheet" href="./weather/weather-visual-v2.css?v=20260828-1">
+<link rel="stylesheet" href="./weather/weather-polish-v4.css?v=20260828-1">
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}body{font-family:Inter,"Segoe UI",Arial,sans-serif}#core{position:fixed;inset:0;width:100%;height:100%;border:0;background:transparent}#weatherLayer{position:fixed;inset:0;z-index:120;pointer-events:none;display:flex;padding:clamp(28px,3.35vw,72px);box-sizing:border-box}.wx-pos-top-left{align-items:flex-start;justify-content:flex-start}.wx-pos-top-right{align-items:flex-start;justify-content:flex-end}.wx-pos-bottom-left{align-items:flex-end;justify-content:flex-start}.wx-pos-bottom-right{align-items:flex-end;justify-content:flex-end}.wx-stack{display:flex;gap:8px;max-width:calc(100vw - 80px)}.wx-stack.column{flex-direction:column}.wx-stack.row{flex-direction:row;flex-wrap:wrap}.wx-card{min-width:150px;max-width:230px;background:rgba(8,43,91,.94);border-left:4px solid #87d7fc;color:#fff;box-shadow:0 7px 24px rgba(0,0,0,.22);padding:10px 12px 8px;backdrop-filter:blur(4px)}.wx-city{font-size:12px;font-weight:800;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wx-main{display:flex;align-items:center;gap:9px;margin-top:5px}.wx-icon{font-size:30px;line-height:1;width:34px;text-align:center}.wx-temp{font-size:27px;font-weight:850;letter-spacing:-.04em}.wx-condition{font-size:9px;color:#dbe8f5;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wx-meta{display:flex;gap:10px;margin-top:6px;color:#c4d6e7;font-size:8.5px;font-weight:650}.wx-source{margin-top:6px;padding-top:5px;border-top:1px solid rgba(255,255,255,.14);color:#8fa8c0;font-size:7px;text-transform:uppercase;letter-spacing:.06em}.wx-loading{opacity:.72}@media(max-width:900px){#weatherLayer{padding:24px}.wx-card{min-width:128px}.wx-stack.row{gap:6px}}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}body{font-family:Inter,"Segoe UI",Arial,sans-serif}#core{position:fixed;inset:0;width:100%;height:100%;border:0;background:transparent}#weatherLayer{display:none!important}#weather-root{position:fixed;inset:0;z-index:120;pointer-events:none;background:transparent!important}
 </style>
 </head>
 <body>
 <iframe id="core" title="PontoView graphics renderer"></iframe>
-<div id="weatherLayer" class="wx-pos-top-right" hidden></div>
+<div id="weatherLayer" hidden></div>
+<div id="weather-root" aria-live="polite"></div>
 <script src="./app-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="./js/overlay-shell.js"></script>
+<script src="./js/news-weather-v2.js?v=20260828-1"></script>
 </body>
 </html>
