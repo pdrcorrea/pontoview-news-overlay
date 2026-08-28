@@ -6,3 +6,12 @@
 
 /studio.html
   Cache-Control: no-cache, no-store, must-revalidate
+
+/control.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/overlay.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/js/news-weather-*.js
+  Cache-Control: no-cache, no-store, must-revalidate

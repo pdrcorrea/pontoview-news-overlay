@@ -8,6 +8,7 @@
   const root = document.getElementById('weather-root');
   const token = new URLSearchParams(location.search).get('token');
   const POLL_MS = 1200;
+  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
 
   let currentState = null;
   let currentRevision = -1;
@@ -147,7 +148,7 @@
   }
 
   function cardHtml(state, index) {
-    return `<div class="weather-card template-${state.template}"><div class="weather-accent"></div><div class="weather-city-content">${cityContentHtml(state, index)}</div></div>`;
+    return `<div class="weather-card template-${state.template}"><div class="weather-accent"></div><div class="weather-city-content">${cityContentHtml(state, index)}</div><div class="weather-flash"></div></div>`;
   }
 
   function anchorClass(position) {
@@ -157,12 +158,23 @@
   }
 
   function applyTheme(state) {
-    root.style.setProperty('--w-primary', state.style.primary || '#003366');
+    root.style.setProperty('--w-primary', state.style.primary || '#175fb5');
     root.style.setProperty('--w-secondary', state.style.secondary || '#ffffff');
     root.style.setProperty('--w-surface', state.style.surface || '#ffffff');
-    root.style.setProperty('--w-text', state.style.text || '#111827');
-    root.style.setProperty('--w-muted', state.style.muted || '#667585');
+    root.style.setProperty('--w-text', state.style.text || '#082a54');
+    root.style.setProperty('--w-muted', state.style.muted || '#58708a');
     root.style.fontFamily = state.style.font || 'Inter';
+  }
+
+  function flashCard(card) {
+    if (reducedMotion || !card) return;
+    const flash = card.querySelector('.weather-flash');
+    if (!flash) return;
+    gsap.killTweensOf(flash);
+    gsap.fromTo(flash,
+      { opacity: 0, xPercent: -115 },
+      { opacity: .86, xPercent: 110, duration: .32, ease: 'power2.out', overwrite: true,
+        onComplete: () => gsap.set(flash, { opacity: 0, xPercent: 0 }) });
   }
 
   function renderWidget(state, instant = false) {
@@ -186,15 +198,24 @@
     layer.appendChild(widget);
     root.appendChild(layer);
 
-    if (instant) gsap.set(widget, { clipPath: 'inset(0 0% 0 0)', opacity: 1 });
-    else gsap.fromTo(widget, { clipPath: 'inset(0 100% 0 0)', opacity: 0 }, { clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: .52, ease: 'power3.out', overwrite: true });
+    if (instant || reducedMotion) {
+      gsap.set(widget, { clipPath: 'inset(0 0% 0 0)', opacity: 1 });
+      return;
+    }
+    gsap.fromTo(widget,
+      { clipPath: 'inset(0 100% 0 0)', opacity: .15 },
+      { clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: .58, ease: 'power3.out', overwrite: true,
+        onComplete: () => flashCard(widget.querySelector('.weather-card')) });
   }
 
   function animateOut(done) {
     const widget = root.querySelector('.weather-widget');
     if (!widget) return done();
+    if (reducedMotion) { done(); return; }
     gsap.killTweensOf(widget);
-    gsap.to(widget, { clipPath: 'inset(0 100% 0 0)', opacity: 0, duration: .22, ease: 'power2.in', overwrite: true, onComplete: done });
+    gsap.to(widget, {
+      clipPath: 'inset(0 100% 0 0)', opacity: .08, duration: .4, ease: 'power2.inOut', overwrite: true, onComplete: done
+    });
   }
 
   async function applyState(raw, instant = false) {
@@ -214,14 +235,20 @@
     nextRotationAt = Date.now() + Math.max(3, Number(state.rotation.interval || 8)) * 1000;
     cityIndex = (cityIndex + 1) % state.locations.length;
     const content = root.querySelector('.weather-city-content');
+    const card = content?.closest('.weather-card');
     if (!content) return renderWidget(state, true);
+    if (reducedMotion) {
+      content.innerHTML = cityContentHtml(state, cityIndex);
+      return;
+    }
     gsap.killTweensOf(content);
     gsap.to(content, {
-      clipPath: 'inset(0 0 0 100%)', opacity: 0, x: 12, duration: .18, ease: 'power2.in',
+      clipPath: 'inset(0 0 0 100%)', opacity: .35, duration: .28, ease: 'power2.inOut',
       onComplete: () => {
         content.innerHTML = cityContentHtml(state, cityIndex);
-        gsap.set(content, { clipPath: 'inset(0 100% 0 0)', opacity: 0, x: -10 });
-        gsap.to(content, { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, duration: .3, ease: 'power3.out' });
+        flashCard(card);
+        gsap.set(content, { clipPath: 'inset(0 100% 0 0)', opacity: .25 });
+        gsap.to(content, { clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: .44, ease: 'power3.out' });
       }
     });
   }
@@ -230,7 +257,10 @@
     if (!currentState?.visibility.widget || !currentState.locations.length) return;
     if (currentState.mode === 'panel') {
       const panel = root.querySelector('.weather-panel');
-      if (panel) panel.innerHTML = currentState.locations.map((_, i) => cardHtml(currentState, i)).join('');
+      if (panel) {
+        panel.innerHTML = currentState.locations.map((_, i) => cardHtml(currentState, i)).join('');
+        if (!reducedMotion) gsap.fromTo(panel.children, { opacity: .72 }, { opacity: 1, duration: .28, stagger: .025, ease: 'power2.out' });
+      }
       return;
     }
     const content = root.querySelector('.weather-city-content');
