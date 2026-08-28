@@ -4,7 +4,7 @@
   const config = window.PV_CONFIG || {};
   const CHECKOUT_URL = './checkout.html';
   const PRODUCT_URLS = Object.freeze({
-    news_overlay: './control.html',
+    news_overlay: './news-workspaces.html',
     weather_overlay: './weather/control.html',
     free_lower_thirds: './lower-thirds/control.html'
   });
