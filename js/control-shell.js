@@ -48,9 +48,6 @@
   }
   function writeJSON(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {} }
   function stable(value) { try { return JSON.stringify(value); } catch (_) { return ''; } }
-  function slugPart(text) {
-    return String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,38) || 'principal';
-  }
   function getWeather(kind) { return normalizeWeather(readJSON(kind === 'program' ? WEATHER_PROGRAM_KEY : WEATHER_DRAFT_KEY, DEFAULT_WEATHER)); }
   function setWeather(kind, value) {
     const normalized = normalizeWeather(value);
@@ -67,54 +64,40 @@
     if (!coreState || typeof coreState !== 'object') return null;
     return { ...clone(coreState), weather:normalizeWeather(weather) };
   }
+  function selectorUrl() {
+    const url = new URL('./news-workspaces.html', location.href);
+    url.search = '';
+    if (workspace?.id || qs.get('workspace')) url.searchParams.set('workspace', workspace?.id || qs.get('workspace'));
+    if (program?.id || qs.get('program')) url.searchParams.set('program', program?.id || qs.get('program'));
+    return url.toString();
+  }
 
   async function chooseContext() {
     const product = cfg.product || 'news_overlay';
+    const requestedWorkspace = qs.get('workspace');
+    const requestedProgram = qs.get('program');
+    if (!requestedWorkspace || !requestedProgram) {
+      location.replace(selectorUrl());
+      return false;
+    }
+
     const { data:workspaces, error:wErr } = await client.from('workspaces')
       .select('id,name,slug,product,created_at').eq('user_id', user.id).eq('product', product).order('created_at');
     if (wErr) throw wErr;
-
-    let rows = workspaces || [];
-    if (!rows.length) {
-      const base = `news-${user.id.replace(/-/g,'').slice(0,12)}`;
-      const created = await client.from('workspaces').insert({ user_id:user.id, product, name:'Meu canal', slug:base })
-        .select('id,name,slug,product,created_at').single();
-      if (created.error) throw created.error;
-      rows = [created.data];
-    }
-
-    const requestedWorkspace = qs.get('workspace');
-    workspace = requestedWorkspace ? rows.find(x => x.id === requestedWorkspace) : null;
-    if (!workspace && rows.length === 1) workspace = rows[0];
-    if (!workspace && rows.length > 1) {
+    workspace = (workspaces || []).find(x => x.id === requestedWorkspace) || null;
+    if (!workspace) {
       location.replace('./news-workspaces.html');
       return false;
     }
-    if (!workspace) throw new Error('Workspace News não encontrado.');
 
     const { data:programs, error:pErr } = await client.from('programs')
       .select('id,name,slug,settings,created_at').eq('workspace_id', workspace.id).order('created_at');
     if (pErr) throw pErr;
-    let pRows = programs || [];
-    if (!pRows.length) {
-      const created = await client.from('programs').insert({
-        workspace_id:workspace.id,
-        name:'Programa principal',
-        slug:slugPart('Programa principal'),
-        settings:{ product:'news_overlay' }
-      }).select('id,name,slug,settings,created_at').single();
-      if (created.error) throw created.error;
-      pRows = [created.data];
-    }
-
-    const requestedProgram = qs.get('program');
-    program = requestedProgram ? pRows.find(x => x.id === requestedProgram) : null;
-    if (!program && pRows.length === 1) program = pRows[0];
-    if (!program && pRows.length > 1) {
+    program = (programs || []).find(x => x.id === requestedProgram) || null;
+    if (!program) {
       location.replace(`./news-workspaces.html?workspace=${encodeURIComponent(workspace.id)}`);
       return false;
     }
-    if (!program) throw new Error('Programa News não encontrado.');
     return true;
   }
 
@@ -124,15 +107,22 @@
     user = session.user;
     if (!(await chooseContext())) return false;
 
-    let { data:sessionRow, error:sErr } = await client.from('live_sessions')
-      .select('id,workspace_id,program_id,public_token,status,updated_at')
-      .eq('workspace_id', workspace.id).eq('program_id', program.id).neq('status','ended')
-      .order('updated_at', { ascending:false }).limit(1).maybeSingle();
+    const requestedSession = qs.get('session');
+    if (!requestedSession) {
+      location.replace(selectorUrl());
+      return false;
+    }
+
+    const { data:sessionRow, error:sErr } = await client.from('live_sessions')
+      .select('id,workspace_id,program_id,name,public_token,status,created_at,updated_at')
+      .eq('id', requestedSession)
+      .eq('workspace_id', workspace.id)
+      .eq('program_id', program.id)
+      .maybeSingle();
     if (sErr) throw sErr;
     if (!sessionRow) {
-      const created = await client.rpc('create_live_session', { p_program_id:program.id, p_name:'Sessão principal' });
-      if (created.error) throw created.error;
-      sessionRow = created.data;
+      location.replace(selectorUrl());
+      return false;
     }
     liveSession = sessionRow;
 
@@ -242,8 +232,8 @@
       const btn = doc.createElement('button');
       btn.id = 'pvWorkspaceHeader'; btn.type = 'button'; btn.className = 'icon-button';
       btn.textContent = workspace?.name ? `Canal: ${workspace.name}` : 'Canal';
-      btn.title = program?.name ? `${workspace.name} · ${program.name}` : 'Trocar canal ou programa';
-      btn.addEventListener('click', () => location.href = `./news-workspaces.html?workspace=${encodeURIComponent(workspace.id)}`);
+      btn.title = [workspace?.name, program?.name, liveSession?.name].filter(Boolean).join(' · ') || 'Trocar canal, programa ou sessão';
+      btn.addEventListener('click', () => location.href = selectorUrl());
       actions.insertBefore(btn, actions.firstChild);
     }
     if (actions && !doc.getElementById('pvWeatherHeader')) {
