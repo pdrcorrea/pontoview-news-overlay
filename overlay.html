@@ -18,6 +18,19 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent
 <script src="./app-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script>
+window.PV_SHARED_WEATHER_V2 = true;
+(() => {
+  const nativeFetch = window.fetch.bind(window);
+  window.fetch = (input, init) => {
+    const url = typeof input === 'string' ? input : (input?.url || String(input || ''));
+    if (window.PV_SHARED_WEATHER_V2 && /(?:api|geocoding-api)\.open-meteo\.com\//i.test(url)) {
+      return Promise.reject(new Error('Legacy Weather provider disabled; using PontoView Weather backend.'));
+    }
+    return nativeFetch(input, init);
+  };
+})();
+</script>
 <script src="./js/overlay-shell.js"></script>
 <script src="./js/news-weather-v2.js?v=20260828-1"></script>
 </body>
