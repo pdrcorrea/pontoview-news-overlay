@@ -10,8 +10,14 @@
 /control.html
   Cache-Control: no-cache, no-store, must-revalidate
 
+/news-workspaces.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /overlay.html
   Cache-Control: no-cache, no-store, must-revalidate
 
-/js/news-weather-*.js
+/app-config.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/js/*
   Cache-Control: no-cache, no-store, must-revalidate
