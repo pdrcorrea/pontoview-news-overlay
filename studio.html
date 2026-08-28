@@ -62,7 +62,7 @@
         <section class="pv-view active" data-view-panel="library">
           <div class="pv-page-heading pv-page-heading-clean"><span class="pv-kicker">OVERLAYS</span><h1 id="welcomeTitle">Seus overlays.</h1><p>Escolha o que deseja operar.</p></div>
           <div id="paywallBanner" class="pv-paywall-banner pv-paywall-compact" hidden>
-            <div class="pv-paywall-copy"><span class="pv-paywall-icon material-symbols-rounded" aria-hidden="true">lock</span><div><strong>Assine para liberar o Studio.</strong><p>Acesse os produtos disponíveis na biblioteca PontoView Studio.</p></div></div>
+            <div class="pv-paywall-copy"><span class="pv-paywall-icon material-symbols-rounded" aria-hidden="true">lock</span><div><strong>Assine para liberar os overlays premium.</strong><p>O Lower Thirds gratuito continua disponível mesmo sem assinatura.</p></div></div>
             <button class="pv-button pv-button-primary" data-action="subscribe" type="button">Assinar</button>
           </div>
 
@@ -84,11 +84,7 @@
             <article class="pv-overlay-card pv-overlay-card-featured" data-product="weather_overlay">
               <div class="pv-overlay-preview pv-weather-preview compact">
                 <div class="pv-weather-preview-label">CLIMA</div>
-                <div class="pv-weather-module">
-                  <div class="pv-weather-icon"><span class="material-symbols-rounded" aria-hidden="true">partly_cloudy_day</span></div>
-                  <div class="pv-weather-main"><strong>23°</strong><span>SÃO PAULO</span></div>
-                  <div class="pv-weather-condition">PARCIALMENTE NUBLADO</div>
-                </div>
+                <div class="pv-weather-module"><div class="pv-weather-icon"><span class="material-symbols-rounded" aria-hidden="true">partly_cloudy_day</span></div><div class="pv-weather-main"><strong>23°</strong><span>SÃO PAULO</span></div><div class="pv-weather-condition">PARCIALMENTE NUBLADO</div></div>
                 <div class="pv-weather-cities"><span>RIO 27°</span><span>CURITIBA 17°</span><span>RECIFE 29°</span></div>
                 <div class="pv-overlay-lock" data-lock-overlay><span class="material-symbols-rounded" aria-hidden="true">lock</span><strong>Assinatura necessária</strong></div>
               </div>
@@ -98,34 +94,39 @@
                 <div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="weather_overlay" type="button">Abrir overlay</button><a class="pv-button pv-button-secondary" href="./weather/">Abrir direto</a></div>
               </div>
             </article>
+
+            <article class="pv-overlay-card pv-overlay-card-featured" data-product="free_lower_thirds">
+              <div class="pv-overlay-preview compact" style="position:relative;overflow:hidden;background:linear-gradient(145deg,#10151d,#202938);min-height:210px">
+                <div style="position:absolute;inset:0;background:radial-gradient(circle at 76% 24%,rgba(47,107,255,.18),transparent 34%)"></div>
+                <div style="position:absolute;left:7%;right:7%;bottom:16%;display:grid;gap:13px">
+                  <div style="display:flex;align-items:stretch;width:76%;filter:drop-shadow(0 9px 14px rgba(0,0,0,.18))"><span style="width:38px;background:#2f6bff;border-radius:7px 0 0 7px"></span><span style="flex:1;background:#11161e;border:1px solid rgba(255,255,255,.1);border-left:0;border-radius:0 7px 7px 0;padding:10px 13px;color:white"><b style="display:block;font-size:12px">TEXTO PRINCIPAL</b><small style="opacity:.58">Informação secundária</small></span></div>
+                  <div style="width:58%;height:36px;border-top:4px solid #2f6bff;background:#f5f7fb;border-radius:0 0 7px 7px;box-shadow:0 8px 18px rgba(0,0,0,.16)"></div>
+                  <div style="width:48%;height:27px;border-radius:999px;background:#11161e;border:1px solid rgba(255,255,255,.12)"></div>
+                </div>
+                <span style="position:absolute;top:14px;left:14px;background:#1fa971;color:white;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900;letter-spacing:.08em">GRÁTIS</span>
+              </div>
+              <div class="pv-overlay-card-body pv-overlay-card-body-clean">
+                <div class="pv-overlay-card-heading"><div><span class="pv-product-state">GRÁTIS</span><h3>PontoView Lower Thirds</h3></div><span class="pv-version">FREE</span></div>
+                <p>Crie, edite, duplique e organize vários lower thirds. Quatro estilos, cores, posição, escala e animações configuráveis.</p>
+                <div class="pv-overlay-actions"><button class="pv-button pv-button-primary" data-open-product="free_lower_thirds" type="button">Abrir overlay</button></div>
+              </div>
+            </article>
           </div>
         </section>
 
         <section class="pv-view" data-view-panel="billing">
           <div class="pv-page-heading pv-page-heading-clean"><span class="pv-kicker">ASSINATURA</span><h1>Assinatura.</h1><p>Status e cobrança do seu Studio.</p></div>
-          <article class="pv-billing-card pv-billing-main pv-billing-clean">
-            <div class="pv-billing-head"><div><h2>PontoView Studio</h2></div><span id="billingStatus" class="pv-billing-status">Verificando</span></div>
-            <div class="pv-billing-price"><strong>R$ 59</strong><span>/ mês</span></div>
-            <div class="pv-billing-meta"><div><span>Início</span><strong id="billingStarted">—</strong></div><div><span>Renovação</span><strong id="billingExpires">—</strong></div></div>
-            <div class="pv-billing-actions"><button class="pv-button pv-button-primary" data-action="subscribe" type="button">Assinar</button><button class="pv-button pv-button-secondary" type="button" data-action="billing-help">Ajuda com cobrança</button></div>
-          </article>
+          <article class="pv-billing-card pv-billing-main pv-billing-clean"><div class="pv-billing-head"><div><h2>PontoView Studio</h2></div><span id="billingStatus" class="pv-billing-status">Verificando</span></div><div class="pv-billing-price"><strong>R$ 59</strong><span>/ mês</span></div><div class="pv-billing-meta"><div><span>Início</span><strong id="billingStarted">—</strong></div><div><span>Renovação</span><strong id="billingExpires">—</strong></div></div><div class="pv-billing-actions"><button class="pv-button pv-button-primary" data-action="subscribe" type="button">Assinar</button><button class="pv-button pv-button-secondary" type="button" data-action="billing-help">Ajuda com cobrança</button></div></article>
         </section>
 
         <section class="pv-view" data-view-panel="account">
           <div class="pv-page-heading pv-page-heading-clean"><span class="pv-kicker">CONTA</span><h1>Sua conta.</h1></div>
-          <div class="pv-account-grid pv-account-grid-clean">
-            <article class="pv-settings-card"><div class="pv-profile-row"><div id="accountAvatar" class="pv-account-avatar">PV</div><div><strong id="accountName">Conta PontoView</strong><span id="accountEmail">—</span></div></div><div class="pv-settings-list"><div><span>Nome</span><strong id="accountNameRow">—</strong></div><div><span>E-mail</span><strong id="accountEmailRow">—</strong></div></div></article>
-            <article class="pv-settings-card"><div class="pv-settings-links"><button type="button" data-action="password-reset"><span>Alterar senha</span><b>›</b></button><a href="./privacidade.html"><span>Privacidade</span><b>›</b></a><a href="./termos.html"><span>Termos de Uso</span><b>›</b></a></div></article>
-          </div>
+          <div class="pv-account-grid pv-account-grid-clean"><article class="pv-settings-card"><div class="pv-profile-row"><div id="accountAvatar" class="pv-account-avatar">PV</div><div><strong id="accountName">Conta PontoView</strong><span id="accountEmail">—</span></div></div><div class="pv-settings-list"><div><span>Nome</span><strong id="accountNameRow">—</strong></div><div><span>E-mail</span><strong id="accountEmailRow">—</strong></div></div></article><article class="pv-settings-card"><div class="pv-settings-links"><button type="button" data-action="password-reset"><span>Alterar senha</span><b>›</b></button><a href="./privacidade.html"><span>Privacidade</span><b>›</b></a><a href="./termos.html"><span>Termos de Uso</span><b>›</b></a></div></article></div>
         </section>
       </main>
     </div>
 
-    <nav class="pv-mobile-nav" aria-label="Navegação mobile">
-      <button class="active" data-view="library" type="button"><span class="material-symbols-rounded" aria-hidden="true">grid_view</span>Overlays</button>
-      <button data-view="billing" type="button"><span class="material-symbols-rounded" aria-hidden="true">credit_card</span>Assinatura</button>
-      <button data-view="account" type="button"><span class="material-symbols-rounded" aria-hidden="true">person</span>Conta</button>
-    </nav>
+    <nav class="pv-mobile-nav" aria-label="Navegação mobile"><button class="active" data-view="library" type="button"><span class="material-symbols-rounded" aria-hidden="true">grid_view</span>Overlays</button><button data-view="billing" type="button"><span class="material-symbols-rounded" aria-hidden="true">credit_card</span>Assinatura</button><button data-view="account" type="button"><span class="material-symbols-rounded" aria-hidden="true">person</span>Conta</button></nav>
   </div>
 
   <div id="noticeModal" class="pv-modal" hidden><div class="pv-modal-card"><button class="pv-modal-close" data-close-modal type="button" aria-label="Fechar"><span class="material-symbols-rounded" aria-hidden="true">close</span></button><span class="pv-kicker">PONTOVIEW STUDIO</span><h2 id="modalTitle">PontoView Studio</h2><p id="modalCopy">Informação do Studio.</p><button class="pv-button pv-button-primary pv-button-full" data-close-modal type="button">Entendi</button></div></div>
