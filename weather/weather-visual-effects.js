@@ -19,11 +19,11 @@
 
   function abbreviateCity(name) {
     const original = cleanName(name).toLocaleUpperCase('pt-BR');
-    if (original.length <= 15) return original;
+    if (original.length <= 13) return original;
 
     const words = significantWords(original);
     if (words.length <= 1) return original;
-    if (words.length === 2 && original.length <= 19) return original;
+    if (words.length === 2 && original.length <= 15) return original;
 
     const last = words.at(-1);
     const initials = words.slice(0, -1)
@@ -49,7 +49,7 @@
       const distance = Math.max(0, Math.ceil(track.scrollWidth - cityEl.clientWidth));
       cityEl.classList.toggle('is-marquee', distance > 3);
       cityEl.style.setProperty('--city-shift', `${distance}px`);
-      cityEl.style.setProperty('--marquee-duration', `${Math.max(7, Math.min(14, 6.5 + distance / 24))}s`);
+      cityEl.style.setProperty('--marquee-duration', `${Math.max(8, Math.min(15, 7.5 + distance / 24))}s`);
     });
   }
 
@@ -100,19 +100,19 @@
         opacity: 0,
         scaleX: 0,
         transformOrigin: 'left center',
-        xPercent: -10
+        xPercent: -12
       });
       window.gsap.timeline()
-        .to(flash, { opacity: .92, scaleX: 1.08, xPercent: 0, duration: .105, ease: 'power2.out' })
-        .to(flash, { opacity: 0, scaleX: 1.18, duration: .15, ease: 'power2.in' });
+        .to(flash, { opacity: .78, scaleX: 1.04, xPercent: 0, duration: .14, ease: 'power2.out' })
+        .to(flash, { opacity: 0, scaleX: 1.12, duration: .20, ease: 'power2.inOut' });
       return;
     }
 
     flash.animate([
-      { opacity: 0, transform: 'translateX(-10%) scaleX(0)' },
-      { opacity: .92, transform: 'translateX(0) scaleX(1.08)', offset: .42 },
-      { opacity: 0, transform: 'translateX(0) scaleX(1.18)' }
-    ], { duration: 260, easing: 'cubic-bezier(.2,.76,.2,1)' });
+      { opacity: 0, transform: 'translateX(-12%) scaleX(0)' },
+      { opacity: .78, transform: 'translateX(0) scaleX(1.04)', offset: .42 },
+      { opacity: 0, transform: 'translateX(0) scaleX(1.12)' }
+    ], { duration: 340, easing: 'cubic-bezier(.2,.76,.2,1)' });
   }
 
   function wipeStageContent(card) {
@@ -123,16 +123,16 @@
     if (window.gsap) {
       window.gsap.killTweensOf(content);
       window.gsap.fromTo(content,
-        { clipPath: 'inset(0 100% 0 0)', opacity: .15, x: -7 },
-        { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, duration: .34, ease: 'power3.out' }
+        { clipPath: 'inset(0 100% 0 0)', opacity: .18, x: -8 },
+        { clipPath: 'inset(0 0% 0 0)', opacity: 1, x: 0, duration: .42, ease: 'power3.out' }
       );
       return;
     }
 
     content.animate([
-      { clipPath: 'inset(0 100% 0 0)', opacity: .15, transform: 'translateX(-7px)' },
+      { clipPath: 'inset(0 100% 0 0)', opacity: .18, transform: 'translateX(-8px)' },
       { clipPath: 'inset(0 0% 0 0)', opacity: 1, transform: 'translateX(0)' }
-    ], { duration: 340, easing: 'cubic-bezier(.2,.76,.2,1)' });
+    ], { duration: 420, easing: 'cubic-bezier(.2,.76,.2,1)' });
   }
 
   function processCard(card) {
