@@ -7,9 +7,11 @@
     const qs = new URLSearchParams(location.search);
     const workspace = qs.get('workspace');
     const program = qs.get('program');
-    if (!workspace || !program) {
+    const session = qs.get('session');
+    if (!workspace || !program || !session) {
       const selector = new URL('./news-workspaces.html', location.href);
       if (workspace) selector.searchParams.set('workspace', workspace);
+      if (program) selector.searchParams.set('program', program);
       location.replace(selector.toString());
       return;
     }
