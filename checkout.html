@@ -16,7 +16,7 @@
 <body>
   <main class="shell" id="page">
     <div class="top">
-      <a class="brand" href="./index.html"><img src="./assets/logo-pontoview.png" alt="PontoView" /><span>Studio</span></a>
+      <a class="brand" href="./index.html"><img src="./assets/pontoview-logo-blue.png" alt="PontoView" /><span>Studio</span></a>
       <a class="back" href="./studio.html">Voltar ao Studio</a>
     </div>
 
@@ -71,7 +71,6 @@
       const money = cents => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(cents || 0)/100);
       const date = value => value ? new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(value)) : '—';
       const statusLabel = {trial:'TESTE GRÁTIS',active:'ATIVA',past_due:'PAGAMENTO PENDENTE',canceled:'CANCELADA',suspended:'SUSPENSA'};
-      let summary = null;
 
       async function invoke(action) {
         const { data:{ session } } = await client.auth.getSession();
@@ -85,7 +84,6 @@
       }
 
       function render(data) {
-        summary = data;
         const plan = data.plan || {};
         const sub = data.subscription || {};
         document.getElementById('planName').textContent = plan.name || 'PontoView Pro';

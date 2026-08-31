@@ -3,6 +3,7 @@
 
   const config = window.PV_CONFIG || {};
   const CHECKOUT_URL = './checkout.html';
+  const SUPPORT_URL = './contato.html';
   const PRODUCT_URLS = Object.freeze({
     news_overlay: './news-workspaces.html',
     weather_overlay: './weather/control.html',
@@ -12,6 +13,7 @@
   const qs = (s, r = document) => r.querySelector(s);
   const qsa = (s, r = document) => [...r.querySelectorAll(s)];
   const fmtDate = value => value ? new Intl.DateTimeFormat('pt-BR', { day:'2-digit', month:'short', year:'numeric' }).format(new Date(value)) : '—';
+  const fmtMoney = cents => new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL' }).format(Number(cents || 0) / 100);
   const initials = name => (name || 'PontoView').split(/\s+/).filter(Boolean).slice(0,2).map(v => v[0]).join('').toUpperCase();
 
   let client = null;
@@ -44,6 +46,27 @@
     authScreen?.removeAttribute('hidden');
     if (authScreen) authScreen.style.display = '';
     document.body.classList.remove('is-authenticated');
+  }
+
+  function injectSupportLinks() {
+    const sidebarNav = qs('.pv-sidebar-nav');
+    if (sidebarNav && !sidebarNav.querySelector('[data-support-link]')) {
+      const link = document.createElement('a');
+      link.className = 'pv-nav-item';
+      link.href = SUPPORT_URL;
+      link.dataset.supportLink = 'true';
+      link.innerHTML = '<span class="pv-nav-icon material-symbols-rounded" aria-hidden="true">support_agent</span><span>Contato e suporte</span>';
+      sidebarNav.appendChild(link);
+    }
+
+    const accountLinks = qs('.pv-settings-links');
+    if (accountLinks && !accountLinks.querySelector('[data-support-link]')) {
+      const link = document.createElement('a');
+      link.href = SUPPORT_URL;
+      link.dataset.supportLink = 'true';
+      link.innerHTML = '<span>Contato e suporte</span><b>›</b>';
+      accountLinks.appendChild(link);
+    }
   }
 
   function applyUser(user, profile = null) {
@@ -115,8 +138,68 @@
       btn.textContent = unlocked ? 'Abrir overlay' : 'Assinar para usar';
     });
     qsa('[data-action="subscribe"]').forEach(btn => {
-      btn.textContent = accessActive ? 'Gerenciar assinatura' : 'Assinar';
+      btn.textContent = accessActive ? 'Gerenciar assinatura' : 'Assinar PontoView PRO';
     });
+  }
+
+  async function invokeBilling(action = 'summary') {
+    if (!client) throw new Error('Serviço financeiro indisponível.');
+    const { data:{ session } } = await client.auth.getSession();
+    if (!session) throw new Error('Sessão expirada.');
+    const response = await fetch(`${config.supabaseUrl}/functions/v1/studio-billing`, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        apikey:config.supabaseKey,
+        Authorization:`Bearer ${session.access_token}`
+      },
+      body:JSON.stringify({ action })
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(body.error || 'Não foi possível consultar o financeiro.');
+    return body;
+  }
+
+  function renderBillingSummary(data) {
+    const plan = data?.plan || {};
+    const sub = data?.subscription || {};
+    const title = qs('.pv-billing-head h2');
+    const price = qs('.pv-billing-price strong');
+    const period = qs('.pv-billing-price span');
+    if (title) title.textContent = plan.name || 'PontoView PRO';
+    if (price) price.textContent = plan.price_cents != null ? fmtMoney(plan.price_cents) : '—';
+    if (period) period.textContent = plan.billing_period === 'monthly' ? '/ mês' : '';
+
+    const statusMap = {
+      trial:['TESTE GRÁTIS','active'],
+      active:['ATIVA','active'],
+      past_due:['PAGAMENTO PENDENTE','locked'],
+      canceled:['CANCELADA','locked'],
+      suspended:['SUSPENSA','locked']
+    };
+    const status = statusMap[sub.status] || [accessActive ? 'ATIVA' : 'INATIVA', accessActive ? 'active' : 'locked'];
+    const statusEl = qs('#billingStatus');
+    if (statusEl) {
+      statusEl.textContent = status[0];
+      statusEl.className = `pv-billing-status ${status[1]}`;
+    }
+
+    const started = qs('#billingStarted');
+    const expires = qs('#billingExpires');
+    if (started) started.textContent = fmtDate(sub.started_at || sub.current_period_start);
+    if (expires) expires.textContent = fmtDate(sub.current_period_end || sub.expires_at || sub.trial_ends_at);
+
+    qsa('[data-action="subscribe"]').forEach(btn => {
+      btn.textContent = sub.status === 'active' || sub.status === 'trial' ? 'Gerenciar assinatura' : 'Assinar PontoView PRO';
+    });
+  }
+
+  async function refreshBilling() {
+    try {
+      renderBillingSummary(await invokeBilling('summary'));
+    } catch (error) {
+      console.warn('Não foi possível carregar o resumo financeiro:', error.message);
+    }
   }
 
   function setView(view) {
@@ -126,6 +209,7 @@
     const titles = { library:'Overlays', billing:'Assinatura', account:'Conta' };
     const title = qs('#topbarTitle');
     if (title) title.textContent = titles[validView];
+    if (validView === 'billing') refreshBilling();
     window.scrollTo({ top:0, behavior:'smooth' });
     qs('.pv-sidebar')?.classList.remove('open');
   }
@@ -147,9 +231,7 @@
     qs('#noticeModal')?.addEventListener('click', e => { if (e.target === qs('#noticeModal')) e.currentTarget.hidden = true; });
 
     qsa('[data-action="subscribe"]').forEach(btn => btn.addEventListener('click', () => { location.href = CHECKOUT_URL; }));
-    qsa('[data-action="billing-help"]').forEach(btn => btn.addEventListener('click', () => {
-      location.href = 'mailto:suporte@pontoview.com.br?subject=Ajuda%20com%20cobrança%20PontoView%20Studio';
-    }));
+    qsa('[data-action="billing-help"]').forEach(btn => btn.addEventListener('click', () => { location.href = `${SUPPORT_URL}?categoria=financeiro`; }));
     qsa('[data-action="password-reset"]').forEach(btn => btn.addEventListener('click', async () => {
       if (!client || !currentUser?.email) return;
       const { error } = await client.auth.resetPasswordForEmail(currentUser.email, { redirectTo:`${location.origin}/studio.html` });
@@ -181,6 +263,7 @@
     applyUser(user, profile || null);
     if (subscriptionError) console.warn('Não foi possível consultar as assinaturas:', subscriptionError.message);
     applyAccess(subscriptions || []);
+    await refreshBilling();
   }
 
   async function authenticate(email, password) {
@@ -224,6 +307,7 @@
 
   async function boot() {
     initClient();
+    injectSupportLinks();
     bindUI();
     bindAuth();
     if (!client) { showAuth(); return; }
