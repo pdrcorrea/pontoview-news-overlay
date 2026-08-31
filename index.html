@@ -2,119 +2,77 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="PontoView Studio: biblioteca de overlays para transmissões, lives e produções ao vivo, com controle pelo navegador." />
   <title>PontoView Studio | Overlays para transmissões ao vivo</title>
+  <link rel="icon" href="./assets/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
-  <link rel="stylesheet" href="./styles.css" />
-  <style>
-    .platform-hero{padding:94px 0 70px;background:linear-gradient(180deg,#f7fbff 0%,#fff 100%)}
-    .platform-hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center}
-    .platform-hero h1{max-width:760px}.platform-hero p{max-width:680px}
-    .studio-board{background:#082f63;border-radius:28px;padding:18px;box-shadow:0 34px 90px rgba(5,44,96,.18)}
-    .studio-board-screen{background:#f8fbfe;border-radius:18px;padding:18px;min-height:420px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .mini-product{border:1px solid #dce7f0;background:#fff;border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;min-height:175px}
-    .mini-product.wide{grid-column:1/-1;min-height:155px}.mini-product .material-symbols-rounded{font-size:28px;color:#073f85}.mini-product strong{font-size:18px;color:#052c60}.mini-product small{color:#66788b;line-height:1.5}.mini-tag{display:inline-flex;width:max-content;padding:5px 8px;border-radius:999px;background:#e9f5ff;color:#073f85;font-size:9px;font-weight:900;letter-spacing:.09em}.mini-tag.free{background:#eaf8f4;color:#12805c}
-    .product-grid-new{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}.product-tile{background:#fff;border:1px solid #dfe8ee;border-radius:20px;overflow:hidden;display:flex;flex-direction:column}.product-tile-visual{min-height:205px;padding:24px;background:#f3f7fb;display:flex;align-items:center;justify-content:center}.product-tile-body{padding:24px;display:flex;flex-direction:column;gap:13px;flex:1}.product-tile h3{margin:0;color:#052c60;font-size:22px}.product-tile p{margin:0;color:#607185;line-height:1.65}.product-state{font-size:9px;font-weight:900;letter-spacing:.1em;color:#073f85}.product-state.free{color:#12805c}.weather-card-art{width:100%;max-width:275px;background:#0b376d;color:white;border-radius:16px;padding:22px;box-shadow:0 18px 50px rgba(8,47,99,.18)}.weather-temp{font-size:58px;font-weight:900;line-height:1}.weather-city{font-size:12px;font-weight:800;letter-spacing:.08em}.weather-line{display:flex;gap:8px;margin-top:18px;font-size:10px;opacity:.8;flex-wrap:wrap}.lt-art{width:100%;max-width:285px;display:grid;gap:10px}.lt-line{background:#10151d;color:#fff;border-radius:10px;padding:13px 15px;border-left:8px solid #2f6bff}.lt-line.alt{background:#fff;color:#10243c;border:1px solid #dce5ed;border-top:5px solid #2f6bff;border-left:1px solid #dce5ed}.lt-line b{display:block;font-size:11px}.lt-line small{font-size:9px;opacity:.65}.news-art{width:100%;max-width:285px;background:#111827;border-radius:16px;min-height:150px;position:relative;overflow:hidden}.news-art:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(101,212,241,.12),transparent 55%)}.news-lower{position:absolute;left:14px;right:14px;bottom:18px;background:#fff;color:#052c60;border-radius:8px;padding:12px 14px;border-left:9px solid #073f85}.news-lower span{font-size:8px;font-weight:900;color:#2f6bff}.news-lower b{display:block;font-size:11px;margin-top:4px}.benefit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}.benefit-card{padding:24px;border:1px solid rgba(255,255,255,.13);border-radius:16px;background:rgba(255,255,255,.04)}.benefit-card .material-symbols-rounded{font-size:30px;color:#65d4f1}.benefit-card h3{margin:14px 0 8px;color:white}.benefit-card p{margin:0;color:rgba(255,255,255,.7);line-height:1.6;font-size:13px}
-    .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:32px}.step-card{border:1px solid #dfe8ee;border-radius:18px;padding:26px;background:#fff}.step-no{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:#073f85;color:#fff;font-weight:900;margin-bottom:18px}.step-card h3{margin:0 0 8px;color:#052c60}.step-card p{margin:0;color:#607185;line-height:1.65}
-    .pro-panel{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;background:#052c60;color:white;border-radius:24px;padding:34px}.pro-panel h2{margin:0 0 10px;color:white;font-size:34px}.pro-panel p{margin:0;color:rgba(255,255,255,.72);max-width:700px;line-height:1.65}.pro-badge{display:inline-flex;margin-bottom:12px;padding:6px 9px;border-radius:999px;background:#65d4f1;color:#052c60;font-size:10px;font-weight:900;letter-spacing:.1em}.support-band{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;border:1px solid #dfe8ee;border-radius:20px;padding:28px;background:#fff}.support-band h3{margin:0 0 8px;color:#052c60}.support-band p{margin:0;color:#607185}
-    @media(max-width:920px){.platform-hero-grid,.pro-panel{grid-template-columns:1fr}.product-grid-new,.steps-grid{grid-template-columns:1fr}.benefit-grid{grid-template-columns:1fr 1fr}.pro-panel .btn{width:100%}.support-band{grid-template-columns:1fr}.studio-board-screen{min-height:auto}}
-    @media(max-width:620px){.platform-hero{padding-top:64px}.benefit-grid{grid-template-columns:1fr}.studio-board-screen{grid-template-columns:1fr}.mini-product.wide{grid-column:auto}}
-  </style>
+  <link rel="stylesheet" href="./home.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="./index.html" aria-label="PontoView Studio"><img class="brand-logo" src="./assets/pontoview-logo-blue.png" alt="PontoView" /> <span class="brand-studio">Studio</span></a>
-      <nav id="navLinks" class="nav-links">
-        <a class="nav-link" href="#overlays">Overlays</a>
-        <a class="nav-link" href="#studio">Studio</a>
-        <a class="nav-link" href="#como-funciona">Como funciona</a>
-        <a class="nav-link" href="#pro">PontoView PRO</a>
-        <a class="nav-link" href="#faq">FAQ</a>
-      </nav>
-      <div class="nav-actions">
-        <button class="btn btn-ghost" data-auth-open="signin" data-logged-out>Entrar</button>
-        <button class="btn btn-primary" data-auth-open="signup" data-logged-out>Criar conta</button>
-        <a class="btn btn-primary" href="./studio.html" data-logged-in style="display:none">Abrir Studio</a>
-      </div>
-      <button id="menuButton" class="btn btn-ghost icon-btn mobile-menu" aria-label="Abrir menu"><span class="material-symbols-rounded" aria-hidden="true">menu</span></button>
+<header class="pv-header">
+  <div class="pv-container pv-nav">
+    <a class="pv-brand" href="./index.html" aria-label="PontoView Studio"><img src="./assets/pontoview-logo-white.png" alt="PontoView" /><span>Studio</span></a>
+    <nav id="navLinks" class="pv-links"><a href="#overlays">Overlays</a><a href="#studio">Studio</a><a href="#como-funciona">Como funciona</a><a href="#pro">PontoView PRO</a><a href="#faq">FAQ</a></nav>
+    <div class="pv-actions"><button class="pv-btn pv-btn-outline-dark" data-auth-open="signin" data-logged-out>Entrar</button><button class="pv-btn pv-btn-primary" data-auth-open="signup" data-logged-out>Criar conta</button><a class="pv-btn pv-btn-primary" href="./studio.html" data-logged-in style="display:none">Abrir Studio</a></div>
+    <button id="menuButton" class="pv-menu" aria-label="Abrir menu"><span class="material-symbols-rounded">menu</span></button>
+  </div>
+</header>
+
+<main>
+  <section class="pv-hero">
+    <div class="pv-container pv-hero-grid">
+      <div><span class="pv-kicker">PontoView Studio</span><h1>Overlays para colocar sua produção <span>em cena.</span></h1><p>Uma biblioteca de gráficos para transmissões ao vivo, entrevistas, informação e conteúdo digital. Escolha o overlay, personalize, prepare no navegador e use a URL de saída no software de produção que preferir.</p><div class="pv-hero-actions"><a class="pv-btn pv-btn-dark" href="#overlays">Ver biblioteca</a><button class="pv-btn" data-auth-open="signin">Entrar no Studio</button></div><div class="pv-meta"><span><i></i>Controle pelo navegador</span><span><i></i>Desktop + mobile</span><span><i></i>Saída por Browser Source</span></div></div>
+      <div class="pv-showcase"><div class="pv-showcase-head"><strong>Biblioteca PontoView</strong><span>STUDIO</span></div><div class="pv-mini-grid">
+        <article class="pv-mini"><span class="tag">PRO</span><span class="material-symbols-rounded">breaking_news_alt_1</span><h3>PontoView News</h3><p>GCs, ticker, identificação e destaques.</p></article>
+        <article class="pv-mini"><span class="tag">PRO</span><span class="material-symbols-rounded">partly_cloudy_day</span><h3>PontoView Weather</h3><p>Clima atual para uma ou mais cidades.</p></article>
+        <article class="pv-mini wide"><span class="tag free">GRÁTIS</span><span class="material-symbols-rounded">subtitles</span><h3>PontoView Lower Thirds</h3><p>Quatro estilos personalizáveis para nomes, cargos e informações rápidas.</p></article>
+      </div></div>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <section class="platform-hero">
-      <div class="container platform-hero-grid">
-        <div>
-          <span class="eyebrow">PontoView Studio</span>
-          <h1>Overlays para colocar sua produção <span class="accent">em cena.</span></h1>
-          <p>Uma biblioteca de gráficos para transmissões ao vivo, entrevistas, informação e conteúdo digital. Escolha o overlay, personalize, prepare no navegador e use a URL de saída no software de produção que preferir.</p>
-          <div class="hero-actions"><a class="btn btn-primary" href="#overlays">Ver biblioteca</a><button class="btn btn-ghost" data-auth-open="signin">Entrar no Studio</button></div>
-          <div class="hero-meta"><span><i></i> Controle pelo navegador</span><span><i></i> Desktop + mobile</span><span><i></i> Saída por Browser Source</span></div>
-        </div>
-        <div class="studio-board" aria-label="Biblioteca do PontoView Studio">
-          <div class="studio-board-screen">
-            <article class="mini-product"><span class="mini-tag">PRO</span><span class="material-symbols-rounded">breaking_news_alt_1</span><div><strong>PontoView News</strong><small>GCs, ticker, identificação e destaques.</small></div></article>
-            <article class="mini-product"><span class="mini-tag">PRO</span><span class="material-symbols-rounded">partly_cloudy_day</span><div><strong>PontoView Weather</strong><small>Clima para cidades em módulos de exibição.</small></div></article>
-            <article class="mini-product wide"><span class="mini-tag free">GRÁTIS</span><span class="material-symbols-rounded">subtitles</span><div><strong>PontoView Lower Thirds</strong><small>Quatro estilos personalizáveis para nomes, cargos e informações rápidas.</small></div></article>
-          </div>
-        </div>
-      </div>
-    </section>
+  <div class="pv-strip"><div class="pv-container pv-strip-inner"><strong>PontoView Studio</strong><span>Biblioteca de overlays</span><span>Preview / Program</span><span>TAKE</span><span>Browser Source</span><span>Desktop + mobile</span></div></div>
 
-    <div class="logo-strip"><div class="container logo-strip-inner"><strong>PontoView Studio</strong><span>Biblioteca de overlays</span><span>Preview / Program</span><span>TAKE</span><span>Browser Source</span><span>Desktop + mobile</span></div></div>
+  <section id="overlays" class="pv-section light"><div class="pv-container"><span class="pv-kicker">Biblioteca</span><h2>Um Studio. Vários tipos de gráfico.</h2><p class="pv-lead">Cada overlay atende um tipo de necessidade, mas todos fazem parte do mesmo ecossistema. Você entra com uma conta, escolhe o produto e opera com a linguagem visual e funcional da PontoView.</p><div class="pv-library">
+    <article class="pv-card"><div class="pv-card-visual"><div class="pv-news-art"><div class="lt"><small>AO VIVO</small><strong>INFORMAÇÃO COM IDENTIDADE</strong></div></div></div><div class="pv-card-body"><span class="eyebrow">PONTOVIEW PRO</span><h3>PontoView News</h3><p>GC principal, identificação, editorias, ticker, destaques, bug e módulos para notícias, entrevistas e programação informativa.</p><a class="pv-btn pv-btn-dark" href="./news.html">Conhecer o News</a></div></article>
+    <article class="pv-card"><div class="pv-card-visual"><div class="pv-weather-art"><strong>SÃO PAULO</strong><b>23°</b><span>Parcialmente nublado</span><small>RIO 27° · CURITIBA 17° · RECIFE 29°</small></div></div><div class="pv-card-body"><span class="eyebrow">PONTOVIEW PRO</span><h3>PontoView Weather</h3><p>Condições atuais de uma ou mais cidades em um overlay complementar para transmissões, jornalismo e conteúdo informativo.</p><a class="pv-btn pv-btn-dark" href="./weather/">Conhecer o Weather</a></div></article>
+    <article class="pv-card"><div class="pv-card-visual"><div class="pv-lt-art"><div class="pv-lt-sample"><strong>NOME DO CONVIDADO</strong><small>Cargo ou informação complementar</small></div><div class="pv-lt-sample light"><strong>PAUTA PRINCIPAL</strong><small>Texto secundário</small></div></div></div><div class="pv-card-body"><span class="eyebrow free">GRÁTIS</span><h3>PontoView Lower Thirds</h3><p>Crie, edite, duplique e organize identificações com quatro estilos, cores, posição, escala e animações configuráveis.</p><a class="pv-btn pv-btn-dark" href="./lower-thirds/control.html">Usar gratuitamente</a></div></article>
+  </div></div></section>
 
-    <section id="overlays" class="section">
-      <div class="container"><span class="eyebrow">Biblioteca</span><h2 class="section-title">Um Studio. Vários tipos de gráfico.</h2><p class="section-copy">O Studio reúne overlays com objetivos diferentes sob a mesma conta e a mesma lógica de operação. A biblioteca cresce sem obrigar você a trocar de ferramenta a cada novo formato.</p>
-        <div class="product-grid-new">
-          <article class="product-tile"><div class="product-tile-visual"><div class="news-art"><div class="news-lower"><span>AO VIVO</span><b>INFORMAÇÃO COM IDENTIDADE</b></div></div></div><div class="product-tile-body"><span class="product-state">PONTOVIEW PRO</span><h3>PontoView News</h3><p>GC principal, identificação, editorias, ticker, destaques, bug e módulos para operações de notícias, entrevistas e informação.</p><a class="btn btn-ghost" href="./news.html">Conhecer o News</a></div></article>
-          <article class="product-tile"><div class="product-tile-visual"><div class="weather-card-art"><div class="weather-city">SÃO PAULO</div><div class="weather-temp">23°</div><div>Parcialmente nublado</div><div class="weather-line"><span>RIO 27°</span><span>CURITIBA 17°</span><span>RECIFE 29°</span></div></div></div><div class="product-tile-body"><span class="product-state">PONTOVIEW PRO</span><h3>PontoView Weather</h3><p>Exiba condições atuais de uma ou mais cidades em um overlay complementar para transmissões e programação informativa.</p><a class="btn btn-ghost" href="./weather/">Conhecer o Weather</a></div></article>
-          <article class="product-tile"><div class="product-tile-visual"><div class="lt-art"><div class="lt-line"><b>NOME DO CONVIDADO</b><small>Cargo ou informação complementar</small></div><div class="lt-line alt"><b>PAUTA PRINCIPAL</b><small>Texto secundário</small></div></div></div><div class="product-tile-body"><span class="product-state free">GRÁTIS</span><h3>PontoView Lower Thirds</h3><p>Lower thirds básicos para criar, editar, duplicar e organizar identificações com cores, posição, escala e animações configuráveis.</p><a class="btn btn-ghost" href="./lower-thirds/control.html">Usar gratuitamente</a></div></article>
-        </div>
-      </div>
-    </section>
+  <section id="studio" class="pv-section dark"><div class="pv-container"><span class="pv-kicker">Operação</span><h2>Controle simples para uma operação séria.</h2><p class="pv-lead">Os overlays premium seguem uma linguagem comum de operação. Assim, a equipe aprende a lógica do Studio uma vez e reaproveita esse conhecimento nos diferentes produtos.</p><div class="pv-features">
+    <article class="pv-feature"><span class="material-symbols-rounded">visibility</span><h3>Preview</h3><p>Prepare conteúdo e ajustes sem alterar imediatamente o que está sendo exibido.</p></article>
+    <article class="pv-feature"><span class="material-symbols-rounded">live_tv</span><h3>Program</h3><p>Acompanhe claramente o estado que está efetivamente na saída do overlay.</p></article>
+    <article class="pv-feature"><span class="material-symbols-rounded">publish</span><h3>TAKE</h3><p>Envie o conteúdo preparado para o ar apenas quando a operação estiver pronta.</p></article>
+    <article class="pv-feature"><span class="material-symbols-rounded">smartphone</span><h3>Mobile</h3><p>Use atalhos e comandos essenciais também em telas menores durante a produção.</p></article>
+  </div></div></section>
 
-    <section id="studio" class="section section-dark"><div class="container"><span class="eyebrow">A mesma lógica em todo o Studio</span><h2 class="section-title">Controle simples para uma operação séria.</h2><p class="section-copy">Os produtos premium do Studio seguem uma linguagem operacional comum, reduzindo a curva de aprendizado quando você troca de overlay.</p><div class="benefit-grid">
-      <article class="benefit-card"><span class="material-symbols-rounded">visibility</span><h3>Preview</h3><p>Prepare conteúdo e ajustes sem alterar imediatamente o que está sendo exibido.</p></article>
-      <article class="benefit-card"><span class="material-symbols-rounded">live_tv</span><h3>Program</h3><p>Acompanhe com clareza o estado efetivamente enviado para a saída do overlay.</p></article>
-      <article class="benefit-card"><span class="material-symbols-rounded">publish</span><h3>TAKE</h3><p>Envie o conteúdo preparado para o ar quando a operação estiver pronta.</p></article>
-      <article class="benefit-card"><span class="material-symbols-rounded">smartphone</span><h3>Mobile</h3><p>Use atalhos e comandos essenciais também em telas menores durante a produção.</p></article>
-    </div></div></section>
+  <section id="como-funciona" class="pv-section white"><div class="pv-container"><span class="pv-kicker">Como funciona</span><h2>Da conta à transmissão em três etapas.</h2><p class="pv-lead">Sem instalar uma estação gráfica dedicada. O painel roda no navegador e a saída é entregue por uma URL exclusiva para uso em softwares compatíveis com Browser Source.</p><div class="pv-steps">
+    <article class="pv-step"><b>01 · ESCOLHA</b><h3>Abra o overlay certo</h3><p>Acesse sua biblioteca e escolha o produto adequado para a produção do momento.</p></article>
+    <article class="pv-step"><b>02 · PREPARE</b><h3>Configure e opere</h3><p>Personalize textos, elementos e estilos, prepare em Preview e envie ao Program quando necessário.</p></article>
+    <article class="pv-step"><b>03 · EXIBA</b><h3>Copie a URL de saída</h3><p>Adicione a URL exclusiva do overlay como fonte de navegador no software de produção compatível.</p></article>
+  </div></div></section>
 
-    <section id="como-funciona" class="section"><div class="container"><span class="eyebrow">Como funciona</span><h2 class="section-title">Da conta à transmissão em três etapas.</h2><div class="steps-grid">
-      <article class="step-card"><div class="step-no">1</div><h3>Escolha seu overlay</h3><p>Acesse a biblioteca do Studio e abra o produto adequado para sua produção.</p></article>
-      <article class="step-card"><div class="step-no">2</div><h3>Configure e opere</h3><p>Personalize textos, estilos e elementos no painel de controle pelo navegador.</p></article>
-      <article class="step-card"><div class="step-no">3</div><h3>Adicione a saída</h3><p>Copie a URL exclusiva do overlay e use-a como fonte de navegador em seu software compatível.</p></article>
-    </div></div></section>
+  <section id="pro" class="pv-section light"><div class="pv-container"><div class="pv-pro"><div><span class="pv-kicker" style="color:#7fddff">PontoView PRO</span><h2>Os overlays profissionais do Studio em um único plano.</h2><p>O PontoView PRO libera os overlays premium disponíveis para a conta e concentra cobrança, status da assinatura e histórico financeiro no próprio Studio.</p><div class="pv-hero-actions"><a class="pv-btn pv-btn-primary" href="./checkout.html">Ver assinatura</a><a class="pv-btn pv-btn-outline-dark" href="./contato.html?categoria=Comercial">Falar com a PontoView</a></div></div><div class="pv-pro-list"><span>✓ PontoView News</span><span>✓ PontoView Weather</span><span>✓ Desktop + mobile</span><span>✓ Preview / Program / TAKE</span><span>✓ Atualizações online</span><span>✓ Suporte PontoView</span></div></div></div></section>
 
-    <section id="pro" class="section"><div class="container"><div class="pro-panel"><div><span class="pro-badge">PONTOVIEW PRO</span><h2>Um plano para o Studio premium.</h2><p>O PontoView PRO é a assinatura do Studio para recursos e overlays premium. Consulte a área de assinatura para ver o valor vigente, status da sua conta, renovação e histórico de cobrança.</p></div><a class="btn" href="./checkout.html">Ver PontoView PRO</a></div></div></section>
+  <section id="faq" class="pv-section white"><div class="pv-container"><span class="pv-kicker">FAQ</span><h2>Perguntas frequentes.</h2><div class="faq">
+    <div class="faq-item open"><button class="faq-q"><span>Como o overlay entra na transmissão?</span><span class="material-symbols-rounded faq-icon">expand_less</span></button><div class="faq-a">Cada overlay gera uma URL de saída que pode ser adicionada como fonte de navegador em softwares de produção compatíveis. A URL é vinculada à sua operação.</div></div>
+    <div class="faq-item"><button class="faq-q"><span>Quais overlays existem hoje?</span><span class="material-symbols-rounded faq-icon">expand_more</span></button><div class="faq-a">A biblioteca atual inclui PontoView News e PontoView Weather no plano PRO, além do PontoView Lower Thirds gratuito.</div></div>
+    <div class="faq-item"><button class="faq-q"><span>Preciso do PontoView PRO para tudo?</span><span class="material-symbols-rounded faq-icon">expand_more</span></button><div class="faq-a">Não. Os Lower Thirds básicos são gratuitos. Os overlays profissionais identificados como PRO exigem assinatura ativa.</div></div>
+    <div class="faq-item"><button class="faq-q"><span>Posso operar pelo celular?</span><span class="material-symbols-rounded faq-icon">expand_more</span></button><div class="faq-a">Sim. As interfaces operacionais são responsivas e priorizam comandos rápidos para uso também em dispositivos móveis.</div></div>
+  </div></div></section>
 
-    <section class="section-tight"><div class="container"><div class="support-band"><div><h3>Precisa falar com a PontoView?</h3><p>Suporte técnico, financeiro e comercial em uma central única.</p></div><a class="btn btn-ghost" href="./contato.html">Contato e suporte</a></div></div></section>
+  <section class="pv-section light"><div class="pv-container"><div class="pv-contact"><div><h3>Precisa falar com a PontoView?</h3><p>Suporte técnico, financeiro e comercial em um único lugar.</p></div><a class="pv-btn pv-btn-dark" href="./contato.html">Contato e suporte</a></div></div></section>
+</main>
 
-    <section id="faq" class="section"><div class="container"><span class="eyebrow">FAQ</span><h2 class="section-title">Perguntas frequentes.</h2><div class="faq">
-      <div class="faq-item open"><button class="faq-q"><span>Como os overlays entram na transmissão?</span><span class="material-symbols-rounded faq-icon">expand_less</span></button><div class="faq-a">Cada overlay gera uma URL de saída para uso como fonte de navegador. Você pode adicioná-la em softwares de produção compatíveis com Browser Source.</div></div>
-      <div class="faq-item"><button class="faq-q"><span>Quais overlays estão disponíveis?</span><span class="material-symbols-rounded faq-icon">expand_more</span></button><div class="faq-a">A biblioteca atual inclui PontoView News, PontoView Weather e PontoView Lower Thirds. O Lower Thirds possui acesso gratuito; recursos premium fazem parte do PontoView PRO.</div></div>
-      <div class="faq-item"><button class="faq-q"><span>O Studio funciona no celular?</span><span class="material-symbols-rounded faq-icon">expand_more</span></button><div class="faq-a">Sim. Os controles são preparados para desktop e mobile, com prioridade para ações rápidas nas telas menores.</div></div>
-      <div class="faq-item"><button class="faq-q"><span>Onde acompanho minha assinatura?</span><span class="material-symbols-rounded faq-icon">expand_more</span></button><div class="faq-a">Na área Meu Studio, em Assinatura. Ali ficam o plano, status, datas e acesso ao financeiro.</div></div>
-    </div></div></section>
+<footer class="pv-footer"><div class="pv-container"><div class="pv-footer-grid"><div class="pv-footer-brand"><a href="./index.html"><img src="./assets/pontoview-logo-white.png" alt="PontoView" /></a><p>Biblioteca de overlays e ferramentas gráficas para transmissões ao vivo e conteúdo digital.</p></div><div><h4>Studio</h4><a href="#overlays">Overlays</a><a href="#studio">Operação</a><a href="#pro">PontoView PRO</a></div><div><h4>Suporte</h4><a href="./contato.html">Contato e suporte</a><a href="./studio.html">Meu Studio</a><a href="#faq">FAQ</a></div><div><h4>Legal</h4><a href="./privacidade.html">Privacidade</a><a href="./termos.html">Termos de Uso</a><a href="./cookies.html">Cookies</a><a href="#" data-cookie-settings>Preferências de cookies</a></div></div><div class="pv-footer-bottom"><span>© 2026 PontoView. Todos os direitos reservados.</span><span>PontoView Studio · Sua marca em cena.</span></div></div></footer>
 
-    <section class="section-tight"><div class="container"><div class="cta-panel"><h2>Escolha o overlay certo para a próxima produção.</h2><button class="btn" data-auth-open="signup">Criar conta no Studio</button></div></div></section>
-  </main>
+<div id="authModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Acesso ao PontoView Studio"><div class="modal"><div class="modal-head"><h2>Acessar o Studio</h2><button id="closeAuth" class="close-btn" aria-label="Fechar"><span class="material-symbols-rounded">close</span></button></div><div class="auth-tabs"><button class="auth-tab active" data-auth-mode="signin">Entrar</button><button class="auth-tab" data-auth-mode="signup">Criar conta</button></div><form id="authForm"><div id="nameField" class="field" style="display:none"><label>Nome</label><input id="authName" autocomplete="name" placeholder="Seu nome" /></div><div class="field"><label>E-mail</label><input id="authEmail" type="email" autocomplete="email" required placeholder="voce@empresa.com.br" /></div><div class="field"><label>Senha</label><input id="authPassword" type="password" minlength="8" autocomplete="current-password" required placeholder="Mínimo de 8 caracteres" /></div><div id="authMessage" class="auth-message"></div><button id="authSubmit" class="pv-btn pv-btn-dark" style="width:100%" type="submit">Entrar</button><div style="text-align:center;margin-top:12px"><button id="resetPassword" type="button" class="text-link">Esqueci minha senha</button></div></form></div></div>
 
-  <footer class="site-footer"><div class="container"><div class="footer-grid">
-    <div><a class="brand" href="./index.html"><img class="brand-logo" src="./assets/pontoview-logo-blue.png" alt="PontoView" /> <span class="brand-studio">Studio</span></a><p class="small" style="max-width:330px;margin-top:16px">Biblioteca de overlays para transmissões e produções ao vivo.</p></div>
-    <div class="footer-col"><h4>Studio</h4><a href="#overlays">Overlays</a><a href="#studio">Operação</a><a href="#pro">PontoView PRO</a><a href="./studio.html">Meu Studio</a></div>
-    <div class="footer-col"><h4>Produtos</h4><a href="./news.html">PontoView News</a><a href="./weather/">PontoView Weather</a><a href="./lower-thirds/control.html">Lower Thirds grátis</a></div>
-    <div class="footer-col"><h4>Suporte e legal</h4><a href="./contato.html">Contato e suporte</a><a href="./privacidade.html">Privacidade</a><a href="./termos.html">Termos de Uso</a><a href="./cookies.html">Cookies</a></div>
-  </div><div class="footer-bottom"><span>© 2026 PontoView. Todos os direitos reservados.</span><span>PontoView Studio · Sua marca em cena.</span></div></div></footer>
+<div id="cookieBanner" class="cookie-banner"><div class="cookie-inner"><p><strong style="color:#073f85">Sua privacidade importa.</strong> Usamos cookies essenciais para autenticação e preferências. Recursos opcionais só são ativados com sua permissão.</p><div class="cookie-actions"><button id="cookieEssential" class="pv-btn">Só essenciais</button><button id="cookieAccept" class="pv-btn pv-btn-dark">Aceitar opcionais</button></div></div></div>
 
-  <div id="authModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Acesso ao PontoView Studio"><div class="modal"><div class="modal-head"><h2>Acessar o Studio</h2><button id="closeAuth" class="close-btn" aria-label="Fechar"><span class="material-symbols-rounded">close</span></button></div><div class="auth-tabs"><button class="auth-tab active" data-auth-mode="signin">Entrar</button><button class="auth-tab" data-auth-mode="signup">Criar conta</button></div><form id="authForm" class="auth-form"><div id="nameField" class="field" style="display:none"><label>Nome</label><input id="authName" autocomplete="name" placeholder="Seu nome" /></div><div class="field"><label>E-mail</label><input id="authEmail" type="email" autocomplete="email" required placeholder="voce@canal.com.br" /></div><div class="field"><label>Senha</label><input id="authPassword" type="password" minlength="8" autocomplete="current-password" required placeholder="Mínimo de 8 caracteres" /></div><div id="authMessage" class="auth-message"></div><button id="authSubmit" class="btn btn-primary btn-wide" type="submit">Entrar</button><div style="text-align:center;margin-top:13px"><button id="resetPassword" type="button" class="text-link">Esqueci minha senha</button></div></form></div></div>
-
-  <div id="cookieBanner" class="cookie-banner"><div class="cookie-inner"><p><strong style="color:white">Sua privacidade importa.</strong> Usamos cookies essenciais para autenticação e preferências. Recursos opcionais só são ativados com sua permissão.</p><div class="cookie-actions"><button id="cookieEssential" class="btn btn-ghost">Usar só essenciais</button><button id="cookieAccept" class="btn btn-primary">Aceitar opcionais</button></div></div></div>
-
-  <script src="./app-config.js"></script>
-  <script type="module" src="./js/app.js"></script>
+<script type="module" src="./js/app.js"></script>
 </body>
 </html>
