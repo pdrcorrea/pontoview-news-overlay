@@ -1,4 +1,4 @@
-window.PV_WEATHER_VISUAL_VERSION = 'v4-20260828-1';
+window.PV_WEATHER_VISUAL_VERSION = 'v5-20260828-2';
 window.PV_WEATHER_CONFIG = Object.freeze({
   supabaseUrl: 'https://fpdojntvnhiszagczfqr.supabase.co',
   supabaseKey: 'sb_publishable_hd9GQaTeJ18o3pwMIZevJQ_EgVIOVOp',
@@ -43,11 +43,19 @@ window.PV_WEATHER_CONFIG = Object.freeze({
 });
 
 (() => {
-  if (document.querySelector('link[data-pv-weather-polish-v4]')) return;
   const base = document.currentScript?.src ? new URL('.', document.currentScript.src) : new URL('./', location.href);
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = new URL('weather-polish-v4.css?v=20260828-1', base).href;
-  link.dataset.pvWeatherPolishV4 = '1';
-  document.head.appendChild(link);
+  if (!document.querySelector('link[data-pv-weather-polish-v4]')) {
+    const legacy = document.createElement('link');
+    legacy.rel = 'stylesheet';
+    legacy.href = new URL('weather-polish-v4.css?v=20260828-1', base).href;
+    legacy.dataset.pvWeatherPolishV4 = '1';
+    document.head.appendChild(legacy);
+  }
+  if (!document.querySelector('link[data-pv-weather-visual-v5]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = new URL('weather-visual-v5.css?v=20260828-2', base).href;
+    link.dataset.pvWeatherVisualV5 = '1';
+    document.head.appendChild(link);
+  }
 })();
