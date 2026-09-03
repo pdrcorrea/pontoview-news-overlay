@@ -33,7 +33,7 @@ function setAuthMode(mode) {
   const nameField = $('#nameField');
   if (nameField) nameField.style.display = mode === 'signup' ? 'block' : 'none';
   const submit = $('#authSubmit');
-  if (submit) submit.textContent = mode === 'signup' ? 'Criar conta' : 'Entrar';
+  if (submit) submit.textContent = mode === 'signup' ? 'Criar Conta PontoView' : 'Entrar com a Conta PontoView';
   if (authMessage) { authMessage.textContent = ''; authMessage.className = 'auth-message'; }
 }
 $$('.auth-tab').forEach(t => t.addEventListener('click', () => setAuthMode(t.dataset.authMode)));
@@ -44,7 +44,7 @@ async function submitAuth(e) {
   const password = $('#authPassword')?.value;
   const fullName = $('#authName')?.value.trim();
   if (!email || !password) return;
-  authMessage.textContent = 'Conectando ao Studio…';
+  authMessage.textContent = 'Conectando à sua Conta PontoView…';
   authMessage.className = 'auth-message';
   $('#authSubmit').disabled = true;
 
@@ -54,12 +54,12 @@ async function submitAuth(e) {
         email,
         password,
         options: {
-          data: { full_name: fullName || null },
-          emailRedirectTo: `${location.origin}/studio.html`
+          data: { full_name: fullName || null, product: 'studio' },
+          emailRedirectTo: `${location.origin}/confirmado.html`
         }
       });
       if (error) throw error;
-      authMessage.textContent = 'Conta criada. Confira seu e-mail para confirmar o acesso.';
+      authMessage.textContent = 'Conta PontoView criada. Confira seu e-mail para confirmar o acesso.';
       authMessage.className = 'auth-message ok';
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
