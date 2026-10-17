@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap");
+
+/* Identidade PontoView Studio — ícone glossy 3D + wordmark tipográfico. */
+.pv-brand,
+.pv-auth-logo-wrap,
+.pv-auth-mobile-brand,
+.pv-sidebar-brand > a,
+footer :is(a,div):has(> img[src*="pontoview-logo"]),
+footer :is(a,div):has(> img[src*="PontoView"]){
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:0 !important;
+  min-width:0;
+  font-family:"Nunito Sans",ui-rounded,"Segoe UI",sans-serif !important;
+  line-height:1 !important;
+  letter-spacing:-.035em !important;
+  text-decoration:none !important;
+  white-space:nowrap;
+}
+
+.pv-brand > img,
+.pv-auth-logo-wrap > img,
+.pv-auth-mobile-brand > img,
+.pv-sidebar-brand > a > img,
+footer img[src*="pontoview-logo"],
+footer img[src*="PontoView"]{
+  content:url("./assets/IconeAzul.png?v=20261017-1") !important;
+  order:1;
+  display:block !important;
+  width:38px !important;
+  height:38px !important;
+  max-width:38px !important;
+  flex:0 0 38px !important;
+  object-fit:contain !important;
+  filter:none !important;
+}
+
+.pv-brand::before,
+.pv-auth-logo-wrap::before,
+.pv-auth-mobile-brand::before,
+.pv-sidebar-brand > a::before,
+footer :is(a,div):has(> img[src*="pontoview-logo"])::before,
+footer :is(a,div):has(> img[src*="PontoView"])::before{
+  content:"Ponto";
+  order:2;
+  margin-left:9px;
+  font-size:19px;
+  font-weight:800;
+}
+
+.pv-brand::after,
+.pv-auth-logo-wrap::after,
+.pv-auth-mobile-brand::after,
+.pv-sidebar-brand > a::after,
+footer :is(a,div):has(> img[src*="pontoview-logo"])::after,
+footer :is(a,div):has(> img[src*="PontoView"])::after{
+  content:"View";
+  order:3;
+  font-size:19px;
+  font-weight:400;
+}
+
+.pv-brand > span,
+.pv-auth-logo-wrap > span,
+.pv-auth-mobile-brand > span,
+.pv-sidebar-brand > a > span{
+  order:4;
+  margin-left:7px !important;
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+  font-size:12px !important;
+  font-weight:600 !important;
+  letter-spacing:-.01em !important;
+  line-height:1 !important;
+  text-transform:none !important;
+  opacity:.68;
+}
+
+/* Superfícies escuras: texto branco. O ícone glossy conserva o contorno branco e azul. */
+.pv-brand,
+.pv-auth-logo-wrap,
+.pv-sidebar-brand > a,
+footer :is(a,div):has(> img[src*="pontoview-logo"]),
+footer :is(a,div):has(> img[src*="PontoView"]){color:#fff !important}
+
+/* Superfícies claras: assinatura azul-marinho. */
+.pv-auth-mobile-brand{color:#173552 !important}
+
+/* Evita que regras antigas dimensionem o arquivo como wordmark horizontal. */
+.pv-auth-logo-wrap img,
+.pv-auth-mobile-brand img,
+.pv-sidebar-brand img{border-radius:12px !important}
+
+@media (max-width:720px){
+  .pv-brand > img,
+  .pv-auth-logo-wrap > img,
+  .pv-auth-mobile-brand > img,
+  .pv-sidebar-brand > a > img{
+    width:34px !important;height:34px !important;max-width:34px !important;flex-basis:34px !important
+  }
+  .pv-brand::before,.pv-brand::after,
+  .pv-auth-logo-wrap::before,.pv-auth-logo-wrap::after,
+  .pv-auth-mobile-brand::before,.pv-auth-mobile-brand::after,
+  .pv-sidebar-brand > a::before,.pv-sidebar-brand > a::after{font-size:17px}
+  .pv-brand > span,.pv-auth-logo-wrap > span,.pv-auth-mobile-brand > span,.pv-sidebar-brand > a > span{font-size:11px !important;margin-left:6px !important}
+}

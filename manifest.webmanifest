@@ -1,0 +1,21 @@
+{
+  "id": "/studio.html",
+  "name": "PontoView Studio",
+  "short_name": "Studio",
+  "description": "PontoView Studio — overlays e gráficos para transmissão.",
+  "start_url": "/studio.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#0b1726",
+  "theme_color": "#0b1726",
+  "icons": [
+    {
+      "src": "/assets/IconeAzul.png?v=20261017-1",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
