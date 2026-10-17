@@ -1,6 +1,45 @@
 (() => {
   'use strict';
 
+  // Identidade visual e metadados instaláveis compartilhados pelo Studio.
+  const ensureLink = (rel, href, extra = {}) => {
+    if (document.querySelector(`link[rel="${rel}"][href*="${href.split('?')[0]}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = rel;
+    link.href = href;
+    Object.entries(extra).forEach(([key, value]) => link.setAttribute(key, value));
+    document.head.appendChild(link);
+  };
+  ensureLink('stylesheet', './brand-glossy.css?v=20261017-1');
+  ensureLink('manifest', './manifest.webmanifest?v=20261017-1');
+  ensureLink('icon', './assets/IconeAzul.png?v=20261017-1', { type: 'image/png' });
+  ensureLink('apple-touch-icon', './assets/IconeAzul.png?v=20261017-1');
+
+  if (!document.querySelector('meta[name="theme-color"]')) {
+    const theme = document.createElement('meta');
+    theme.name = 'theme-color';
+    theme.content = '#0b1726';
+    document.head.appendChild(theme);
+  }
+  if (!document.querySelector('meta[name="application-name"]')) {
+    const appName = document.createElement('meta');
+    appName.name = 'application-name';
+    appName.content = 'PontoView Studio';
+    document.head.appendChild(appName);
+  }
+  if (!document.querySelector('meta[name="mobile-web-app-capable"]')) {
+    const capable = document.createElement('meta');
+    capable.name = 'mobile-web-app-capable';
+    capable.content = 'yes';
+    document.head.appendChild(capable);
+  }
+  if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
+    const appleCapable = document.createElement('meta');
+    appleCapable.name = 'apple-mobile-web-app-capable';
+    appleCapable.content = 'yes';
+    document.head.appendChild(appleCapable);
+  }
+
   const path = String(location.pathname || '');
   const isNewsControl = /(?:^|\/)control\.html$/i.test(path);
   if (isNewsControl) {
