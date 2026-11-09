@@ -9,7 +9,7 @@
   const WEATHER_CHANNEL = 'pontoview-weather-v1';
   const WEATHER_PROGRAM_KEY = `${WEATHER_CHANNEL}:program`;
   const WEATHER_DRAFT_KEY = `${WEATHER_CHANNEL}:draft`;
-  const DEFAULT_WEATHER = Object.freeze({ visible:false, cities:[], position:'top-right', layout:'row', unit:'celsius', showHumidity:true, showWind:false, refreshMinutes:10 });
+  const { DEFAULT_WEATHER, normalizeWeather, readJSON, stripWeather } = window.PVLegacyWeather;
 
   const $ = id => document.getElementById(id);
   const clone = value => JSON.parse(JSON.stringify(value));
@@ -30,22 +30,6 @@
   let overlaySignal = null;
   let elementObserver = null;
 
-  function normalizeWeather(raw) {
-    const x = { ...clone(DEFAULT_WEATHER), ...(raw && typeof raw === 'object' ? raw : {}) };
-    x.cities = [...new Set((Array.isArray(x.cities) ? x.cities : []).map(v => String(v || '').trim()).filter(Boolean))].slice(0,5);
-    x.visible = !!x.visible;
-    x.showHumidity = x.showHumidity !== false;
-    x.showWind = !!x.showWind;
-    x.position = ['top-left','top-right','bottom-left','bottom-right'].includes(x.position) ? x.position : 'top-right';
-    x.layout = x.layout === 'column' ? 'column' : 'row';
-    x.unit = x.unit === 'fahrenheit' ? 'fahrenheit' : 'celsius';
-    x.refreshMinutes = Math.max(5, Number(x.refreshMinutes || 10));
-    return x;
-  }
-
-  function readJSON(key, fallback = null) {
-    try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (_) { return fallback; }
-  }
   function writeJSON(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {} }
   function stable(value) { try { return JSON.stringify(value); } catch (_) { return ''; } }
   function getWeather(kind) { return normalizeWeather(readJSON(kind === 'program' ? WEATHER_PROGRAM_KEY : WEATHER_DRAFT_KEY, DEFAULT_WEATHER)); }
@@ -55,10 +39,6 @@
     try { weatherBC?.postMessage({ type:'WEATHER', kind, state:normalized, nonce:Date.now() }); } catch (_) {}
     ensureWeatherRow();
     return normalized;
-  }
-  function stripWeather(state) {
-    if (!state || typeof state !== 'object') return state;
-    const next = clone(state); delete next.weather; return next;
   }
   function mergeWeather(coreState, weather) {
     if (!coreState || typeof coreState !== 'object') return null;
