@@ -1,0 +1,84 @@
+/* PontoView Auth Design System 1.0 | reusable visual contracts
+   Same stylesheet in product repositories. Only .pv-auth-v1 scope. */
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap");
+.pv-auth-v1{
+ --pv-auth-deep:#052b72;--pv-auth-blue:#0757be;--pv-auth-cyan:#4cecf6;
+ --pv-auth-ink:#092e70;--pv-auth-line:#c8def8;--pv-auth-muted:#536e94;
+ --pv-auth-soft:#f8fbff;
+ font-family:Arial,Helvetica,sans-serif!important;
+ color:var(--pv-auth-ink);background:var(--pv-auth-soft)!important;
+ min-height:100dvh;
+}
+.pv-auth-v1 :is(h1,h2,h3,h4),.pv-auth-v1 .pv-auth-heading{
+ font-family:"Nunito Sans",Arial,sans-serif!important;letter-spacing:-.04em;
+}
+.pv-auth-v1 .pv-auth-identity{
+ position:relative;overflow:hidden;isolation:isolate;
+ background:radial-gradient(ellipse at 76% 25%,#146ee1 0%,#0955b5 43%,#062f79 100%)!important;
+ color:white!important;padding:clamp(30px,5vw,76px)!important;
+}
+.pv-auth-v1 .pv-auth-identity::before{
+ content:"";position:absolute;pointer-events:none;z-index:-1;
+ width:440px;aspect-ratio:1;right:-180px;top:-160px;border:2px solid #6cf5fa65;
+ border-radius:50%;
+}
+.pv-auth-v1 .pv-auth-identity::after{
+ content:"";position:absolute;pointer-events:none;z-index:-1;
+ width:340px;aspect-ratio:1;right:-95px;bottom:-190px;
+ border:42px solid #95ddff16;border-radius:34%;transform:rotate(-24deg);
+}
+.pv-auth-v1 .pv-auth-identity :is(h1,h2){color:#fff!important;font-size:clamp(38px,4.2vw,65px)!important;line-height:1.06!important;font-weight:800!important;letter-spacing:-.052em!important}
+.pv-auth-v1 .pv-auth-identity p{color:#dfedff!important;line-height:1.65!important}
+.pv-auth-v1 .pv-auth-identity :is(.eyebrow,.pv-kicker,.auth-main-pitch>span){color:#7af1fa!important;letter-spacing:.16em;font-size:11px;font-weight:800}
+.pv-auth-v1 .pv-auth-form-side{background:#f8fbff!important;color:#092e70!important;min-width:0}
+.pv-auth-v1 .pv-auth-form-surface{
+ background:#fff!important;border:1px solid #c8def8!important;border-radius:25px!important;
+ box-shadow:0 22px 58px #0a397517!important;color:#092e70!important;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(h1,h2){color:#092e70!important;font-family:"Nunito Sans",Arial,sans-serif!important;letter-spacing:-.035em;font-weight:800}
+.pv-auth-v1 .pv-auth-form-surface p{line-height:1.55}
+.pv-auth-v1 .pv-auth-form-surface label{color:#25466c;font-size:13px;font-weight:700}
+.pv-auth-v1 .pv-auth-form-surface input:not([type="checkbox"]):not([type="radio"]){
+ background:#fbfdff!important;border:1px solid #bdd7f1!important;color:#092e70!important;
+ border-radius:12px!important;min-height:46px;
+ transition:border-color .2s,box-shadow .2s!important;
+}
+.pv-auth-v1 .pv-auth-form-surface input:focus-visible{
+ outline:0!important;border-color:#159cc7!important;box-shadow:0 0 0 3px #4cecf641!important;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(button[type="submit"],.pv-auth-primary){
+ --x:50%;--y:50%;
+ position:relative;isolation:isolate;overflow:hidden;
+ background:#0757be!important;color:white!important;border:1px solid #0757be!important;
+ border-radius:13px!important;min-height:46px;font-weight:800!important;
+ transform:none!important;transition:background .24s,border-color .24s,box-shadow .24s!important;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(button[type="submit"],.pv-auth-primary)::before{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(230px circle at var(--x) var(--y),#59edfaad,transparent 83%);
+ opacity:0;transition:opacity .2s;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(button[type="submit"],.pv-auth-primary):hover:not(:disabled){
+ background:#063f92!important;border-color:#48ddec!important;box-shadow:0 8px 23px #0757be35!important;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(button[type="submit"],.pv-auth-primary):hover::before{opacity:1}
+.pv-auth-v1 .pv-auth-form-surface :is(button[type="submit"],.pv-auth-primary):disabled{opacity:.65;cursor:wait}
+.pv-auth-v1 .pv-auth-form-surface a:not(.pv-auth-primary){color:#0757be;text-underline-offset:3px}
+.pv-auth-v1 .pv-auth-form-surface a:not(.pv-auth-primary):hover{color:#03438b}
+.pv-auth-v1 .pv-auth-form-surface :is(.auth-main-tabs,.auth-tabs,.pv-auth-tabs){border-radius:13px;background:#edf5ff;border:1px solid #d8e8fa}
+.pv-auth-v1 .pv-auth-form-surface :is(.auth-main-tabs,.auth-tabs,.pv-auth-tabs) :is(.active,[aria-current="page"]){background:white;color:#073e8c!important;box-shadow:0 4px 12px #092e7014}
+.pv-auth-v1 .pv-auth-product-mark{width:52px;height:52px;object-fit:contain;display:block}
+.pv-auth-v1 .pv-auth-visual-card{
+ background:linear-gradient(145deg,#f6fcff,#dceeff);border:7px solid #e9f6ff;
+ border-radius:28px;box-shadow:0 24px 50px #001e5280;
+}
+.pv-auth-v1 :focus-visible{outline-offset:3px}
+@media(max-width:800px){
+ .pv-auth-v1{min-height:100dvh}
+ .pv-auth-v1 .pv-auth-identity{display:none!important}
+ .pv-auth-v1 .pv-auth-form-side{min-height:100dvh;padding:24px 16px!important;display:grid;place-items:center}
+ .pv-auth-v1 .pv-auth-form-surface{width:min(100%,480px);padding:clamp(20px,5vw,32px)!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .pv-auth-v1 *,.pv-auth-v1 *::before,.pv-auth-v1 *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
