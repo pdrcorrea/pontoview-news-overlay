@@ -33,3 +33,17 @@
 .pv-studio-auth .pv-auth-form-surface{max-width:510px!important;width:min(100%,510px)!important}
 .pv-studio-auth .pv-auth-form-surface .pv-auth-product{margin-bottom:32px!important}
 .pv-studio-auth .pv-auth-form-surface .pv-auth-product img{width:43px!important;height:43px!important;max-width:43px!important}
+
+
+/* Studio: formulário visualmente compacto com a mesma largura e escala. */
+@media(min-width:801px){
+ .pv-studio-auth .pv-auth-form-side{padding:clamp(16px,3vw,45px)!important}
+ .pv-studio-auth .pv-auth-form-surface{
+  width:min(100%,510px)!important;max-width:510px!important;
+  padding:clamp(20px,3.1vh,32px)!important;
+ }
+ .pv-studio-auth .pv-auth-form-surface .pv-auth-product{margin-bottom:clamp(13px,2.3vh,21px)!important}
+ .pv-studio-auth .pv-auth-form-surface .pv-auth-form{gap:clamp(9px,1.6vh,14px)!important}
+ .pv-studio-auth .pv-auth-form-surface .pv-auth-divider{margin:clamp(12px,2vh,19px) 0!important}
+ .pv-studio-auth .pv-auth-form-surface .pv-auth-legal{margin-top:clamp(12px,2vh,18px)!important}
+}
