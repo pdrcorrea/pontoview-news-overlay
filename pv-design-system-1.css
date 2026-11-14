@@ -1,0 +1,88 @@
+/* PontoView Studio — Design System 1.0
+   Só index.html e studio.html: nunca injetar nos overlays OBS, Program/Preview ou control.html. */
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap");
+:root{--pv-institutional-deep:#052b72;--pv-institutional-blue:#0757be;--pv-institutional-cyan:#4cecf6;--pv-institutional-ink:#092e70;--pv-institutional-line:#c8def8}
+body{font-family:Arial,Helvetica,sans-serif}
+body :is(h1,h2,h3,h4){font-family:"Nunito Sans",Arial,sans-serif;letter-spacing:-.035em}
+body:not(.pv-app-body) .pv-hero{
+  background:radial-gradient(ellipse at 78% 18%,#126bdd,#0849aa 50%,#052b72);
+  color:#fff;border-bottom-right-radius:74px;
+}
+body:not(.pv-app-body) .pv-hero h1{color:white;font-weight:800;line-height:1.04}
+body:not(.pv-app-body) .pv-hero h1 span{color:#56eff9}
+body:not(.pv-app-body) .pv-hero p,body:not(.pv-app-body) .pv-meta{color:#dcefff}
+body:not(.pv-app-body) .pv-kicker{color:#64edfa}
+body:not(.pv-app-body) .pv-kicker:before{width:10px;height:10px;border-radius:50%;background:#4cecf6}
+body:not(.pv-app-body) .pv-header{
+  position:fixed;top:13px;left:50%;transform:translateX(-50%);
+  z-index:80;width:min(1170px,calc(100% - 34px));
+  border-radius:23px;background:rgba(5,41,105,.82);
+  border:1px solid #b6dffe44;box-shadow:0 15px 38px #001e513d;
+  -webkit-backdrop-filter:blur(22px) saturate(145%);backdrop-filter:blur(22px) saturate(145%);
+}
+body:not(.pv-app-body) .pv-nav{height:68px;padding:0 14px}
+body:not(.pv-app-body) .pv-links a{color:#e9f6ff}
+body:not(.pv-app-body) .pv-links a:hover{color:#73f5fc}
+body:not(.pv-app-body) .pv-btn{
+  --x:50%;--y:50%;isolation:isolate;position:relative;overflow:hidden;
+  border-radius:15px;transition:background .25s,color .25s,border-color .25s;
+}
+body:not(.pv-app-body) .pv-btn:before{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:0;
+  pointer-events:none;
+  background:radial-gradient(240px circle at var(--x) var(--y),#53ecff88,transparent 80%);
+  transition:opacity .23s;
+}
+body:not(.pv-app-body) .pv-btn:hover:before{opacity:1}
+body:not(.pv-app-body) .pv-hero .pv-btn{background:white;color:#063b7c;border-color:#cfe7fc}
+body:not(.pv-app-body) .pv-hero .pv-btn:hover{
+  background:#073e8c;color:white;border-color:#4cecf6;filter:none;
+}
+body:not(.pv-app-body) .pv-header .pv-btn-primary{
+  background:#65eef8;color:#063b7c;border-color:#65eef8;
+}
+body:not(.pv-app-body) .pv-header .pv-btn-primary:hover{background:#a6feff}
+body:not(.pv-app-body) .pv-showcase{
+  border:7px solid #ecf7ff;border-radius:26px;
+  box-shadow:0 30px 58px #001d5084;
+}
+body:not(.pv-app-body) :is(.pv-card,.pv-mini){
+  border-radius:22px;border-color:#c8def8;
+}
+body.pv-app-body{
+  --blue:#0757be;--navy:#052b72;--cyan:#4cecf6;--ink:#092e70;
+  --muted:#536e94;--bg:#f8fbff;--line:#c8def8;
+  color:#092e70;background:#f8fbff;
+}
+body.pv-app-body .pv-auth-brand{
+  background:radial-gradient(ellipse at 80% 20%,#115fc3,#062e75 67%,#041f52);
+}
+body.pv-app-body .pv-auth-copy h1{
+  font-family:"Nunito Sans",Arial,sans-serif;font-weight:800;line-height:1.05;
+}
+body.pv-app-body .pv-auth-copy .pv-kicker{color:#84effa}
+body.pv-app-body .pv-button{
+  --x:50%;--y:50%;position:relative;isolation:isolate;overflow:hidden;
+  border-radius:14px;transition:background .24s,color .24s,border-color .24s;
+  transform:none;
+}
+body.pv-app-body .pv-button:before{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:0;pointer-events:none;
+  background:radial-gradient(230px circle at var(--x) var(--y),#4cecf68c,transparent 83%);
+  transition:opacity .22s;
+}
+body.pv-app-body .pv-button:hover:before{opacity:1}
+body.pv-app-body .pv-button-primary{background:#0757be;color:#fff;border-color:#0757be}
+body.pv-app-body .pv-button-primary:hover{background:#063d88;border-color:#4cecf6}
+body.pv-app-body :is(.pv-settings-card,.pv-overlay-card,.pv-billing-card){
+  border-color:#c8def8;border-radius:22px;
+}
+@media(max-width:760px){
+ body:not(.pv-app-body) .pv-header{top:9px;border-radius:18px}
+ body:not(.pv-app-body) .pv-nav{height:60px}
+ body:not(.pv-app-body) .pv-hero{border-bottom-right-radius:44px;padding-top:126px}
+ body:not(.pv-app-body) .pv-hero h1{font-size:clamp(40px,10vw,57px)}
+}
+@media(prefers-reduced-motion:reduce){
+ body:not(.pv-app-body) .pv-btn,body.pv-app-body .pv-button{transition:none!important}
+}
