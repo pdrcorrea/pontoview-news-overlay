@@ -1,0 +1,23 @@
+/* PontoView Studio: auth only, never OBS broadcast/output. */
+.pv-studio-auth{display:grid!important;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr)!important;min-height:100dvh!important}
+.pv-studio-auth .pv-auth-identity{min-height:100dvh;display:flex!important;flex-direction:column}
+.pv-studio-auth .pv-auth-logo-wrap{display:flex;align-items:center;color:#fff!important}
+.pv-studio-auth .pv-auth-logo-wrap img{width:148px;max-height:42px;object-fit:contain}
+.pv-studio-auth .pv-auth-copy{position:relative;z-index:2;max-width:580px}
+.pv-studio-auth .pv-auth-copy h1{max-width:11ch!important}
+.pv-studio-auth .pv-auth-visual{position:relative;z-index:2;max-width:550px}
+.pv-studio-auth .pv-auth-form-side{display:flex;align-items:center;justify-content:center;padding:clamp(20px,5vw,70px)!important}
+.pv-studio-auth .pv-auth-form-surface{width:min(100%,490px)!important;padding:clamp(25px,3vw,39px)!important}
+.pv-studio-auth .pv-auth-form-surface h2{font-size:30px;line-height:1.12}
+.pv-studio-auth .pv-auth-form-surface .pv-auth-form{display:grid;gap:15px}
+.pv-studio-auth .pv-auth-form-surface .pv-field{display:grid;gap:8px}
+.pv-studio-auth .pv-auth-form-surface .pv-field input{width:100%;padding:11px 14px}
+.pv-studio-auth .pv-auth-form-surface .pv-button{min-height:47px}
+.pv-studio-auth .pv-auth-legal{font-size:11px;line-height:1.5;color:#607b99}
+.pv-studio-auth .pv-auth-divider{margin:19px 0}
+@media(max-width:800px){
+ .pv-studio-auth{display:block!important}
+ .pv-studio-auth .pv-auth-identity{display:none!important}
+ .pv-studio-auth .pv-auth-form-side{min-height:100dvh!important;padding:22px 16px!important}
+ .pv-studio-auth .pv-auth-form-surface{max-width:480px}
+}

@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="./studio-app.css" />
   <link rel="stylesheet" href="./studio-clean.css" />
   <link rel="stylesheet" href="./pv-design-system-1.css" />
+  <link rel="stylesheet" href="./pv-auth-design-system.css" />
+  <link rel="stylesheet" href="./pv-auth-studio.css" />
   <script src="./pv-design-system-1.js" defer></script>
   <style>
     .pv-free-lt-preview{position:relative;overflow:hidden;background:linear-gradient(145deg,#10151d,#202938);min-height:210px}
@@ -31,14 +33,14 @@
   </style>
 </head>
 <body class="pv-app-body">
-  <div id="authScreen" class="pv-auth-screen">
-    <section class="pv-auth-brand">
+  <div id="authScreen" class="pv-auth-screen pv-auth-v1 pv-studio-auth">
+    <section class="pv-auth-brand pv-auth-identity">
       <a href="./index.html" class="pv-auth-logo-wrap"><img src="./assets/logo-pontoview.png" alt="PontoView" /><span>Studio</span></a>
       <div class="pv-auth-copy"><span class="pv-kicker">PONTOVIEW STUDIO</span><h1>Sua marca em cena.</h1><p>Entre para acessar seus overlays.</p></div>
       <div class="pv-auth-visual" aria-hidden="true"><div class="pv-auth-screen-frame"><div class="pv-auth-bug">PONTOVIEW</div><div class="pv-auth-lt"><span>JORNALISMO</span><strong>INFORMAÇÃO COM IDENTIDADE</strong><small>Gráficos controlados pelo navegador</small></div></div></div>
     </section>
-    <section class="pv-auth-panel">
-      <div class="pv-auth-card">
+    <section class="pv-auth-panel pv-auth-form-side">
+      <div class="pv-auth-card pv-auth-form-surface">
         <a href="./index.html" class="pv-auth-mobile-brand"><img src="./assets/logo-pontoview.png" alt="PontoView" /><span>Studio</span></a>
         <span class="pv-kicker">ÁREA DO CLIENTE</span><h2>Entre no seu Studio</h2>
         <form id="loginForm" class="pv-auth-form">
