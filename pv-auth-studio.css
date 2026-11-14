@@ -21,3 +21,15 @@
  .pv-studio-auth .pv-auth-form-side{min-height:100dvh!important;padding:22px 16px!important}
  .pv-studio-auth .pv-auth-form-surface{max-width:480px}
 }
+
+
+/* Studio Auth V2: identidade e formulário sem a prévia legada. */
+.pv-studio-auth .pv-auth-identity{justify-content:center!important}
+.pv-studio-auth .pv-auth-copy{max-width:520px}
+.pv-studio-auth .pv-auth-copy h1{max-width:12ch!important}
+.pv-studio-auth .pv-auth-identity .pv-auth-company{bottom:34px}
+.pv-studio-auth .pv-auth-visual,.pv-studio-auth .pv-auth-logo-wrap{display:none!important}
+.pv-studio-auth .pv-auth-form-side{background:#f8fbff!important}
+.pv-studio-auth .pv-auth-form-surface{max-width:510px!important;width:min(100%,510px)!important}
+.pv-studio-auth .pv-auth-form-surface .pv-auth-product{margin-bottom:32px!important}
+.pv-studio-auth .pv-auth-form-surface .pv-auth-product img{width:43px!important;height:43px!important;max-width:43px!important}

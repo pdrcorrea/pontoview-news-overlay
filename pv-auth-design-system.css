@@ -82,3 +82,137 @@
 @media(prefers-reduced-motion:reduce){
  .pv-auth-v1 *,.pv-auth-v1 *::before,.pv-auth-v1 *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+
+/* AUTH V2 — contrato compartilhado entre Telas, BusBoard, Filas e Studio.
+   Hero institucional sem marca, card único e assinatura do produto no canto superior direito.
+   Nunca afeta páginas autenticadas, TV, emissão, OBS ou menus administrativos. */
+.pv-auth-v1{
+  --pv-auth-deep:#052b72;--pv-auth-blue:#0757be;--pv-auth-cyan:#4cecf6;
+  --pv-auth-ink:#092e70;--pv-auth-line:#c8def8;--pv-auth-muted:#536e94;
+  background:#f8fbff!important;
+  min-height:100dvh;
+  font-family:Arial,Helvetica,sans-serif!important;
+}
+.pv-auth-v1 .pv-auth-identity{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:linear-gradient(128deg,#094396 0%,#1061c5 57%,#07337e 100%)!important;
+  padding:clamp(36px,5.5vw,85px)!important;
+  color:#fff!important;
+}
+.pv-auth-v1 .pv-auth-identity::before{
+  content:"";position:absolute;z-index:-1;top:-180px;right:-220px;
+  width:440px;height:440px;border:1px solid rgba(88,238,251,.35);
+  border-radius:50%;pointer-events:none;
+}
+.pv-auth-v1 .pv-auth-identity::after{
+  content:"";position:absolute;z-index:-1;bottom:-240px;left:-260px;
+  width:480px;height:480px;border:42px solid rgba(143,218,255,.07);
+  border-radius:38%;transform:rotate(-22deg);pointer-events:none;
+}
+.pv-auth-v1 .pv-auth-identity :is(h1,h2){
+  font-family:"Nunito Sans",Arial,sans-serif!important;
+  color:#fff!important;font-size:clamp(38px,4vw,61px)!important;
+  font-weight:800!important;line-height:1.07!important;letter-spacing:-.052em!important;
+  max-width:13ch!important;margin:15px 0 19px!important;
+}
+.pv-auth-v1 .pv-auth-identity p{max-width:480px!important;font-size:clamp(15px,1.25vw,18px)!important;line-height:1.65!important;color:#e0efff!important}
+.pv-auth-v1 .pv-auth-identity :is(.auth-main-pitch>span,.eyebrow,.pv-kicker){
+  font-size:11px!important;font-weight:800!important;letter-spacing:.16em!important;color:#85f2fb!important;
+}
+.pv-auth-v1 .pv-auth-identity .pv-auth-benefits{
+  list-style:none!important;display:grid!important;gap:13px!important;
+  margin:28px 0 0!important;padding:0!important;
+}
+.pv-auth-v1 .pv-auth-benefits li{display:flex;gap:12px;align-items:center;color:#e8f5ff!important;font-size:13px;line-height:1.45}
+.pv-auth-v1 .pv-auth-benefits li::before{
+  content:"";display:block;flex:none;width:8px;height:8px;border-radius:50%;
+  background:#50eaf6;box-shadow:0 0 0 4px #50eaf625;
+}
+.pv-auth-v1 .pv-auth-benefits li svg{color:#62effa!important;flex:none}
+.pv-auth-v1 .pv-auth-identity .pv-auth-company{
+  position:absolute;left:clamp(36px,5.5vw,85px);bottom:33px;
+  font-family:"Nunito Sans",Arial,sans-serif!important;font-size:12px!important;
+  color:#c3e5ff!important;letter-spacing:.03em!important;
+  text-decoration:none!important;
+}
+.pv-auth-v1 .pv-auth-identity .pv-auth-company strong{color:white;font-weight:800}
+.pv-auth-v1 .pv-auth-form-side{
+  background:#f8fbff!important;
+  padding:clamp(24px,4vw,64px)!important;
+  min-width:0!important;
+}
+.pv-auth-v1 .pv-auth-form-surface{
+  position:relative!important;box-sizing:border-box;
+  width:min(100%,510px)!important;max-width:510px!important;
+  padding:clamp(26px,3.1vw,42px)!important;
+  border:1px solid #c8def8!important;border-radius:26px!important;
+  box-shadow:0 22px 54px rgba(5,46,111,.105)!important;
+  background:#fff!important;color:#092e70!important;
+}
+.pv-auth-v1 .pv-auth-product{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex-direction:row!important;gap:10px!important;
+  width:100%!important;margin:0 0 31px!important;
+  font-family:"Nunito Sans",Arial,sans-serif!important;
+  font-size:15px!important;font-weight:800!important;
+  line-height:1.1!important;color:#073d84!important;
+  text-align:right!important;text-decoration:none!important;
+}
+.pv-auth-v1 .pv-auth-product img{
+  display:block!important;width:43px!important;height:43px!important;max-width:43px!important;
+  flex:none!important;object-fit:contain!important;
+}
+.pv-auth-v1 .pv-auth-product small{font-size:11px;color:#6684a5;font-weight:700;margin:0}
+.pv-auth-v1 .pv-auth-form-surface :is(h1,h2){
+  font-size:clamp(25px,2.4vw,30px)!important;line-height:1.16!important;
+  margin:0 0 10px!important;letter-spacing:-.035em!important;
+  color:#092e70!important;font-weight:800!important;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(.auth-main-eyebrow,.pv-kicker){
+  color:#0a72ae!important;font-size:10px!important;letter-spacing:.14em!important;font-weight:800!important;
+}
+.pv-auth-v1 .pv-auth-form-surface label{color:#24456e!important;font-size:12px!important;font-weight:700!important}
+.pv-auth-v1 .pv-auth-form-surface input:not([type="checkbox"]):not([type="radio"]){
+  min-height:46px!important;border:1px solid #bed7f0!important;
+  background:#fbfdff!important;color:#092e70!important;border-radius:12px!important;
+}
+.pv-auth-v1 .pv-auth-form-surface input:focus-visible{
+  border-color:#149dc7!important;outline:0!important;box-shadow:0 0 0 3px #4cecf638!important;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(.auth-tabs,.auth-main-tabs,.pv-auth-tabs,[aria-label="Tipo de acesso"]){
+  border-radius:13px!important;background:#edf5ff!important;
+  border:1px solid #d8e8fa!important;padding:4px!important;
+}
+.pv-auth-v1 .pv-auth-form-surface :is(.auth-tabs,.auth-main-tabs,.pv-auth-tabs,[aria-label="Tipo de acesso"]) :is(.active,[aria-current="page"]){
+  background:#fff!important;color:#073f8e!important;border-radius:10px!important;
+  box-shadow:0 3px 12px #0b3d7c13!important;
+}
+.pv-auth-v1 .pv-auth-form-surface button[type="submit"]{
+  --x:50%;--y:50%;position:relative;isolation:isolate;overflow:hidden;
+  min-height:48px!important;border-radius:13px!important;
+  background:#0757be!important;border:1px solid #0757be!important;
+  color:#fff!important;font-family:"Nunito Sans",Arial,sans-serif!important;
+  font-weight:800!important;transition:background .25s,border-color .25s,box-shadow .25s!important;
+}
+.pv-auth-v1 .pv-auth-form-surface button[type="submit"]::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(230px circle at var(--x) var(--y),#55eeff91,transparent 82%);
+  opacity:0;transition:opacity .22s;
+}
+.pv-auth-v1 .pv-auth-form-surface button[type="submit"]:hover:not(:disabled){
+  background:#073c8e!important;border-color:#4cecf6!important;
+  box-shadow:0 9px 22px rgba(2,53,124,.22)!important;
+}
+.pv-auth-v1 .pv-auth-form-surface button[type="submit"]:hover::before{opacity:1}
+.pv-auth-v1 .pv-auth-form-surface a:not(.pv-auth-product){color:#0862b6}
+.pv-auth-v1 .pv-auth-form-surface a:not(.pv-auth-product):hover{color:#043c7a}
+@media(max-width:800px){
+  .pv-auth-v1 .pv-auth-identity{display:none!important}
+  .pv-auth-v1 .pv-auth-form-side{min-height:100dvh!important;padding:20px 16px!important}
+  .pv-auth-v1 .pv-auth-form-surface{padding:clamp(22px,5vw,32px)!important}
+  .pv-auth-v1 .pv-auth-product{margin-bottom:27px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .pv-auth-v1 *,.pv-auth-v1 *::before,.pv-auth-v1 *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
