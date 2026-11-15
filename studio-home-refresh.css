@@ -74,3 +74,11 @@ body.pv-studio-home .pv-studio-identity{display:flex;align-items:center;gap:15px
 body.pv-studio-home .pv-studio-identity img{width:58px;height:58px;object-fit:contain;flex:none;filter:drop-shadow(0 8px 16px #001b4d55)}
 body.pv-studio-home .pv-studio-identity .pv-kicker::before{display:none}
 @media(max-width:700px){body.pv-studio-home .pv-studio-identity img{width:48px;height:48px}}
+
+/* Lente do Studio na navegação, antes da marca. Não replicar na hero. */
+body.pv-studio-home .pv-header a.pv-brand{display:inline-flex!important;align-items:center!important;gap:9px!important;white-space:nowrap}
+body.pv-studio-home .pv-header a.pv-brand::before,body.pv-studio-home .pv-header a.pv-brand::after{content:none!important;display:none!important}
+body.pv-studio-home .pv-header a.pv-brand > img.pv-brand-studio-icon{content:url('./assets/pontoview-studio-soft3d.svg')!important;order:0!important;width:40px!important;height:40px!important;max-width:40px!important;flex:0 0 40px!important;object-fit:contain!important}
+body.pv-studio-home .pv-header a.pv-brand > .pv-brand-name{order:1!important;color:#fff;font:800 19px/1 'Nunito Sans',Arial,sans-serif}
+body.pv-studio-home .pv-header a.pv-brand > span{order:2!important;margin-left:2px!important;opacity:.75;color:#d5e7ff!important;font-size:12px!important}
+@media(max-width:480px){body.pv-studio-home .pv-header a.pv-brand{gap:6px!important}body.pv-studio-home .pv-header a.pv-brand > img.pv-brand-studio-icon{width:35px!important;height:35px!important;max-width:35px!important;flex-basis:35px!important}body.pv-studio-home .pv-header a.pv-brand > .pv-brand-name{font-size:17px}}
