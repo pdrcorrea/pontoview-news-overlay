@@ -64,3 +64,7 @@ body.pv-studio-home .pv-login-signature img{width:42px;height:42px;object-fit:co
 @media(max-width:850px){body.pv-studio-home .pv-links{gap:12px}body.pv-studio-home .pv-hero-grid{grid-template-columns:1fr}body.pv-studio-home .pv-showcase{max-width:650px;width:100%;margin:0 auto}}
 @media(max-width:700px){body.pv-studio-home .pv-header{width:calc(100% - 22px)}body.pv-studio-home .pv-hero{padding:120px 0 54px;border-bottom-right-radius:46px}body.pv-studio-home .pv-hero h1{font-size:clamp(39px,9vw,57px)}body.pv-studio-home .pv-section{padding:56px 0}body.pv-studio-home .modal{display:block;max-width:450px}body.pv-studio-home .pv-login-aside{display:none}body.pv-studio-home .pv-login-form-panel{padding:24px}body.pv-studio-home .pv-showcase{padding:16px}body.pv-studio-home .pv-mini-grid{gap:10px}body.pv-studio-home .pv-mini{min-height:150px;padding:14px}}
 @media(prefers-reduced-motion:reduce){body.pv-studio-home .pv-btn,body.pv-studio-home .pv-mini,body.pv-studio-home .pv-card{transition:none!important}}
+
+/* Marca em SVG: desativar lettering legado criado por pseudoelementos. */
+body.pv-studio-home .pv-brand::before,body.pv-studio-home .pv-brand::after{content:none!important;display:none!important}
+body.pv-studio-home .pv-footer-brand a::before,body.pv-studio-home .pv-footer-brand a::after{content:none!important;display:none!important}
