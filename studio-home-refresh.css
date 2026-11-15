@@ -82,3 +82,8 @@ body.pv-studio-home .pv-header a.pv-brand > img.pv-brand-studio-icon{content:url
 body.pv-studio-home .pv-header a.pv-brand > .pv-brand-name{order:1!important;color:#fff;font:800 19px/1 'Nunito Sans',Arial,sans-serif}
 body.pv-studio-home .pv-header a.pv-brand > span{order:2!important;margin-left:2px!important;opacity:.75;color:#d5e7ff!important;font-size:12px!important}
 @media(max-width:480px){body.pv-studio-home .pv-header a.pv-brand{gap:6px!important}body.pv-studio-home .pv-header a.pv-brand > img.pv-brand-studio-icon{width:35px!important;height:35px!important;max-width:35px!important;flex-basis:35px!important}body.pv-studio-home .pv-header a.pv-brand > .pv-brand-name{font-size:17px}}
+
+/* Rodapé: símbolo oficial PontoView, independente do ícone de produto Studio. */
+body.pv-studio-home .pv-footer-brand .pv-footer-wordmark{display:inline-flex!important;gap:10px!important;align-items:center!important;color:#fff!important}
+body.pv-studio-home .pv-footer-brand .pv-footer-official-mark{display:inline-block;flex:none;width:40px;height:40px;background:url('./assets/PontoViewMarkBlue.svg') center/contain no-repeat;filter:brightness(0) invert(1)}
+body.pv-studio-home .pv-footer-brand a::before,body.pv-studio-home .pv-footer-brand a::after{content:none!important;display:none!important}
