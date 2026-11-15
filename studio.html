@@ -33,16 +33,24 @@
   </style>
 </head>
 <body class="pv-app-body">
-  <div id="authScreen" class="pv-auth-screen pv-auth-v1 pv-studio-auth">
+  <div id="authScreen" class="pv-auth-screen pv-auth-v1 pv-studio-auth pv-studio-editorial">
     <section class="pv-auth-brand pv-auth-identity">
-      
-      <div class="pv-auth-copy"><span class="pv-kicker">PONTOVIEW STUDIO</span><h1>Sua marca em cena.</h1><p>Crie gráficos e overlays para dar identidade às suas transmissões, com controle direto pelo navegador.</p></div>
-      <ul class="pv-auth-benefits"><li>Gráficos sob controle em tempo real</li><li>Identidade visual consistente</li><li>Overlays para produções e transmissões</li></ul><a href="https://pontoview.com.br" class="pv-auth-company">Um produto <strong>PontoView</strong></a>
+      <div class="pv-auth-copy">
+        <span class="pv-studio-kicker">Studio</span>
+        <h1>Sua identidade <em>em cada transmissão.</em></h1>
+        <p>Crie e controle gráficos para suas transmissões diretamente pelo navegador.</p>
+        <div class="pv-studio-features" aria-label="Funcionalidades do Studio">
+          <div><span class="material-symbols-rounded" aria-hidden="true">subtitles</span><span><strong>Gerador de GCs</strong><small>Identificação e informações na tela</small></span></div>
+          <div><span class="material-symbols-rounded" aria-hidden="true">layers</span><span><strong>Overlays</strong><small>Elementos gráficos para transmissões</small></span></div>
+          <div><span class="material-symbols-rounded" aria-hidden="true">tune</span><span><strong>Controle ao vivo</strong><small>Atualizações direto do navegador</small></span></div>
+          <div><span class="material-symbols-rounded" aria-hidden="true">palette</span><span><strong>Identidade visual</strong><small>Personalização com sua marca</small></span></div>
+        </div>
+      </div>
     </section>
     <section class="pv-auth-panel pv-auth-form-side">
       <div class="pv-auth-card pv-auth-form-surface">
-        <a href="./index.html" class="pv-auth-product" aria-label="Voltar à página do Studio"><span>PontoView <small>Studio</small></span><img src="./assets/PontoViewMarkBlue.svg" alt="" /></a>
-        <span class="pv-kicker">ÁREA DO CLIENTE</span><h2>Entre no seu Studio</h2>
+        <a href="./index.html" class="pv-auth-product" aria-label="Voltar à página do Studio"><img src="./assets/pv-studio-icon.png" alt="" /><span>PontoView <small>Acesso ao Studio</small></span></a>
+        <h2>Bem-vindo de volta.</h2><p class="pv-studio-form-intro">Entre com sua conta para continuar.</p>
         <form id="loginForm" class="pv-auth-form">
           <label class="pv-field"><span>E-mail</span><input id="loginEmail" type="email" autocomplete="email" placeholder="voce@empresa.com.br" required /></label>
           <label class="pv-field"><span>Senha</span><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Sua senha" required /></label>
