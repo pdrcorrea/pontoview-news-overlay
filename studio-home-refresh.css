@@ -1,0 +1,66 @@
+/* Studio — identidade pública alinhada ao ecossistema PontoView.
+   Escopo: somente index.html. Nenhum efeito nos overlays/controles OBS. */
+body.pv-studio-home{--pv-navy:#052b72;--pv-blue:#0757be;--pv-cyan:#4cecf6;--pv-ink:#092e70;--pv-line:#c8def8;background:#f8fbff;color:var(--pv-ink);font-family:Arial,Helvetica,sans-serif}
+body.pv-studio-home :is(h1,h2,h3,h4){font-family:"Nunito Sans",Arial,sans-serif}
+body.pv-studio-home .pv-header{background:rgba(5,39,101,.88);border-color:rgba(162,229,255,.22)}
+body.pv-studio-home .pv-brand{gap:10px;font-family:"Nunito Sans",Arial,sans-serif;color:#fff;font-weight:850;font-size:19px}
+body.pv-studio-home .pv-brand .pv-brand-mark{height:38px;width:38px;flex:none;color:#b1f8ff}
+body.pv-studio-home .pv-brand span{color:#b8d6f7;font-size:12px;font-weight:800;letter-spacing:.04em;margin-left:5px;padding-left:12px;border-left:1px solid #ffffff39}
+body.pv-studio-home .pv-links{gap:20px}
+body.pv-studio-home .pv-links a{font-size:13px}
+body.pv-studio-home .pv-hero{padding:132px 0 88px;background:radial-gradient(ellipse at 78% 20%,#1269d3,#08459f 55%,#052b72);border-bottom-right-radius:82px}
+body.pv-studio-home .pv-hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:clamp(28px,4vw,60px)}
+body.pv-studio-home .pv-hero h1{font-size:clamp(44px,5.2vw,68px);line-height:1.04;letter-spacing:-.047em;max-width:630px;margin:20px 0 22px}
+body.pv-studio-home .pv-hero p{font-size:clamp(15px,1.3vw,17px);line-height:1.6;max-width:560px}
+body.pv-studio-home .pv-kicker{font-family:Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:.13em}
+body.pv-studio-home .pv-hero .pv-kicker{color:#a5f5ff}
+body.pv-studio-home .pv-meta{gap:15px;margin-top:23px;font-size:12px}
+body.pv-studio-home .pv-meta i{background:#4cecf6}
+body.pv-studio-home .pv-showcase{padding:22px;border:1px solid rgba(222,243,255,.82);border-radius:28px;background:linear-gradient(145deg,#f9fcff,#e8f3ff);box-shadow:0 24px 55px #001d5066}
+body.pv-studio-home .pv-showcase-head{margin-bottom:16px}
+body.pv-studio-home .pv-showcase-head strong{font-family:"Nunito Sans",Arial,sans-serif;font-size:16px}
+body.pv-studio-home .pv-mini{position:relative;min-height:166px;padding:19px;border:1px solid #c9def5;border-radius:19px;background:#fff;box-shadow:0 8px 23px #123d6911;transition:transform .25s,box-shadow .25s}
+body.pv-studio-home .pv-mini:hover{transform:translateY(-4px);box-shadow:0 15px 30px #123d6922}
+body.pv-studio-home .pv-mini.wide{min-height:140px}
+body.pv-studio-home .pv-mini .tag{margin-bottom:12px}
+body.pv-studio-home .pv-mini h3{font-size:17px;margin:10px 0 5px}
+body.pv-studio-home .pv-mini p{font-size:12px;color:#536e94!important;opacity:1!important;line-height:1.5}
+body.pv-studio-home .pv-mini .material-symbols-rounded{font-size:28px;color:#0757be}
+body.pv-studio-home .pv-strip{background:#073b85}
+body.pv-studio-home .pv-strip-inner{min-height:70px;gap:25px}
+body.pv-studio-home .pv-section{padding:76px 0}
+body.pv-studio-home .pv-section h2{font-size:clamp(33px,4vw,52px);letter-spacing:-.037em}
+body.pv-studio-home .pv-section.light{background:#f1f7ff}
+body.pv-studio-home .pv-section.dark{background:linear-gradient(135deg,#052b72,#063d91)}
+body.pv-studio-home .pv-card{border-color:#c8def8;border-radius:24px;box-shadow:0 12px 30px #10396713;transition:transform .26s,box-shadow .26s}
+body.pv-studio-home .pv-card:hover{transform:translateY(-5px);box-shadow:0 22px 42px #10396722}
+body.pv-studio-home .pv-card-visual{background:#e9f4ff}
+body.pv-studio-home .pv-card-body{padding:24px}
+body.pv-studio-home .pv-card p{font-size:14px;line-height:1.57}
+body.pv-studio-home .pv-feature{border-radius:21px}
+body.pv-studio-home .pv-step{border-radius:21px}
+body.pv-studio-home .pv-btn{font-family:"Nunito Sans",Arial,sans-serif;font-weight:800;box-shadow:0 4px 14px #001a3911;transition:transform .22s,box-shadow .22s,background .22s,color .22s,border-color .22s}
+body.pv-studio-home .pv-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px #001e5130;filter:none}
+body.pv-studio-home .pv-btn:active{transform:translateY(0)}
+body.pv-studio-home .pv-footer-brand .pv-footer-wordmark{display:inline-flex;align-items:center;gap:8px;font:800 22px "Nunito Sans",Arial,sans-serif;color:white}
+body.pv-studio-home .pv-footer-wordmark svg{width:38px;height:38px;color:#91f4ff}
+/* O acesso da home reutiliza os mesmos princípios de composição dos logins atuais. */
+body.pv-studio-home .modal-backdrop{padding:18px;overflow-y:auto;align-items:center;justify-content:center}
+body.pv-studio-home .modal{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1fr);width:min(890px,100%);max-width:890px;max-height:calc(100dvh - 36px);overflow:auto;padding:0;background:#f8fbff;border:1px solid #b9daf7;border-radius:26px;box-shadow:0 30px 90px #001c5280}
+body.pv-studio-home .pv-login-aside{padding:40px;background:linear-gradient(145deg,#0b59bd,#052b72);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+body.pv-studio-home .pv-login-aside:before{content:"";position:absolute;right:-110px;top:-140px;width:310px;height:310px;border:1px solid #7feffa66;border-radius:38%;transform:rotate(-26deg)}
+body.pv-studio-home .pv-login-aside .pv-login-label{color:#8cf4fb;font:800 11px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+body.pv-studio-home .pv-login-aside h3{font:800 clamp(28px,3vw,38px)/1.12 "Nunito Sans",Arial,sans-serif;letter-spacing:-.04em;margin:18px 0}
+body.pv-studio-home .pv-login-aside p{font-size:14px;line-height:1.6;color:#e0efff;margin:0}
+body.pv-studio-home .pv-login-form-panel{padding:clamp(24px,4vw,38px);min-width:0;background:#fff}
+body.pv-studio-home .modal-head h2{font-size:26px;color:#092e70;margin:0}
+body.pv-studio-home .modal .auth-tabs{background:#edf5ff;border:1px solid #d8e8fa;border-radius:13px;padding:4px}
+body.pv-studio-home .modal .auth-tab{border-radius:10px}
+body.pv-studio-home .modal .field input{border-radius:12px;border-color:#bdd7f1;background:#fbfdff;min-height:45px}
+body.pv-studio-home .modal #authSubmit{background:#0757be;color:#fff;border-radius:13px}
+body.pv-studio-home .modal #authSubmit:hover{background:#063e92}
+body.pv-studio-home .pv-login-signature{display:flex;gap:10px;align-items:center;margin:0 0 18px;color:#0757be;font:800 13px "Nunito Sans",Arial,sans-serif}
+body.pv-studio-home .pv-login-signature img{width:42px;height:42px;object-fit:contain}
+@media(max-width:850px){body.pv-studio-home .pv-links{gap:12px}body.pv-studio-home .pv-hero-grid{grid-template-columns:1fr}body.pv-studio-home .pv-showcase{max-width:650px;width:100%;margin:0 auto}}
+@media(max-width:700px){body.pv-studio-home .pv-header{width:calc(100% - 22px)}body.pv-studio-home .pv-hero{padding:120px 0 54px;border-bottom-right-radius:46px}body.pv-studio-home .pv-hero h1{font-size:clamp(39px,9vw,57px)}body.pv-studio-home .pv-section{padding:56px 0}body.pv-studio-home .modal{display:block;max-width:450px}body.pv-studio-home .pv-login-aside{display:none}body.pv-studio-home .pv-login-form-panel{padding:24px}body.pv-studio-home .pv-showcase{padding:16px}body.pv-studio-home .pv-mini-grid{gap:10px}body.pv-studio-home .pv-mini{min-height:150px;padding:14px}}
+@media(prefers-reduced-motion:reduce){body.pv-studio-home .pv-btn,body.pv-studio-home .pv-mini,body.pv-studio-home .pv-card{transition:none!important}}
