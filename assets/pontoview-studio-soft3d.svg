@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="studioTitle studioDescription">
+<title id="studioTitle">PontoView Studio</title>
+<desc id="studioDescription">Lente de câmera com obturador em azul-ciano, sobre botão azul tridimensional.</desc>
+<defs>
+ <linearGradient id="surface" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#126CDC"/><stop offset=".50" stop-color="#0649A8"/><stop offset="1" stop-color="#052D77"/></linearGradient>
+ <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#70F8FF"/><stop offset=".45" stop-color="#168DFA"/><stop offset="1" stop-color="#0767DE"/></linearGradient>
+ <linearGradient id="cyanCore" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A1FFFF"/><stop offset="1" stop-color="#25B8F8"/></linearGradient>
+ <linearGradient id="cyanArc" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A6FFFF"/><stop offset="1" stop-color="#32C9F9"/></linearGradient>
+ <radialGradient id="glass" cx=".36" cy=".28" r=".8"><stop stop-color="#1E9AE6"/><stop offset=".38" stop-color="#075BBA"/><stop offset=".72" stop-color="#06346F"/><stop offset="1" stop-color="#021B4D"/></radialGradient>
+ <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF" stop-opacity=".20"/><stop offset=".45" stop-color="#FFFFFF" stop-opacity=".025"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="175%"><feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#001C55" flood-opacity=".28"/></filter>
+ <filter id="glyphShadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#001B59" flood-opacity=".30"/></filter>
+</defs>
+<g filter="url(#shadow)">
+ <rect x="34" y="34" width="444" height="444" rx="104" fill="url(#surface)" stroke="url(#rim)" stroke-width="9"/>
+ <rect x="49" y="48" width="414" height="414" rx="91" fill="none" stroke="#CCFAFF" stroke-opacity=".20" stroke-width="3"/>
+ <path d="M82 108 Q82 76 126 72 H385 Q431 74 435 118 V244 H77 V126 Q77 116 82 108Z" fill="url(#gloss)"/>
+ <path d="M102 75 Q128 55 176 55 H345 Q393 55 421 79" fill="none" stroke="#CBFFFF" stroke-opacity=".48" stroke-width="5" stroke-linecap="round"/>
+</g>
+<g filter="url(#glyphShadow)">
+ <circle cx="256" cy="256" r="122" fill="#062D76" stroke="url(#cyanArc)" stroke-width="20"/>
+ <circle cx="256" cy="256" r="94" fill="url(#glass)" stroke="#6AEFFF" stroke-opacity=".75" stroke-width="6"/>
+ <g fill="url(#cyanCore)" stroke="#044C96" stroke-opacity=".45" stroke-width="2" stroke-linejoin="round">
+  <path d="M256 256L256 173Q298 174 328 208Z"/>
+  <path d="M256 256L328 208Q349 243 333 285Z"/>
+  <path d="M256 256L333 285Q307 329 263 339Z"/>
+  <path d="M256 256L263 339Q216 340 185 307Z"/>
+  <path d="M256 256L185 307Q161 268 178 227Z"/>
+  <path d="M256 256L178 227Q205 181 256 173Z"/>
+ </g>
+ <circle cx="256" cy="256" r="43" fill="url(#glass)" stroke="#B7FFFF" stroke-width="6"/>
+ <circle cx="245" cy="244" r="13" fill="#B8FFFF" opacity=".78"/>
+ <path d="M211 194A75 75 0 0 1 255 179" fill="none" stroke="#E9FFFF" stroke-opacity=".65" stroke-width="7" stroke-linecap="round"/>
+</g>
+</svg>
