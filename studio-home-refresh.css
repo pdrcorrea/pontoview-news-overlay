@@ -68,3 +68,9 @@ body.pv-studio-home .pv-login-signature img{width:42px;height:42px;object-fit:co
 /* Marca em SVG: desativar lettering legado criado por pseudoelementos. */
 body.pv-studio-home .pv-brand::before,body.pv-studio-home .pv-brand::after{content:none!important;display:none!important}
 body.pv-studio-home .pv-footer-brand a::before,body.pv-studio-home .pv-footer-brand a::after{content:none!important;display:none!important}
+
+/* Assinatura visual exclusiva do Studio: lente audiovisual em botão Soft 3D. */
+body.pv-studio-home .pv-studio-identity{display:flex;align-items:center;gap:15px}
+body.pv-studio-home .pv-studio-identity img{width:58px;height:58px;object-fit:contain;flex:none;filter:drop-shadow(0 8px 16px #001b4d55)}
+body.pv-studio-home .pv-studio-identity .pv-kicker::before{display:none}
+@media(max-width:700px){body.pv-studio-home .pv-studio-identity img{width:48px;height:48px}}
