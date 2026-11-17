@@ -180,6 +180,7 @@ body.reserve-left .anchor-shell{left:calc(var(--safe-x) + var(--module-w) + 20px
   <section id="fullscreen" class="graphic" data-mode="headline" aria-label="Fullscreen"><div id="fsCard" class="fs-card no-image"><div class="fs-copy"><div id="fsLabel" class="fs-label"></div><div id="fsTitle" class="fs-title"></div><div id="fsSubtitle" class="fs-subtitle"></div><ul id="fsList" class="fs-list"></ul></div><img id="fsImage" class="fs-image" alt=""></div></section>
   <div id="breakingStinger"><span id="stingerText">BREAKING NEWS</span></div>
 </div></div>
+<script src="./shared/graphics-engine.js"></script>
 <script>
 (()=>{
 'use strict';
@@ -202,8 +203,7 @@ const KEYS=['liveTag','module','topicBar','personBar','lowerThird','highlight','
 const IDS={liveTag:'liveTag',module:'sideModule',topicBar:'topicBar',personBar:'personBar',lowerThird:'lowerThird',highlight:'highlight',ticker:'ticker',bug:'bug',fullscreen:'fullscreen'};
 const OUT_MS={liveTag:430,module:480,topicBar:480,personBar:480,lowerThird:480,highlight:480,ticker:480,bug:480,fullscreen:560};
 const IN_MS={liveTag:400,module:480,topicBar:480,personBar:480,lowerThird:480,highlight:480,ticker:450,bug:480,fullscreen:560};
-const $=id=>document.getElementById(id),clone=v=>JSON.parse(JSON.stringify(v));
-function merge(base,extra){if(!extra||typeof extra!=='object')return base;for(const k of Object.keys(extra)){if(extra[k]&&typeof extra[k]==='object'&&!Array.isArray(extra[k]))base[k]=merge(base[k]&&typeof base[k]==='object'?base[k]:{},extra[k]);else base[k]=extra[k]}return base}
+const $=id=>document.getElementById(id),{clone,merge}=window.PVGraphicsEngine;
 function migrateV5(s){if(!s||s.liveTag)return s;const n=merge(clone(DEFAULT),s);const mod=s.module||{},gc=s.lowerThird||{};n.liveTag={visible:!!(mod.visible&&mod.showStatus),position:mod.position||'left',dock:'composition',text:mod.status||'AO VIVO'};n.module={...n.module,...mod,transparentLogo:false};delete n.module.status;delete n.module.showStatus;n.topicBar={visible:!!gc.visible,position:gc.position||'left',text:gc.topic||'NOTÍCIAS'};n.personBar={visible:!!gc.visible,position:gc.position||'left',name:gc.name||'',role:gc.role||''};n.lowerThird={...n.lowerThird,...gc};delete n.lowerThird.topic;delete n.lowerThird.name;delete n.lowerThird.role;return n}
 let targetState=clone(DEFAULT),displayState=clone(DEFAULT),mounted=new Set(),bc=null,transitionToken=0,lastMessageNonce=null,lastCompositionAnchor=null;const animHandles=new Map(),updateHandles=new Map();
 try{bc=new BroadcastChannel(CHANNEL)}catch(_){}
